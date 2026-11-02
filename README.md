@@ -1,10 +1,10 @@
 # Treinamento Visual de Soldagem
 
+[Jogar online](https://mathyas2026floragold-arch.github.io/SIMBOLOGIA-DE-SOLDAGEM-/) · [Código-fonte](https://github.com/mathyas2026floragold-arch/SIMBOLOGIA-DE-SOLDAGEM-)
+
 Plataforma online de treinamento para interpretar simbologia de soldagem, reconhecer juntas e identificar posições em chapas. O aprendizado acontece por desenhos técnicos, comparação visual, ordens de serviço simuladas e correção imediata.
 
 A aplicação é estática e reúne os cinco jogos em um único arquivo HTML. Também funciona offline, sem instalação, com progresso salvo no navegador.
-
-O código está no [repositório do projeto](https://github.com/mathyas2026floragold-arch/SIMBOLOGIA-DE-SOLDAGEM-).
 
 ## Os cinco modos
 
@@ -71,7 +71,7 @@ O comando atualiza `SIMBOLOGIA DE SOLDAGEM.html` e `index.html` na raiz. A execu
 
 ## GitHub Pages
 
-O repositório está preparado para hospedagem estática. Nas configurações do repositório, em **Pages**, selecione **Deploy from a branch**, a branch **main** e a pasta **/ (root)**. O arquivo `index.html` é a página de entrada. A disponibilidade do endereço público depende da ativação e conclusão da publicação pelo GitHub.
+A publicação está configurada para usar a branch **main** e a pasta **/ (root)**. O arquivo `index.html` é a página de entrada. Novos envios para essa branch iniciam a atualização do site pelo GitHub Pages.
 
 Consulte a [documentação oficial do GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) para os detalhes da publicação.
 
