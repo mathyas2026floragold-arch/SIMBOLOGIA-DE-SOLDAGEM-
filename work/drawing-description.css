@@ -1,0 +1,16 @@
+.drawing-brief{padding:22px 25px;border:1px solid #c4dbed;border-left:4px solid var(--blue);border-radius:14px;background:#f8fcff;color:var(--ink)}
+.drawing-brief>.eyebrow{font-size:10px;letter-spacing:1.4px}
+.scene .drawing-brief h3,.drawing-brief h3{font-size:20px;font-weight:750;letter-spacing:-.3px;line-height:1.3;color:var(--blue-deep);margin:5px 0 14px}
+.drawing-description{max-width:960px}
+.scene .drawing-description p,.drawing-description p{font-size:14px;line-height:1.8;margin:0 0 13px;color:#284b67}
+.drawing-description p:last-child{margin-bottom:0}
+.scene .drawing-brief-instruction,.drawing-brief-instruction{border-top:1px solid #d7e6f2;padding-top:12px;margin:17px 0 0;font-size:12px;line-height:1.65;color:#53738d}
+.construction-drawing{width:100%;min-width:0;display:block}
+.construction-drawing>svg{display:block;width:100%;height:auto;max-height:315px}
+.construction-reference .note{font-size:12px}
+.construction-message{max-width:460px;padding:10px 12px;margin:10px auto 0;border:1px solid #d8e6f1;border-radius:8px;background:#f6faff;font-size:12px;line-height:1.6;color:#52718a;text-align:center}
+.construction-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;padding:25px 18px;text-align:center;color:var(--muted)}
+.construction-placeholder strong{font-size:14px;font-weight:650;color:#416d8f}
+.construction-placeholder p{max-width:270px;font-size:12px;line-height:1.65;margin:8px 0 0;color:var(--muted)}
+@media(max-width:720px){.drawing-brief{padding:18px 19px}.scene .drawing-brief h3,.drawing-brief h3{font-size:18px;margin-bottom:11px}.scene .drawing-description p,.drawing-description p{font-size:13px;line-height:1.75;margin-bottom:11px}.scene .drawing-brief-instruction,.drawing-brief-instruction{font-size:11px}.construction-placeholder{min-height:155px;padding:20px 16px}.construction-drawing>svg{max-height:240px}.construction-message{font-size:11px;padding:8px 10px}}
+@media(max-width:450px){.drawing-brief{padding:16px 15px;border-left-width:3px}.scene .drawing-description p,.drawing-description p{font-size:12px;line-height:1.8}.scene .drawing-brief h3,.drawing-brief h3{font-size:17px}.construction-placeholder strong{font-size:13px}.construction-placeholder p{font-size:11px}.construction-drawing>svg{max-height:215px}}

@@ -1,0 +1,17 @@
+# Local conversation notes and review captures
+/CONTINUIDADE.md
+/*-preview.png
+/*-preview.jpg
+
+# Historical snapshots; keep the source baseline used by the build
+/work/*backup.html
+!/work/before-five-modes.backup.html
+/work/reference-*.png
+
+# Local dependencies, caches and credentials
+/node_modules/
+/.env
+/.env.*
+*.log
+.DS_Store
+Thumbs.db

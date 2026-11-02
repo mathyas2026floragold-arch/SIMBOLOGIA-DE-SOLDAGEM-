@@ -1,0 +1,981 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>TREINAMENTO VISUAL DE SOLDAGEM</title>
+<style>
+:root{color-scheme:light;--bg:#eef5fb;--panel:#ffffff;--ink:#16334d;--muted:#54718b;--line:#d5e3ef;--hot:#0068b7;--weld:#ffb63e;--good:#087e55;--bad:#b52e3f;--blue:#005ca9;--blue-deep:#003e7a;--blue-soft:#e6f2fd;--shadow:0 10px 30px #174c7810}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at 85% 0,#dceefe 0,transparent 46%),var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",Arial,sans-serif}
+main{max-width:1180px;margin:auto;padding:26px 30px 42px}
+header{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:0 0 24px;border-bottom:1px solid #cbddea}
+h1{font-size:29px;line-height:1.1;letter-spacing:1.5px;font-weight:900;margin:0;color:var(--blue-deep)}h1 span{color:var(--blue)}
+header small{display:block;margin-top:7px;color:var(--muted);font-size:13px}
+h2{font-size:27px;line-height:1.25;letter-spacing:-.6px;margin:0 0 16px;font-weight:750}h3{margin:0;font-size:18px;line-height:1.35}p{margin:8px 0 16px}small,.sub{color:var(--muted)}
+button,select{font:inherit;color:inherit;background:var(--panel);border:1px solid #bed4e6;border-radius:12px;padding:12px 18px;cursor:pointer;transition:background .18s,border-color .18s,box-shadow .18s,transform .18s}
+button:hover{border-color:var(--blue);background:#f2f8fe;box-shadow:0 3px 12px #0068b715}
+button:focus-visible,select:focus-visible{outline:3px solid #249bef;outline-offset:4px}
+button:disabled{cursor:default;box-shadow:none;transform:none;opacity:1;color:var(--ink)}
+button.primary{background:var(--blue);color:#fff;border-color:var(--blue);font-weight:700;box-shadow:0 5px 14px #0068b722}button.primary:hover{background:var(--blue-deep);border-color:var(--blue-deep)}
+#home{font-size:14px;font-weight:650;border-color:#b5d1e8;background:#fff;color:var(--blue-deep);padding:10px 17px}
+.stats{display:grid;grid-template-columns:1.1fr .7fr .8fr 1.4fr;gap:12px;margin:23px 0}
+.stat{background:var(--panel);padding:14px 20px;border:1px solid var(--line);border-radius:14px;box-shadow:0 3px 12px #16486e04;min-width:0;position:relative;overflow:hidden}
+.stat:first-child{border-left:4px solid var(--blue)}.stat small{font-size:12px;letter-spacing:.3px}.stat b{display:block;font-size:23px;line-height:1.25;font-weight:750;color:var(--blue-deep);margin-top:2px}
+.eyebrow{text-transform:uppercase;color:var(--blue);letter-spacing:1.7px;font-size:11px;font-weight:800}
+.hero{background:linear-gradient(115deg,#004989 0,#0068b7 65%,#0586ce 100%);border-radius:22px;padding:32px 36px;display:grid;grid-template-columns:1.15fr 1fr;gap:28px;align-items:center;overflow:hidden;box-shadow:0 16px 30px #005ca922;position:relative;isolation:isolate;color:#fff}
+.hero::before{content:"";position:absolute;width:430px;height:430px;border:1px solid #ffffff15;border-radius:50%;right:-155px;top:-155px;z-index:-1}.hero::after{content:"";position:absolute;width:330px;height:330px;border:1px solid #ffffff15;border-radius:50%;right:-100px;top:-100px;z-index:-1}
+.hero .eyebrow{color:#c3e9ff;display:block;margin-bottom:14px}.hero h2{font-size:39px;line-height:1.13;letter-spacing:-1px;max-width:490px;margin-bottom:15px;font-weight:750;color:#fff}.hero p{color:#d5eaff;font-size:15px;max-width:440px;margin-bottom:20px}.hero-tags{display:flex;flex-wrap:wrap;gap:8px}.hero-tags span{border-radius:6px;border:1px solid #ffffff29;color:#e7f6ff;background:#ffffff0b;font-size:11px;padding:5px 9px;letter-spacing:.2px}
+.hero-art{border:1px solid #ffffff35;border-radius:16px;background-color:#004b8f55;background-image:linear-gradient(#ffffff0b 1px,transparent 1px),linear-gradient(90deg,#ffffff0b 1px,transparent 1px);background-size:22px 22px;padding:5px;transform:rotate(-2deg);position:relative}.hero-art svg{display:block;width:100%;height:auto}.hero-art text{fill:#e0f1ff}.hero-art .wire{stroke:#e5f4ff}.hero-art .metal{fill:#3684bb;stroke:#a4d6f9}.hero-art .weld{fill:#ffc354;stroke:#ffe6b5}.hero-art .dim{stroke:#8dd7ff}.hero-art .note{fill:#c1e4ff}
+.menu-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-top:30px;margin-bottom:15px}.menu-heading h2{font-size:22px;margin:0}.menu-heading p{margin:4px 0 0;font-size:14px;color:var(--muted)}.menu-counter{color:var(--blue);background:#ddecf9;font-size:12px;font-weight:700;padding:6px 12px;border-radius:30px;white-space:nowrap}
+.menu{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:17px}
+.mode{grid-column:span 2;text-align:left;padding:0;display:flex;flex-direction:column;align-items:stretch;min-width:0;background:#fff;border:1px solid #caddea;border-radius:17px;box-shadow:var(--shadow);overflow:hidden;position:relative}
+.mode:nth-child(n+4){grid-column:span 3}.mode:hover{transform:translateY(-4px);border-color:#5ca1d8;box-shadow:0 13px 28px #155e9422;background:#fff}
+.mode-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 0}.mode-head .num{color:var(--blue);font-size:11px;font-weight:800;letter-spacing:1.4px;background:#e9f3fc;border-radius:6px;padding:4px 8px}.mode-arrow{font-size:20px;color:var(--blue)}
+.game-preview{height:130px;overflow:hidden;background:linear-gradient(0deg,#f4f9fe 0,#ffffff 100%);margin:0 14px;display:flex;justify-content:center;align-items:center;color:var(--ink)}
+.game-preview>svg{height:125px;width:100%;max-width:290px;display:block}.game-preview.double{gap:4px}.game-preview.double>svg{width:50%;height:108px}.game-preview .note{font-size:13px}.game-preview .wire{stroke:var(--blue-deep)}
+.mode-body{border-top:1px solid #e3edf5;padding:18px 20px 19px;display:flex;flex-direction:column;gap:7px;flex:1}.mode h3{color:var(--blue-deep);font-size:15px;letter-spacing:.2px;font-weight:800}.mode small{display:block;font-size:13px;line-height:1.5;color:var(--muted);font-weight:400;max-width:390px}.mode-cta{display:flex;align-items:center;justify-content:space-between;margin-top:9px;font-size:12px;font-weight:750;color:var(--blue)}.mode-cta span:last-child{font-size:16px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:28px 0 14px}.toolbar small{font-size:12px}.toolbar .eyebrow{background:#dfedfa;border-radius:7px;padding:6px 11px}
+.scene{background-color:#fff;background-image:linear-gradient(#0068b705 1px,transparent 1px),linear-gradient(90deg,#0068b705 1px,transparent 1px);background-size:24px 24px;border:1px solid #c8dceb;border-radius:17px;padding:20px;min-width:0;box-shadow:0 5px 20px #19486b06;margin-bottom:20px}
+.scene>svg{display:block;width:100%;max-height:315px}.scene h3{font-size:15px;color:var(--blue);margin-bottom:8px}.scene p{font-size:16px}.scene small{font-size:12px}
+.choices,.split{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px;margin:20px 0}.split{align-items:center}.scene .split{margin:6px 0}.split>div{min-width:0}.split svg{width:100%;display:block}
+.choice{padding:15px;text-align:left;position:relative;min-width:0;border:2px solid #d0e0ee;background:#fff;box-shadow:0 3px 14px #1c496b04}.choice:hover:not(:disabled){background:#f3f9ff;border-color:#2284cd;transform:translateY(-2px)}.choice svg{width:100%;display:block;height:192px}.choice .letter{display:inline-block;min-width:29px;text-align:center;border-radius:7px;background:#e6f1fb;color:var(--blue);padding:3px 9px;margin-bottom:8px;font-size:13px;font-weight:800}.choice strong{font-size:13px;display:block;margin-top:8px}.choice.correct{border-color:var(--good);background:#edfbf4;box-shadow:0 0 0 2px #0b915813}.choice.correct strong{color:var(--good)}.choice.wrong{border-color:var(--bad);background:#fff1f3}.choice.wrong strong{color:var(--bad)}
+.feedback{border:1px solid #b6dfcb;border-left:5px solid var(--good);background:#f2fbf6;border-radius:14px;padding:23px;margin:24px 0}.feedback.error{border-color:#f0c4cd;border-left-color:var(--bad);background:#fff6f7}.feedback h3{color:var(--good);font-size:20px}.feedback.error h3{color:var(--bad)}.feedback p{max-width:880px}.feedback .compare h3,.feedback>div>div>h3{color:var(--ink);font-size:15px}.feedback svg{max-height:230px;display:block;width:100%}.feedback>.primary{margin-top:12px}
+.pills{display:flex;gap:11px;flex-wrap:wrap;margin:18px 0}.pills button{min-width:110px;font-weight:600}.pills .choice .letter{margin:0 6px 0 0}.pills .choice strong{display:inline;margin-left:4px}
+.builder{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px;background:#fff;border:1px solid var(--line);padding:22px;border-radius:16px;margin:20px 0}.builder label{display:grid;gap:7px;color:#3f6587;font-size:13px;font-weight:650}.builder select{width:100%;color:var(--ink);font-size:15px;background:#f8fbff;border-color:#bfd4e7;min-height:48px}.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+svg{overflow:visible;color:var(--ink)}svg text{font-family:"Segoe UI",Arial,sans-serif;fill:var(--ink);font-size:14px}svg .metal{fill:#d3e0eb;stroke:#68869f;stroke-width:1.5}svg .weld{fill:var(--weld);stroke:#ae6d12;stroke-width:1.4}svg .wire{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round}svg .dim{fill:none;stroke:#1677bc;stroke-width:1.5}svg .note{fill:#56748d;font-size:12px}
+.foot{margin-top:24px;font-size:12px;text-align:center;color:var(--muted);letter-spacing:.2px}details{margin-top:28px;border:1px solid #ccdeec;border-radius:12px;padding:15px 19px;background:#ffffffa8;font-size:14px;color:#3e607d}details p{max-width:1000px}summary{cursor:pointer;font-weight:650;color:var(--blue-deep);font-size:13px}details[open] summary{margin-bottom:16px}#reset{font-size:13px;color:var(--bad);border-color:#e6bdc6}a{color:var(--blue);text-underline-offset:3px}.progress{height:6px;background:#dceaf5;border-radius:6px;overflow:hidden;margin-top:12px}.progress i{display:block;height:100%;background:var(--blue)}#toast{color:var(--bad);font-size:14px}#toast:not(:empty){padding:10px 0}
+@media(max-width:920px){main{padding:22px}.hero{padding:28px}.hero h2{font-size:34px}.hero-art{transform:none}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.stat{padding:13px 14px}.stat b{font-size:21px}.mode h3{font-size:14px}.mode-head{padding:14px 15px 0}.mode-body{padding:16px}.game-preview{margin:0 8px}.game-preview>svg{height:115px}}
+@media(max-width:720px){main{padding:18px 16px 30px}header{gap:12px;padding-bottom:18px}h1{font-size:25px}header small{font-size:11px}#home{padding:9px 12px;font-size:12px}.stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:17px 0}.stat{padding:11px 14px}.stat b{font-size:21px}.stat small{font-size:11px}.hero{grid-template-columns:1fr;padding:26px;gap:20px;border-radius:17px}.hero h2{font-size:33px;max-width:520px}.hero p{font-size:14px;max-width:100%}.hero-art{max-width:380px;width:100%;justify-self:center}.hero-art svg{max-height:180px}.hero-tags span{font-size:10px}.menu-heading{margin-top:26px}.menu-heading h2{font-size:20px}.menu-heading p{font-size:12px}.menu-counter{font-size:10px;padding:5px 9px}.mode,.mode:nth-child(n+4){grid-column:span 3}.mode:last-child{grid-column:span 6}.mode:last-child .game-preview>svg{max-width:270px}.mode h3{font-size:14px}.mode small{font-size:12px}.game-preview{height:110px}.game-preview>svg{height:103px}.game-preview.double>svg{height:90px}.builder{grid-template-columns:1fr 1fr;padding:17px}.split,.compare{grid-template-columns:1fr}.scene{padding:14px}.split{gap:20px}.choice svg{height:164px}h2{font-size:23px}.toolbar{margin-top:23px}.choices{gap:12px}}
+@media(max-width:450px){main{padding:15px 12px 28px}.hero{padding:23px 20px}.hero h2{font-size:30px}.hero-art{max-width:310px}.hero-art svg{max-height:160px}.menu{gap:13px}.mode,.mode:nth-child(n+4){grid-column:span 6}.mode{display:grid;grid-template-columns:105px 1fr;grid-template-rows:auto auto}.mode-head{grid-column:2;grid-row:1;padding:15px 16px 0 0}.game-preview{grid-column:1;grid-row:1/span 2;margin:10px 0 10px 10px;height:100%;align-self:center;background:#f1f7fd;border-radius:10px;min-height:125px}.game-preview>svg{height:auto;width:100%;max-height:135px}.game-preview.double{flex-direction:column;gap:0}.game-preview.double>svg{height:65px;width:100%}.mode-body{grid-column:2;grid-row:2;border:0;padding:10px 16px 15px 12px}.mode h3{font-size:13px}.mode small{font-size:12px}.mode-cta{font-size:11px;margin-top:3px}.menu-counter{display:none}.menu-heading p{max-width:270px}.builder,.choices{grid-template-columns:1fr}.choice svg{height:185px}.feedback{padding:18px}.pills{gap:9px}.pills button{flex:1;min-width:120px}.pills .choice{padding:13px}.stat small{letter-spacing:0}.hero-tags{gap:6px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
+
+.drawing-note{font-size:13px;color:var(--muted);line-height:1.5;margin:8px 0}.symbol-palette{display:flex;gap:8px;flex-wrap:wrap}.symbol-palette button{padding:7px;width:88px;display:grid;justify-items:center;gap:4px;font-size:12px}.symbol-palette button span{white-space:nowrap}.symbol-palette svg{height:52px;width:100%}.symbol-palette button[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft)}
+
+.work-order{margin:0 0 24px;background:#f6faff;border:1px solid #c7ddec;border-left:4px solid var(--blue);border-radius:12px;padding:20px}.os-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}.os-head h3{margin:6px 0 0;color:var(--blue-deep);font-size:17px}.os-head .eyebrow{font-size:10px;letter-spacing:1.2px}.os-status{flex-shrink:0;font-size:11px;font-weight:650;background:#e3effb;color:var(--blue-deep);padding:5px 9px;border-radius:6px}.os-data{display:grid;grid-template-columns:1.2fr 1fr 1.2fr;gap:14px;padding:14px 0;margin:12px 0;border-top:1px solid #dbe7f2;border-bottom:1px solid #dbe7f2}.os-data dt{font-size:11px;color:var(--muted);margin-bottom:3px}.os-data dd{font-size:13px;font-weight:600;margin:0;overflow-wrap:anywhere}.os-description h4{font-size:12px;letter-spacing:.2px;color:var(--blue);margin:0 0 5px}.os-description p{font-size:14px;line-height:1.55;margin:0;max-width:1000px}.os-specs h3{font-size:15px}.os-specs ul{padding-left:19px;margin:10px 0 16px}.os-specs li{font-size:14px;line-height:1.55;margin:0 0 10px}.os-specs .os-instruction{font-size:13px;font-weight:600;color:var(--blue);border-top:1px solid var(--line);padding-top:12px;margin-bottom:0}@media(max-width:720px){.os-head{flex-direction:column;gap:8px}.os-data{grid-template-columns:1fr;gap:10px}.work-order{padding:15px}.os-description p{font-size:14px}.os-head h3{font-size:16px}}
+.level-progress{grid-column:1/-1;padding:16px 20px;background:#fff;border:1px solid var(--line);border-radius:14px;min-width:0}
+.level-progress-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.level-progress-head>div{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 10px}
+.level-progress-head small{font-size:12px;color:var(--muted)}
+.level-progress-head strong{font-size:14px;color:var(--blue-deep)}
+.level-progress-head>span{font-size:12px;color:var(--blue);text-align:right}
+.level-progress .progress{margin-top:10px;height:7px}
+details.level-trail{border:0;border-top:1px solid #e4edf5;border-radius:0;padding:10px 0 0;margin:12px 0 0;background:transparent}
+.level-trail summary{font-size:12px}
+.rank-grid{list-style:none;padding:0;margin:12px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.rank-grid li{display:flex;gap:10px;align-items:center;padding:12px;border-radius:9px;border:1px solid var(--line);background:#f7fafd;min-width:0}
+.rank-grid li.rank-current{border-color:var(--blue);background:var(--blue-soft)}
+.rank-grid li.rank-done{background:#f2fbf6;border-color:#c8e8d7}
+.rank-number{color:var(--blue);font-size:13px;font-weight:750;flex-shrink:0}
+.rank-grid b{font-size:12px;color:var(--ink);font-weight:650;display:block}
+.rank-grid small{font-size:11px;display:block;margin-top:2px}
+.rank-mark{margin-left:auto;font-size:13px;color:var(--blue)}
+.rank-done .rank-mark{color:var(--good)}
+.promotion{padding:12px 15px;background:#e3f1fd;border:1px solid #b1d5ef;color:var(--blue-deep);border-radius:10px;margin-bottom:15px;font-weight:650}
+@media(max-width:720px){.rank-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.level-progress{padding:13px 14px}.level-progress-head{align-items:flex-start}.level-progress-head>div{display:grid;gap:3px}}
+@media(max-width:450px){.rank-grid{grid-template-columns:1fr}.level-progress-head>span{max-width:120px}.stat b{overflow-wrap:anywhere}}
+
+
+.max-preview-banner{display:flex;justify-content:space-between;align-items:center;gap:18px;background:#e2f1ff;border:1px solid #a4cde9;border-left:4px solid var(--blue);border-radius:12px;padding:16px 20px;margin-top:22px}.max-preview-banner strong{font-size:13px;color:var(--blue-deep)}.max-preview-banner p{font-size:13px;color:var(--muted);margin:5px 0 0}.max-preview-banner button{font-size:12px;flex-shrink:0}.preview-max-button{font-size:13px;margin-top:14px;color:var(--blue);font-weight:650}@media(max-width:720px){.max-preview-banner{align-items:flex-start;flex-direction:column;padding:15px}.max-preview-banner button{width:100%}}
+.position-key{display:flex;gap:9px 20px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-bottom:18px}.position-key b{color:var(--blue)}
+.position-target{display:flex;align-items:center;gap:17px;padding:13px 18px;background:#e9f3fc;border-radius:10px;color:var(--blue-deep);margin-bottom:16px}.position-target>strong{font-size:30px;font-weight:800;flex-shrink:0}.position-target b{font-size:16px}.position-target small{display:block;margin-top:3px;color:var(--muted);font-size:12px}.position-target>span{font-size:14px}
+#position-model svg{display:block;width:100%;max-height:320px}
+.position-answer-code{font-size:23px;color:var(--blue-deep);display:block!important;margin:3px 0!important}.position-answer-meaning{display:block;font-weight:650;font-size:15px;margin:6px 0}.position-iso{display:block;font-size:12px;color:var(--blue);margin-top:4px}
+.position-reference{background:#fff;margin:18px 0;padding:15px 18px}.position-reference summary{font-size:13px}.position-note{font-size:13px!important;line-height:1.5;color:var(--muted)}
+.position-table{width:100%;border-collapse:collapse;margin:12px 0;font-size:13px;table-layout:fixed}.position-table caption{text-align:left;font-weight:650;color:var(--blue-deep);padding-bottom:8px}.position-table th,.position-table td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}.position-table thead th{background:var(--blue-soft);font-size:12px;color:var(--blue-deep)}.position-table th:first-child{width:23%}.position-table th:nth-child(2){width:21%}.position-table tbody th{color:var(--blue);font-weight:650}
+svg .travel-indicator path{fill:none;stroke:var(--good);stroke-width:3;stroke-linecap:round;stroke-linejoin:round}svg .travel-indicator text{fill:var(--good);font-size:11px;font-weight:650}
+@media(max-width:450px){.position-key{font-size:12px;gap:6px 12px}.position-target{padding:12px;gap:12px}.position-target>strong{font-size:26px}.position-target b{font-size:14px}.position-table th,.position-table td{padding:8px 5px;font-size:12px}.position-reference{padding:13px}}
+
+.added-symbol-section{margin-top:24px}.added-symbol-callout{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px;border:1px solid #b8d6ec;border-radius:14px;background:#e6f2fd}.added-symbol-callout h3{font-size:18px;color:var(--blue-deep);margin-top:5px}.added-symbol-callout p{font-size:13px;color:var(--muted);max-width:670px;margin-bottom:0}.added-symbol-callout button{flex-shrink:0;font-size:13px}
+.added-symbol-library{margin-top:13px;background:#fff}.added-symbol-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:18px}.added-symbol-grid button{display:grid;justify-items:center;align-content:start;gap:5px;padding:14px;min-width:0;background:#f8fbff}.added-symbol-grid svg{width:100%;height:76px}.added-symbol-grid b{font-size:14px}.added-symbol-grid small{font-size:11px;color:var(--muted)}.added-symbol-grid button[aria-pressed="true"]{background:#e4f0fb;border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.symbol-study{border-top:1px solid var(--line);margin-top:22px;padding-top:20px}.symbol-study>p{font-size:14px;max-width:900px}.symbol-study h3{color:var(--blue-deep);font-size:18px}.symbol-study h4{font-size:13px;margin:0;color:var(--blue)}.symbol-study svg{width:100%;max-height:280px}.symbol-study>.split{align-items:start}.new-symbol-focus{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;background:#e6f1fb;border-radius:9px;margin:16px 0;font-size:13px}.new-symbol-focus button{font-size:12px;padding:7px 11px}.symbol-palette button{width:98px}.symbol-palette button span{white-space:normal;line-height:1.3;text-align:center}
+@media(max-width:720px){.added-symbol-callout{align-items:flex-start;flex-direction:column;padding:17px}.added-symbol-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.added-symbol-callout h3{font-size:16px}}@media(max-width:400px){.added-symbol-grid{gap:8px}.added-symbol-grid button{padding:10px}.added-symbol-grid b{font-size:12px}}
+
+
+.choices .choice svg{height:270px}.choices .choice svg text{font-size:16px}.choices .choice svg .note{font-size:14px}@media(max-width:720px){.choices .choice svg{height:235px}}@media(max-width:450px){.choices .choice svg{height:270px}}
+</style>
+</head>
+<body>
+<main><header><div><h1>TREINAMENTO VISUAL DE SOLDAGEM</h1></div><button id="home" type="button">⌂ Modos</button></header><div id="preview-notice" aria-live="polite"></div><div id="stats" class="stats"></div><section id="app"></section><div id="toast" role="status"></div><details><summary>Convenções, pontuação e referências</summary><p>Convenção usada: AWS A2.4, linha de referência única; abaixo = lado da seta, acima = lado oposto. Dimensões em milímetros. Desenhos originais, esquemáticos e sem escala. F = filete; G = solda em chanfro/topo. As posições representam chapas e a orientação em relação à gravidade.</p><p>+20 XP por acerto, com bônus de sequência de até +20. São 12 níveis, de Aprendiz (0 XP) até Referência Técnica (14.500 XP). Consulte a trilha acima para ver todas as faixas. A dificuldade sobe conforme os acertos em cada modo. Erros geram uma questão de reforço sobre o mesmo elemento.</p><p>O triângulo indica filete, não o tipo de junta. A garganta teórica de um filete de pernas iguais a 90° é aproximadamente 0,707 × perna. Face da raiz e ângulo individual de bisel são cotados no detalhe da junta; não possuem um símbolo básico próprio. Passo é a distância entre centros dos trechos.</p><p>Backing (material de apoio) aparece como retângulo; solda de apoio/reverso usa semicírculo aberto; melt-through usa semicírculo preenchido e requer penetração com reforço visível no reverso. Não confundir tamanho efetivo E com profundidade de preparação S em S(E).</p><p>Referências: <a href="https://app.aws.org/mwf/attachments/64/225364/AWSWeldSymbolchart.pdf" target="_blank" rel="noopener">quadro AWS A2.4</a> · <a href="https://contenthub.itwwelding.com/api/public/content/miller-electric-mfg-llc/how-to-guide/52bb4e-welding-symbol-chart.pdf" target="_blank" rel="noopener">Quadro de símbolos AWS/Miller</a> · <a href="https://www.millerwelds.com/-/media/miller-electric/import/posters/file/welding-positions-poster-261666.pdf" target="_blank" rel="noopener">posições — Miller</a> · <a href="https://weldcalc.ssab.com/sisStandards/ISO%206947.pdf" target="_blank" rel="noopener">ISO 6947 — posições e sentidos de avanço</a>. Os símbolos de aresta e canto flangeados da biblioteca são identificados como referências de desenhos legados. Terminologia de estudo; para fabricação, siga a norma e o desenho aplicáveis.</p><button id="reset">Apagar meu progresso</button></details><p class="foot">100% local · funciona sem internet · progresso salvo neste navegador</p></main>
+<script>
+
+'use strict';
+const $=s=>document.querySelector(s), app=$('#app');
+const KEY='moto-work-v1';
+if('scrollRestoration' in history)history.scrollRestoration='manual';
+let state={xp:0,total:0,right:0,streak:0,master:{},seen:{}},storage=true;
+try{const saved=JSON.parse(localStorage.getItem(KEY));if(saved&&typeof saved.xp==='number'&&saved.master&&saved.seen)state={...state,...saved};}catch(e){storage=false;}
+let mode=0,q=null,locked=false,retry=null,detect=null,lastId='',serial=0;
+const names=['','MATCH VISUAL','DETETIVE DO DESENHO','MONTE O SÍMBOLO','FISCAL DE FABRICAÇÃO','DESAFIO 3D DE POSIÇÕES'];
+const levels=['Aprendiz','Operador','Técnico','Profissional','Especialista','Especialista Avançado','Analista de Desenhos','Inspetor de Simbologia','Mestre de Simbologia','Mestre em Manutenção','Mentor Técnico','Referência Técnica'];
+const thresholds=[0,200,600,1200,2000,3000,4200,5600,7200,9000,11500,14500];
+let previewActive=false,personalProgress=null,maxPreviewFirst=false;
+const maxPreviewRequested=typeof location!=='undefined'&&new URLSearchParams(location.search).get('nivel')==='maximo';
+function enterMaxPreview(){
+  if(!previewActive){
+    personalProgress={...state,master:{...state.master},seen:{...state.seen}};
+    state={...state,xp:thresholds[thresholds.length-1],total:0,right:0,streak:0,master:{1:44,2:44,3:44,4:44,5:44},seen:{}};
+    previewActive=true;
+  }
+  maxPreviewFirst=true;stats();start(3);
+}
+function exitMaxPreview(){
+  if(!previewActive)return;
+  state=personalProgress;
+  try{const latest=JSON.parse(localStorage.getItem(KEY));if(latest&&typeof latest.xp==='number'&&latest.master&&latest.seen)state={...state,...latest};}catch(e){}
+  personalProgress=null;previewActive=false;maxPreviewFirst=false;
+  if(typeof location!=='undefined')try{const url=new URL(location.href);url.searchParams.delete('nivel');history.replaceState(null,'',url.href);}catch(e){}
+  menu();
+}
+function renderPreviewNotice(){
+  $('#preview-notice').innerHTML=previewActive?'<div class="max-preview-banner"><div><strong>PRÉVIA · NÍVEL 12 — REFERÊNCIA TÉCNICA</strong><p>14.500 XP demonstrativos · dificuldade máxima. As respostas desta prévia não alteram seu progresso salvo.</p></div><button type="button" id="exit-preview">Voltar ao meu progresso</button></div>':'';
+  const back=$('#exit-preview');if(back)back.onclick=exitMaxPreview;
+  $('#reset').disabled=previewActive;
+}
+
+function levelIndex(xp=state.xp){let i=0;while(i+1<thresholds.length&&xp>=thresholds[i+1])i++;return i;}
+function stats(){
+  const current=levelIndex(),last=current===levels.length-1,next=thresholds[current+1];
+  const percent=last?100:Math.max(0,Math.min(100,100*(state.xp-thresholds[current])/(next-thresholds[current])));
+  $('#stats').innerHTML=`<div class="stat"><small>Nível ${current+1} de ${levels.length}</small><b>${levels[current]}</b></div><div class="stat"><small>XP acumulado</small><b>${state.xp}</b></div><div class="stat"><small>Sequência</small><b>${state.streak} 🔥</b></div><div class="stat"><small>Desempenho · ${state.total} respostas</small><b>${state.total?Math.round(100*state.right/state.total)+'%':'—'}</b></div><section class="level-progress" aria-label="Progressão de níveis"><div class="level-progress-head"><div><small>${last?'Trilha concluída':'Próximo nível · '+(current+2)}</small><strong>${last?'Referência Técnica':levels[current+1]}</strong></div><span>${last?(previewActive?'Nível máximo em demonstração':'Maior nível alcançado'):(next-state.xp)+' XP para avançar'}</span></div><div class="progress" role="progressbar" aria-label="Progresso até o próximo nível" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(percent)}"><i style="width:${percent.toFixed(2)}%"></i></div><details class="level-trail"><summary>Conhecer os ${levels.length} níveis</summary><ol class="rank-grid">${levels.map((name,i)=>`<li class="${i===current?'rank-current':i<current?'rank-done':'rank-locked'}"${i===current?' aria-current="step"':''}><span class="rank-number">${String(i+1).padStart(2,'0')}</span><span><b>${name}</b><small>${thresholds[i].toLocaleString('pt-BR')} XP · ${i===current?'nível atual':i<current?'alcançado':'a conquistar'}</small></span><span class="rank-mark" aria-hidden="true">${i<current?'✓':i===current?'●':'○'}</span></li>`).join('')}</ol><button type="button" class="preview-max-button" id="preview-max-button">Experimentar o nível máximo</button></details></section>`;
+  renderPreviewNotice();
+  const previewButton=$('#preview-max-button');if(previewButton)previewButton.onclick=enterMaxPreview;
+  if(!storage)$('#toast').textContent='Armazenamento indisponível: o progresso dura enquanto esta página estiver aberta.';
+}
+
+const pick=a=>a[Math.floor(Math.random()*a.length)];function shuffle(a){const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;}
+const line=(d,c='wire')=>`<path class="${c}" d="${d}"/>`,txt=(x,y,t,c='')=>`<text x="${x}" y="${y}" class="${c}">${t}</text>`;
+function svg(content,label='Desenho técnico',box='0 0 440 240'){return `<svg viewBox="${box}" role="img" aria-label="${label}">${content}</svg>`;}
+function save(){try{if(!previewActive)localStorage.setItem(KEY,JSON.stringify(state));}catch(e){storage=false;}stats();}
+const grooveNames=['Reto','V','X','Bisel','K','U','Duplo U','J','Duplo J'];
+const addedWeldTypes=['V flangeado','Bisel flangeado','Aresta flangeada','Canto flangeado','Tampão','Ponto','Costura','Reverso','Revestimento'];
+const addedWeldInfo={
+  'V flangeado':{name:'V flangeado',aliases:['Flare-V'],definition:'Solda no encontro de duas superfícies convexas. As curvas do símbolo representam a geometria das peças, não uma preparação em U.',dimensionLabel:'Tamanho efetivo E',sideRule:'seta'},
+  'Bisel flangeado':{name:'½ V flangeado',aliases:['Bisel flangeado','Flare-bevel'],definition:'Solda entre uma superfície convexa e outra plana. O símbolo tem uma linha reta e uma curva; não deve ser confundido com a preparação em J.',dimensionLabel:'Tamanho efetivo E',sideRule:'seta'},
+  'Aresta flangeada':{name:'Aresta flangeada',aliases:['Flange-edge'],definition:'Indicação de união de duas bordas flangeadas, presente em referências e desenhos legados. Compare o detalhe das chapas dobradas antes de interpretar a solda.',dimensionLabel:'Dimensão da solda de aresta',sideRule:'seta',legacy:true},
+  'Canto flangeado':{name:'Canto flangeado',aliases:['Flange-corner'],definition:'Indicação de união entre uma borda flangeada e outra reta, encontrada em desenhos legados. Não é o símbolo de chanfro de meio V flangeado.',dimensionLabel:'Dimensão da solda de aresta',sideRule:'seta',legacy:true},
+  'Tampão':{name:'Solda tampão',aliases:['Plug weld'],definition:'O metal preenche um furo na chapa superior para ligá-la à chapa sobreposta. O retângulo também pode representar rasgo; o detalhe circular deste exercício define tampão.',dimensionLabel:'Diâmetro do furo',sideRule:'seta'},
+  'Ponto':{name:'Solda a ponto',aliases:['Spot weld'],definition:'Regiões discretas de fusão unem as chapas na interface, sem um furo preenchido. Neste exemplo de resistência, o círculo fica centrado na linha e não distingue lado.',dimensionLabel:'Diâmetro da região fundida',sideRule:'neutro'},
+  'Costura':{name:'Solda por costura',aliases:['Seam weld'],definition:'Uma faixa contínua de fusão une as chapas. O círculo com duas linhas paralelas distingue costura de ponto; a linha de referência passa pelo centro neste exemplo.',dimensionLabel:'Largura da solda',sideRule:'neutro'},
+  'Reverso':{name:'Solda no reverso',aliases:['Back weld'],definition:'Um passe é executado no lado oposto após a solda principal. O semicírculo aberto também pode indicar solda de apoio; a sequência informada distingue o reverso de outras aplicações.',dimensionLabel:'Sem dimensão neste exemplo',sideRule:'seta'},
+  'Revestimento':{name:'Solda de revestimento',aliases:['Surfacing'],definition:'O metal de adição forma uma camada sobre uma superfície. A indicação não solicita a união de duas peças e usa o símbolo abaixo da linha de referência.',dimensionLabel:'Espessura adicionada',sideRule:'seta'}
+};
+const allWeldFamilies=['Filete',...grooveNames,...addedWeldTypes];
+let newSymbolFocus=null;
+function addedGlyph(type){
+  const paths={
+    'V flangeado':'M18 0 Q18 30 -12 30 M24 0 Q24 30 54 30',
+    'Bisel flangeado':'M0 0 V34 M8 0 Q8 30 40 30',
+    'Aresta flangeada':'M12 0 V16 Q12 32 0 38 M24 0 V16 Q24 32 36 38',
+    'Canto flangeado':'M0 0 V38 M12 0 V16 Q12 32 36 38',
+    'Tampão':'M0 0 H36 V26 H0 Z',
+    'Ponto':'M36 0 A18 18 0 1 1 0 0 A18 18 0 1 1 36 0',
+    'Costura':'M36 0 A18 18 0 1 1 0 0 A18 18 0 1 1 36 0 M-7 -9 H43 M-7 9 H43',
+    'Reverso':'M0 0 A18 18 0 0 0 36 0',
+    'Revestimento':'M0 0 A15 15 0 0 0 30 0 A15 15 0 0 0 60 0'
+  };
+  return paths[type]?line(paths[type]):null;
+}
+function addedSymbol(c){
+  const type=c.type;if(!addedWeldTypes.includes(type))return null;
+  const meta=addedWeldInfo[type],center=meta.sideRule==='neutro';
+  const sign=c.side==='oposto'?-1:1;
+  let s=line('M42 192 L104 130 H375 M42 192 l5 -18 M42 192 l18 -5');
+  if(type==='Reverso'){
+    s+=`<g transform="translate(217 130)">${line('M0 30 L18 0 L36 30')}</g><g transform="translate(217 130) scale(1 -1)">${addedGlyph(type)}</g>`;
+    s+=txt(24,241,'Semicírculo: executar após a solda principal','note');
+  }else{
+    s+=`<g transform="translate(217 130) scale(1 ${center?1:sign})">${addedGlyph(type)}</g>`;
+    if(c.size!==undefined&&c.size!=='')s+=txt(151,center?162:sign>0?155:114,['V flangeado','Bisel flangeado'].includes(type)?'('+c.size+')':c.size);
+  }
+  if(c.field)s+=line('M104 130 V63 L132 75 L104 86');
+  if(c.all)s+='<circle cx="104" cy="130" r="9" class="wire"/>';
+  if(c.count)s+=txt(223,center?185:sign>0?183:78,'('+c.count+')');
+  if(c.contour){const cy=130+sign*57;s+=line(c.contour==='Plano'?`M217 ${cy} h38`:c.contour==='Convexo'?`M217 ${cy} Q236 ${cy+sign*14} 255 ${cy}`:`M217 ${cy+sign*8} Q236 ${cy-sign*8} 255 ${cy+sign*8}`);if(c.finish)s+=txt(228,cy+sign*23,c.finish);}
+  if(c.tail)s+=line('M375 130 l30 -18 M375 130 l30 18')+txt(326,85,c.tail);
+  if(meta.legacy)s+=txt(24,241,'Símbolo de desenho legado · bordas flangeadas','note');
+  if(type==='Tampão')s+=txt(24,241,'Detalhe: furo circular na chapa superior','note');
+  return svg(s,'Indicação de soldagem com símbolo básico e linha de referência','0 0 440 260');
+}
+function trainAddedSymbols(type=null){newSymbolFocus=type||'all-new';mode=1;detect=null;retry=null;next();}
+function addedSymbolLibrary(){
+  return `<section class="added-symbol-section"><div class="added-symbol-callout"><div><span class="eyebrow">Conteúdo ampliado</span><h3>9 famílias para ampliar sua leitura do desenho</h3><p>Chanfros entre superfícies curvas, tampão, ponto, costura, reverso, revestimento e arestas de desenhos legados.</p></div><button type="button" class="primary" id="train-added-all">Praticar novos símbolos</button></div><details class="added-symbol-library"><summary>Explorar símbolos, significados e soldas executadas</summary><div class="added-symbol-grid">${addedWeldTypes.map(type=>`<button type="button" data-symbol-study="${type}" aria-pressed="${type==='Tampão'}">${svg(`<g transform="translate(25 48)">${addedGlyph(type)}</g>`,addedWeldInfo[type].name,'0 0 110 104')}<b>${addedWeldInfo[type].name}</b><small>${addedWeldInfo[type].legacy?'Desenho legado':addedWeldInfo[type].aliases[0]}</small></button>`).join('')}</div><div id="symbol-study-panel"></div></details></section>`;
+}
+function showAddedSymbolStudy(type){
+  const d=addedWeldInfo[type],c={type,side:d.sideRule==='neutro'?'neutro':'seta',...(type==='Reverso'?{}:{size:6})};
+  $('#symbol-study-panel').innerHTML=`<div class="symbol-study"><h3>${d.name}${d.legacy?' · referência de desenho legado':''}</h3><p>${d.definition}</p><div class="split"><div><h4>Indicação de soldagem</h4>${symbol(c)}</div><div><h4>Representação da execução</h4>${cut(c)}</div></div><button type="button" class="primary" id="train-added-one">Treinar este símbolo</button></div>`;
+  app.querySelectorAll('[data-symbol-study]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.symbolStudy===type)));
+  $('#train-added-one').onclick=()=>trainAddedSymbols(type);
+}
+function attachAddedSymbolLibrary(){
+  app.insertAdjacentHTML('beforeend',addedSymbolLibrary());
+  $('#train-added-all').onclick=()=>trainAddedSymbols();
+  app.querySelectorAll('[data-symbol-study]').forEach(b=>b.onclick=()=>showAddedSymbolStudy(b.dataset.symbolStudy));
+  showAddedSymbolStudy('Tampão');
+}
+function installAddedWeldCases(){
+  for(const type of addedWeldTypes){
+    const others=shuffle(addedWeldTypes.filter(t=>t!==type)).slice(0,3);
+    add('adicionado-tipo-'+type,0,'Qual execução corresponde ao símbolo?',()=>symbol({type}),type,[type,...others],addedWeldInfo[type].definition,'cut');
+    Object.assign(bank[bank.length-1],{added:true,targetType:type});
+    if(type==='Reverso')continue;
+    for(const size of [4,6,8]){
+      const c={type,size,side:addedWeldInfo[type].sideRule==='neutro'?'neutro':'seta'};
+      pairCase('adicionado-'+type+'-'+size,0,c,[{...c,size:size+2},{type:others[0],size,side:'seta'},{type:others[1],size,side:'seta'}],`${addedWeldInfo[type].definition} A dimensão solicitada neste exemplo é ${size} mm.`);
+      Object.assign(bank[bank.length-1],{added:true,targetType:type});
+    }
+  }
+  pairCase('reverso-apoiometal-melt',0,{type:'Reverso'},[{type:'V',backing:true},{type:'V',melt:true},{type:'V'}],'O semicírculo aberto, com execução após a solda principal, indica solda no reverso. O retângulo é apoio em barra; o semicírculo preenchido é melt-through.');
+  Object.assign(bank[bank.length-1],{added:true,targetType:'Reverso'});
+}
+
+function specialWeldCut(c={}){
+  const supported=['V flangeado','Bisel flangeado','Aresta flangeada','Canto flangeado','Tampão','Ponto','Costura','Reverso','Revestimento'];
+  if(!supported.includes(c.type))return null;
+  const shape=(d,cls='metal')=>`<path class="${cls}" d="${d}"/>`;
+  const arrow=(x,y,fromX=355,fromY=34)=>line(`M${fromX} ${fromY} L${x} ${y} M${x} ${y} l17 -4 M${x} ${y} l5 -16`,'dim')+txt(fromX-24,fromY-10,'seta','note');
+  const mirror=content=>`<g transform="translate(0 230) scale(1 -1)">${content}</g>`;
+  const dimensionNames={'V flangeado':'E','Bisel flangeado':'E','Aresta flangeada':'dimensão','Canto flangeado':'dimensão',Tampão:'Ø do furo',Ponto:'Ø da região fundida',Costura:'largura',Reverso:'dimensão',Revestimento:'espessura adicionada'};
+  let s='',height=270,label='Corte esquemático da união e do metal de adição';
+  if(c.type==='V flangeado'){
+    const base='<circle class="metal" cx="145" cy="115" r="70"/><circle class="metal" cx="285" cy="115" r="70"/>';
+    const weld=shape('M194 65 H236 Q215 80 215 115 Q215 80 194 65 Z','weld');
+    s+=txt(28,22,'CORTE TRANSVERSAL','note')+base+(c.side==='oposto'?mirror(weld):weld)+(c.side==='ambos'?mirror(weld):'')+arrow(217,77);
+    label='Duas seções arredondadas adjacentes, com metal de adição preenchendo o encontro das superfícies convexas';
+  }else if(c.type==='Bisel flangeado'){
+    const base='<circle class="metal" cx="160" cy="115" r="65"/>'+shape('M225 35 H252 V195 H225 Z');
+    const weld=shape('M202 65 H225 V115 Q225 85 202 65 Z','weld');
+    s+=txt(28,22,'CORTE TRANSVERSAL','note')+base+(c.side==='oposto'?mirror(weld):weld)+(c.side==='ambos'?mirror(weld):'')+arrow(221,78);
+    label='Uma seção arredondada junto à face plana de uma chapa, com metal de adição no encontro';
+  }else if(c.type==='Aresta flangeada'||c.type==='Canto flangeado'){
+    const left=shape('M40 162 H159 Q193 162 193 128 V60 H205 V128 Q205 174 159 174 H40 Z');
+    const right=c.type==='Aresta flangeada'?shape('M390 162 H271 Q237 162 237 128 V60 H225 V128 Q225 174 271 174 H390 Z'):shape('M225 60 H237 V184 H225 Z');
+    const weld=shape('M193 60 Q215 39 237 60 L225 69 H205 Z','weld');
+    const content=left+right+weld;
+    s+=txt(28,22,'CORTE TRANSVERSAL','note')+(c.side==='oposto'?mirror(content):content)+arrow(216,63);
+    label=c.type==='Aresta flangeada'?'Duas bordas de chapas dobradas para a mesma direção e unidas nas extremidades':'Uma borda dobrada e uma borda reta de chapas adjacentes, unidas nas extremidades';
+  }else if(c.type==='Tampão'){
+    let section=shape('M45 116 H395 V148 H45 Z')+shape('M45 84 H198 L207 116 H45 Z M242 84 H395 V116 H233 Z')+shape('M198 84 H242 L233 116 Q220 127 207 116 Z','weld');
+    s+=txt(28,22,'CORTE PELO CENTRO','note')+(c.side==='oposto'?mirror(section):section)+arrow(221,88);
+    s+=txt(28,208,'VISTA SUPERIOR','note')+shape('M60 220 H380 V294 H60 Z');
+    const count=Math.max(1,Math.min(5,Math.round(+c.count||3)));
+    for(let i=0;i<count;i++)s+=`<circle class="weld" cx="${count===1?220:95+i*250/(count-1)}" cy="257" r="16"/>`;
+    height=340;label='Chapas sobrepostas com furo atravessando a chapa superior e preenchido por metal de adição, com vista superior';
+  }else if(c.type==='Ponto'){
+    let section=shape('M45 85 H395 V115 H45 Z M45 115 H395 V145 H45 Z')+'<ellipse class="weld" cx="220" cy="115" rx="24" ry="14"/>';
+    s+=txt(28,22,'CORTE PELO CENTRO','note')+section+arrow(220,108);
+    s+=txt(28,208,'VISTA SUPERIOR · FUSÃO INTERNA','note')+shape('M60 220 H380 V294 H60 Z');
+    const count=Math.max(1,Math.min(5,Math.round(+c.count||3)));
+    for(let i=0;i<count;i++)s+=`<circle cx="${count===1?220:95+i*250/(count-1)}" cy="257" r="13" fill="var(--weld)" fill-opacity=".58" stroke="var(--blue)" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+    height=340;label='Duas chapas sobrepostas, sem furo, unidas por regiões circulares discretas de fusão na interface';
+  }else if(c.type==='Costura'){
+    let section=shape('M45 85 H395 V115 H45 Z M45 115 H395 V145 H45 Z')+'<ellipse class="weld" cx="220" cy="115" rx="24" ry="14"/>';
+    s+=txt(28,22,'CORTE TRANSVERSAL','note')+section+arrow(220,108);
+    s+=txt(28,208,'VISTA SUPERIOR · FUSÃO INTERNA','note')+shape('M60 220 H380 V294 H60 Z');
+    s+=`<path d="M85 247 H355 V267 H85 Z" fill="var(--weld)" fill-opacity=".65" stroke="var(--blue)" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+    if(c.length)s+=txt(260,315,'L = '+c.length+' mm');
+    height=340;label='Duas chapas sobrepostas unidas por uma faixa contínua de fusão ao longo da junta, com vista superior';
+  }else if(c.type==='Reverso'){
+    const plates=shape('M40 65 H169 L205 146 V165 H40 Z M390 65 H261 L225 146 V165 H390 Z');
+    const main=shape('M169 65 H261 L225 146 V165 H205 V146 Z','weld');
+    const back=shape('M193 165 Q215 191 237 165 Q215 156 193 165 Z','weld');
+    const content=plates+main+back;
+    s+=txt(28,22,'CORTE · PASSES INDICADOS POR 1 E 2','note')+(c.side==='oposto'?mirror(content):content)+txt(206,c.side==='oposto'?145:98,'1')+txt(245,c.side==='oposto'?48:190,'2')+arrow(218,177,355,208);
+    label='Junta em chanfro com solda principal e um passe adicional no lado oposto da raiz, sem barra de apoio';
+  }else if(c.type==='Revestimento'){
+    s+=txt(28,22,'CORTE TRANSVERSAL','note')+shape('M45 120 H395 V157 H45 Z');
+    s+=shape('M45 120 V105 Q65 91 85 105 Q105 91 125 105 Q145 91 165 105 Q185 91 205 105 Q225 91 245 105 Q265 91 285 105 Q305 91 325 105 Q345 91 365 105 Q380 95 395 105 V120 Z','weld')+arrow(260,106);
+    s+=txt(28,208,'VISTA SUPERIOR','note')+shape('M60 220 H380 V294 H60 Z');
+    for(let y=230;y<290;y+=15)s+=shape(`M70 ${y} Q85 ${y-3} 100 ${y} H370 V${y+11} H70 Z`,'weld');
+    height=340;label='Uma única chapa com camada de metal adicionado sobre sua superfície, sem ligação entre duas peças';
+  }
+  if(c.type!=='Reverso'&&c.size!==undefined&&c.size!=='')s+=txt(28,height-13,(c.designation||dimensionNames[c.type])+' = '+c.size+' mm');
+  if(c.type!=='Reverso'&&c.size!==undefined&&c.size!=='')label+='; '+(c.designation||dimensionNames[c.type])+' '+c.size+' milímetros';
+  const result=svg(s,label,`0 0 440 ${height}`);
+  return result+(c.execution?`<div class="drawing-note">${c.field?'Em campo':'Em oficina'} · ${c.finish?'Método '+c.finish:'Sem método indicado'}</div>`:'');
+}
+
+const specialWeldDefaults={
+  'V flangeado':{dimensionLabel:'Tamanho efetivo E',definition:'União entre duas superfícies curvas convexas.',joint:'Superfícies curvas',sideRule:'selectable',sizes:[3,4,5,6],asset:'Guia de transferência · GT-214',part:'Ligação entre perfis conformados'},
+  'Bisel flangeado':{dimensionLabel:'Tamanho efetivo E',definition:'União entre uma superfície curva convexa e uma superfície plana.',joint:'Curva/plano',sideRule:'selectable',sizes:[3,4,5,6],asset:'Transportador de peças · TP-202',part:'Fixação de perfil conformado à chapa-base'},
+  'Aresta flangeada':{dimensionLabel:'Tamanho da solda de aresta',definition:'União de duas bordas flangeadas, representada por símbolo de desenho legado.',joint:'Borda',sideRule:'seta',sizes:[2,3,4],legacy:true,asset:'Calha de transferência · CT-118',part:'União das bordas de fechamento'},
+  'Canto flangeado':{dimensionLabel:'Tamanho da solda de aresta',definition:'União de uma borda flangeada com outra peça, representada por símbolo de desenho legado.',joint:'Canto',sideRule:'seta',sizes:[2,3,4],legacy:true,asset:'Caixa de proteção · CP-106',part:'União do fechamento lateral'},
+  'Tampão':{dimensionLabel:'Diâmetro do furo',definition:'Preenchimento de um furo para unir duas peças sobrepostas.',joint:'Sobreposta',sideRule:'selectable',sizes:[6,8,10],asset:'Suporte de guia · SG-306',part:'Ligação da chapa de reposição'},
+  'Ponto':{dimensionLabel:'Diâmetro do ponto',definition:'Ligação localizada por um ponto de solda, sem furo de tampão.',joint:'Sobreposta',sideRule:'neutro',sizes:[4,6,8],asset:'Painel de fechamento · PF-302',part:'Ligação das chapas de fechamento'},
+  'Costura':{dimensionLabel:'Largura da costura',definition:'Ligação por uma faixa de solda, distinta de pontos isolados.',joint:'Sobreposta',sideRule:'neutro',sizes:[3,4,5],asset:'Calha de alimentação · CA-410',part:'Ligação longitudinal das chapas'},
+  'Reverso':{dimensionLabel:'',definition:'Solda realizada no reverso após a solda principal; não é material de apoio.',joint:'Topo',sideRule:'oposto',sizes:[],asset:'Mesa de transferência · MT-206',part:'Recomposição da chapa de ligação'},
+  'Revestimento':{dimensionLabel:'Espessura da camada',definition:'Deposição de uma camada de solda sobre uma superfície, sem unir duas peças.',joint:'Superfície',sideRule:'seta',sizes:[2,3,4],asset:'Mesa de apoio · MA-311',part:'Superfície de contato da chapa'}
+};
+let specialOrderCount=0;
+function isSpecialWeld(c){return !!c&&Object.prototype.hasOwnProperty.call(specialWeldDefaults,c.type);}
+function specialWeldMetadata(type){
+  const base=specialWeldDefaults[type];
+  return {...base,...(typeof addedWeldInfo!=='undefined'?addedWeldInfo[type]||{}:{})};
+}
+function specialWeldTypes(){return Object.keys(specialWeldDefaults);}
+function chooseSpecialWeld(){return !retry&&Math.random()<.34;}
+function specialConfig(type=pick(specialWeldTypes())){
+  const m=specialWeldMetadata(type);
+  const c={special:true,type,joint:m.joint,side:m.sideRule==='neutro'?'neutro':'seta',field:false,all:false,finish:'',contour:''};
+  if(m.sizes.length)c.size=pick(m.sizes);
+  return c;
+}
+function specialRetryConfig(c){
+  const copy={...c},sizes=specialWeldMetadata(c.type).sizes;
+  if(sizes.length>1)copy.size=pick(sizes.filter(n=>n!==c.size));
+  return copy;
+}
+function specialOrder(c){
+  if(c.specialOrder)return c.specialOrder;
+  const m=specialWeldMetadata(c.type),number=String(++specialOrderCount).padStart(4,'0');
+  const task=m.legacy?'Interpretar o desenho de manutenção legado e identificar a indicação original da ligação no detalhe A. A análise deve considerar a geometria representada, sem substituir o símbolo por outro de aparência semelhante.':c.type==='Revestimento'?'Interpretar a indicação referente à superfície de contato da chapa no detalhe A e registrar os requisitos de deposição representados.':c.type==='Reverso'?'Interpretar a indicação da ligação de reposição no detalhe A, incluindo a sequência indicada no lado oposto da junta.':'Recompor a ligação do componente de reposição conforme a geometria e a indicação de soldagem do detalhe A do desenho de manutenção.';
+  c.specialOrder={id:'OS-ESP-'+number,drawing:'DM-ESP-'+number,revision:m.legacy?'Legado · rev. 01':'02',asset:m.asset,part:m.part,task};
+  return c.specialOrder;
+}
+function specialOrderPanel(c,activity){
+  const order=specialOrder(c);
+  return `<article class="work-order" aria-label="Ordem de serviço de manutenção simulada"><div class="os-head"><div><span class="eyebrow">Manutenção mecânica · OS simulada</span><h3>${order.id} · ${order.part}</h3></div><span class="os-status">${activity}</span></div><dl class="os-data"><div><dt>Equipamento / TAG</dt><dd>${order.asset}</dd></div><div><dt>Documento de referência</dt><dd>${order.drawing} · ${order.revision} · detalhe A</dd></div><div><dt>Área analisada</dt><dd>Ligação indicada no desenho</dd></div></dl><div class="os-description"><h4>Descrição do serviço solicitado</h4><p>${order.task}</p></div></article>`;
+}
+function specialTypeDistractors(type){
+  const close={
+    'V flangeado':['Bisel flangeado','V','U'],
+    'Bisel flangeado':['V flangeado','Bisel','J'],
+    'Aresta flangeada':['Canto flangeado','V flangeado','Revestimento'],
+    'Canto flangeado':['Aresta flangeada','Bisel flangeado','Filete'],
+    'Tampão':['Ponto','Costura','Filete'],
+    'Ponto':['Costura','Tampão','Filete'],
+    'Costura':['Ponto','Tampão','Revestimento'],
+    'Reverso':['Tampão','Revestimento','Filete'],
+    'Revestimento':['Reverso','Filete','Costura']
+  };
+  return close[type];
+}
+function specialSizeOptions(c){
+  const sizes=specialWeldMetadata(c.type).sizes;
+  return [...new Set([c.size,...sizes,...[2,3,4,5,6,8,10]])].slice(0,4).map(n=>n+' mm');
+}
+function specialDetective(input){
+  if(!detect||!detect.special){
+    const c=input||specialConfig(),m=specialWeldMetadata(c.type);
+    const shortMeaning=t=>specialWeldMetadata(t).definition.split('. ')[0].replace(/\.$/,'')+'.';
+    const meaning=shortMeaning(c.type);
+    const meaningOptions=[meaning,...shuffle(specialWeldTypes().filter(t=>t!==c.type)).slice(0,3).map(shortMeaning)];
+    const steps=[
+      ['Qual tipo de solda a indicação representa?',c.type,[c.type,...specialTypeDistractors(c.type)],m.definition],
+      ['Qual interpretação corresponde ao símbolo?',meaning,meaningOptions,'Observe o formato do símbolo e a geometria da ligação no corte.']
+    ];
+    if(c.size!==undefined)steps.push([`Qual é a dimensão indicada: ${m.dimensionLabel.toLowerCase()}?`,c.size+' mm',specialSizeOptions(c),`A dimensão indicada é ${c.size} mm; neste caso, ela representa ${m.dimensionLabel.toLowerCase()}.`]);
+    if(m.sideRule==='neutro')steps.push(['O símbolo centralizado na linha informa qual lado?', 'Sem significado de lado neste exemplo',['Sem significado de lado neste exemplo','Somente o lado da seta','Somente o lado oposto','Ambos os lados'], 'Neste exemplo, o símbolo está centralizado e não distingue lado da seta e lado oposto.']);
+    else if(c.type==='Reverso')steps.push(['Qual sequência o desenho indica?', 'Reverso após a solda principal',['Reverso após a solda principal','Apoio em barra antes da solda','Apenas reforço de raiz por melt-through','Somente revestimento superficial'],'O semicírculo aberto representa a solda de reverso; a referência à segunda operação define sua sequência.']);
+    else steps.push(['Qual é o lado indicado pela posição do símbolo?', 'seta',['seta','oposto','ambos','Sem significado de lado'], 'O símbolo abaixo da linha de referência indica o lado da seta.']);
+    detect={special:true,c,index:0,steps};
+  }
+  const {c,index,steps}=detect,[prompt,answer,choices,explain]=steps[index];
+  q={detect:true,special:true,explain:explain+` Resposta: ${answer}.`,correctVisual:symbol(c)};
+  shell(prompt,`${specialOrderPanel(c,'Leitura do desenho anexo')}<div class="split"><div><h3>Detalhe A · geometria</h3>${cut(c)}</div><div><h3>Indicação de projeto</h3>${symbol(c)}</div></div><small>Investigação ${index+1}/${steps.length} · ${specialOrder(c).drawing}</small>`);
+  options(shuffle(choices),answer);
+}
+function specialBuilder(input){
+  const c=input||(isSpecialWeld(retry?.config)?specialRetryConfig(retry.config):specialConfig());
+  const m=specialWeldMetadata(c.type),typeChoices=['Filete',...grooveNames,...specialWeldTypes()];
+  const keys=['type',...(c.size!==undefined?['size']:[]),...(m.sideRule==='selectable'?['side']:[])];
+  const sizes=[...new Set([...(m.sizes||[]),3,4,5,6,8,10])].sort((a,b)=>a-b);
+  const values={type:typeChoices,size:sizes.map(String),side:['seta','oposto']};
+  const fieldLabels={type:'Símbolo básico',size:m.dimensionLabel+' (mm)',side:'Posição na linha de referência'};
+  const show=(key,value)=>key==='side'?(value==='seta'?'Abaixo · lado da seta':'Acima · lado oposto'):value;
+  const requirements=[`Tipo de indicação: ${c.type}${m.legacy?' · simbologia do desenho legado':''}.`];
+  if(c.size!==undefined)requirements.push(`${m.dimensionLabel} = ${c.size} mm${c.type==='V flangeado'||c.type==='Bisel flangeado'?' (E indicado entre parênteses)':''}.`);
+  if(m.sideRule==='selectable')requirements.push('Aplicar a indicação ao lado da seta.');
+  if(m.sideRule==='neutro')requirements.push('Usar o símbolo centralizado, sem distinção de lado neste exemplo.');
+  if(c.type==='Reverso')requirements.push('Solda de reverso após a solda principal em V, conforme a segunda operação indicada.');
+  if(c.type==='Revestimento')requirements.push('Deposição sobre a superfície indicada pela seta; não se trata da união de duas peças.');
+  q={special:true,config:c,builder:true,correctVisual:symbol(c),explain:''};
+  shell('Interprete a OS e monte a indicação correspondente.',`${specialOrderPanel(c,'Interpretação da OS')}<div class="split"><div><h3>Detalhe A · execução solicitada</h3>${cut(c)}</div><section class="os-specs"><h3>Requisitos técnicos</h3><ul>${requirements.map(t=>`<li>${t}</li>`).join('')}</ul><p class="os-instruction">Monte a indicação com os elementos aplicáveis a esta família de solda.</p></section></div>`);
+  $('#work').innerHTML=`<div class="symbol-palette" aria-label="Peças dos novos símbolos">${specialWeldTypes().map(t=>`<button type="button" data-special-basic="${t}" aria-pressed="false">${svg(`<g transform="translate(4 48)">${glyph(t)}</g>`,t,'0 0 70 100')}<span>${t}</span></button>`).join('')}</div><div class="builder">${keys.map(key=>`<label>${fieldLabels[key]}<select data-special-field="${key}"><option value="">Escolha…</option>${values[key].map(v=>`<option value="${v}">${show(key,v)}</option>`).join('')}</select></label>`).join('')}</div><h3>Sua montagem</h3><div class="scene" id="special-live"><p class="sub">Escolha o símbolo básico.</p></div><p><button type="button" class="primary" id="special-submit">Conferir montagem</button></p>`;
+  const read=()=>{const result={};app.querySelectorAll('[data-special-field]').forEach(el=>result[el.dataset.specialField]=el.value);return result;};
+  const mounted=r=>{const result={...c,type:r.type,side:r.side||c.side};delete result.specialOrder;if(r.size)result.size=Number(r.size);return result;};
+  const update=()=>{const r=read();$('#special-live').innerHTML=r.type?symbol(mounted(r)):'<p class="sub">Escolha o símbolo básico.</p>';app.querySelectorAll('[data-special-basic]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.specialBasic===r.type)));};
+  app.querySelectorAll('[data-special-field]').forEach(el=>el.onchange=update);
+  app.querySelectorAll('[data-special-basic]').forEach(b=>b.onclick=()=>{app.querySelector('[data-special-field="type"]').value=b.dataset.specialBasic;update();});
+  $('#special-submit').onclick=()=>{
+    const r=read();if(keys.some(k=>!r[k])){$('#toast').textContent='Escolha todos os elementos antes de conferir.';return;}
+    $('#toast').textContent='';
+    const errors=keys.filter(k=>r[k]!==String(c[k]));q.mine=symbol(mounted(r));
+    q.explain=errors.length?'Revise: '+errors.map(k=>fieldLabels[k]+': '+show(k,String(c[k]))).join('; ')+'.':'A montagem representa corretamente o tipo de solda e os elementos solicitados pela OS.';
+    grade(errors.length?'incorreto':'correto',null,[],'correto');
+  };
+}
+function specialInspector(input){
+  const c=input||(isSpecialWeld(retry?.config)?specialRetryConfig(retry.config):specialConfig());
+  const eligible=['Tipo de solda errado',...(c.size!==undefined?['Dimensão errada']:[])];
+  const error=retry?.error&&eligible.includes(retry.error)?retry.error:pick(['Conforme',...eligible]);
+  const exec={...c,execution:true};
+  if(error==='Tipo de solda errado')exec.type=pick(specialTypeDistractors(c.type));
+  if(error==='Dimensão errada')exec.size=pick(specialWeldMetadata(c.type).sizes.filter(s=>s!==c.size));
+  q={special:true,config:c,error,phase:0,correctVisual:cut({...c,execution:true}),explain:error==='Conforme'?'A execução corresponde à indicação de soldagem apresentada na OS.':error==='Dimensão errada'?`O tipo de solda corresponde ao desenho, mas a dimensão executada difere dos ${c.size} mm especificados.`:'A execução representa outro tipo de solda; compare o símbolo e a geometria correta abaixo.'};
+  shell('O serviço executado corresponde à indicação da OS?',`${specialOrderPanel(c,'Conferência da execução')}<div class="split"><div><h3>Desenho de referência</h3>${symbol(c)}</div><div><h3>Execução</h3>${cut(exec)}</div></div>`);
+  $('#work').innerHTML='<div class="pills"><button type="button" id="special-approve">✓ Conforme</button><button type="button" id="special-reject">✕ Há divergência</button></div>';
+  $('#special-approve').onclick=()=>grade('Conforme',null,[],error);
+  $('#special-reject').onclick=()=>{
+    if(error==='Conforme'){grade('divergência',null,[],error);return;}
+    q.phase=1;$('#work').innerHTML='<h3>Qual é a divergência exata?</h3><div class="pills" id="special-faults"></div>';
+    shuffle(eligible).forEach(value=>{const button=document.createElement('button');button.type='button';button.textContent=value;button.onclick=()=>grade(value,button,[],error);$('#special-faults').append(button);});
+  };
+}
+
+function glyph(type){const extra=addedGlyph(type);if(extra)return extra;const paths={Filete:'M0 0 V30 L30 0',Reto:'M0 0 V30 M22 0 V30',V:'M0 30 L18 0 L36 30',X:'M0 -28 L36 28 M36 -28 L0 28',Bisel:'M0 0 V30 M0 0 L30 30',K:'M0 -28 V28 M30 -28 L0 0 L30 28',U:'M18 0 V12 M0 42 V30 Q0 12 18 12 Q36 12 36 30 V42','Duplo U':'M18 -12 V12 M0 -42 V-30 Q0 -12 18 -12 Q36 -12 36 -30 V-42 M0 42 V30 Q0 12 18 12 Q36 12 36 30 V42',J:'M0 0 V42 M0 14 Q30 14 30 42','Duplo J':'M0 -42 V42 M0 -14 Q30 -14 30 -42 M0 14 Q30 14 30 42'};return line(paths[type]||paths.Filete);}
+function symbol(c={}) {
+  if(addedWeldTypes.includes(c.type))return addedSymbol(c);
+  const type=c.type||'Filete',side=c.side||'seta',doubled=['X','K','Duplo U','Duplo J'].includes(type);
+  let s=line('M42 192 L104 130 H375 M42 192 l5 -18 M42 192 l18 -5');
+  if(['Bisel','J','K','Duplo J'].includes(type))s=line('M42 192 L72 162 H85 L104 130 H375 M42 192 l5 -18 M42 192 l18 -5');
+  let signs=side==='ambos'?[1,-1]:[side==='oposto'?-1:1];
+  if(doubled){s+=`<g transform="translate(217 130)">${glyph(type)}</g>`;signs=[1,-1];}
+  for(const sign of signs){
+    if(!doubled)s+=`<g transform="translate(217 130) scale(1 ${sign})">${glyph(type)}</g>`;
+    if(c.size)s+=txt(154,sign>0?156:115,c.size);
+    if(c.length)s+=txt(274,sign>0?156:115,`${c.length}${c.pitch?'–'+c.pitch:''}`);
+    if(c.contour){let cy=130+sign*55;
+      s+=line(c.contour==='Plano'?`M215 ${cy} h38`:c.contour==='Convexo'?`M215 ${cy} Q234 ${cy+sign*15} 253 ${cy}`:`M215 ${cy+sign*8} Q234 ${cy-sign*8} 253 ${cy+sign*8}`);
+      if(c.finish)s+=txt(226,cy+sign*25,c.finish);
+    }
+  }
+  if(c.all)s+='<circle cx="104" cy="130" r="9" class="wire"/>';
+  if(c.field)s+=line('M104 130 V63 L132 75 L104 86');
+  let suppSign=side==='oposto'?1:-1;
+  if(c.backing)s+=`<g transform="translate(217 130) scale(1 ${suppSign})"><rect width="34" height="15" class="wire"/></g>`+(c.removable?txt(228,suppSign>0?143:128,'R'):'');
+  if(c.melt)s+=`<g transform="translate(217 130) scale(1 ${suppSign})"><path d="M0 0 A17 17 0 0 0 34 0 Z" fill="currentColor"/></g>`;
+  if(c.backWeld)s+=`<g transform="translate(217 130) scale(1 ${suppSign})">${line('M0 0 A17 17 0 0 0 34 0')}</g>`;
+  const sign=side==='oposto'?-1:1;
+  if(c.root!==undefined&&c.root!=='')s+=txt(229,sign>0?153:115,c.root);
+  if(c.angle)s+=txt(220,sign>0?225:43,c.angle+'°');
+  if(c.tail)s+=line('M375 130 l30 -18 M375 130 l30 18')+txt(335,87,c.tail);
+  return svg(s,'Símbolo de soldagem','0 0 440 260');
+}
+function cut(c={}) {
+  const extra=specialWeldCut(c);if(extra)return extra;
+  const type=c.type||'Filete',j=c.joint||(type==='Filete'?'T':'Topo');
+  let s='',metal='',weld='',opposite='';
+  const contour=(x,y,size,dir=1)=>{
+    const a=[x,y-size*dir],b=[x+size,y];
+    const face=c.contour==='Convexo'?`Q${x+size*.95} ${y-size*.95*dir} ${b.join(' ')}`:c.contour==='Côncavo'?`Q${x+size*.1} ${y-size*.1*dir} ${b.join(' ')}`:`L${b.join(' ')}`;
+    return `<path class="weld" d="M${a.join(' ')} ${face} H${x} Z"/>`;
+  };
+  if(type==='Filete'){
+    let x=214,y=160;
+    if(j==='Sobreposta'){x=260;metal='<path class="metal" d="M95 160 H385 V184 H95 Z M35 136 H260 V160 H35 Z"/>';opposite='<path class="weld" d="M95 160 H71 L95 184 Z"/>';}
+    else if(j==='Canto'){x=184;metal='<path class="metal" d="M160 160 H385 V184 H160 Z M160 35 H184 V160 H160 Z"/>';}
+    else{metal='<path class="metal" d="M35 160 H385 V184 H35 Z M190 35 H214 V160 H190 Z"/>';}
+    weld=contour(x,y,38);
+    if(!opposite)opposite=`<g transform="translate(${x+190} 0) scale(-1 1)">${weld}</g>`;
+    s+=metal;
+    if(c.side==='opposto'||c.side==='oposto')s+=opposite;else{s+=weld;if(c.side==='ambos')s+=opposite;}
+    s+=line(`M345 75 L${x+18} 144 M${x+18} 144 l18 -6 M${x+18} 144 l5 -18`,'dim')+txt(321,61,'seta','note');
+    if(c.size)s+=txt(260,207,'perna '+c.size+' mm');
+  }else{
+    let left='M35 65 H165 L203 140 V165 H35 Z',right='M385 65 H255 L217 140 V165 H385 Z',w='M165 65 H255 L217 140 V165 H203 V140 Z';
+    if(type==='Reto'){left='M35 65 H203 V165 H35 Z';right='M217 65 H385 V165 H217 Z';w='M203 65 H217 V165 H203 Z';}
+    if(['Bisel','J','K','Duplo J'].includes(type)){left='M35 65 H203 V165 H35 Z';w='M203 65 H255 L217 140 V165 H203 Z';}
+    if(['U','J'].includes(type)){right='M385 65 H255 V102 Q255 140 217 140 V165 H385 Z';if(type==='J')w='M203 65 H255 V102 Q255 140 217 140 V165 H203 Z';else{left='M35 65 H165 V102 Q165 140 203 140 V165 H35 Z';w='M165 65 H255 V102 Q255 140 217 140 V165 H203 V140 Q165 140 165 102 Z';}}
+    if(type==='X'||type==='K'){left=type==='K'?'M35 65 H203 V165 H35 Z':'M35 65 H165 L203 115 L165 165 H35 Z';right='M385 65 H255 L217 115 L255 165 H385 Z';w=type==='K'?'M203 65 H255 L217 115 L255 165 H203 Z':'M165 65 H255 L217 115 L255 165 H165 L203 115 Z';}
+    if(type==='Duplo U'||type==='Duplo J'){left=type==='Duplo J'?'M35 65 H203 V165 H35 Z':'M35 65 H165 Q165 115 203 115 Q165 115 165 165 H35 Z';right='M385 65 H255 Q255 115 217 115 Q255 115 255 165 H385 Z';w=type==='Duplo J'?'M203 65 H255 Q255 115 217 115 Q255 115 255 165 H203 Z':'M165 65 H255 Q255 115 217 115 Q255 115 255 165 H165 Q165 115 203 115 Q165 115 165 65 Z';}
+    if(c.contour==='Convexo'||c.contour==='Côncavo'){
+      const cy=c.contour==='Convexo'?43:87;
+      w=w.replace(/^M(\d+) 65 H255/,(_,x)=>`M${x} 65 Q${(+x+255)/2} ${cy} 255 65`);
+      if(['X','K','Duplo U','Duplo J'].includes(type))w=w.replace(/255 165 H(\d+)/,(_,x)=>`255 165 Q${(+x+255)/2} ${c.contour==='Convexo'?187:143} ${x} 165`);
+    }
+    let content=`<path class="metal" d="${left}"/><path class="metal" d="${right}"/><path class="weld" d="${w}"/>`;
+    if(c.backing)content+='<rect x="170" y="167" width="80" height="14" class="metal"/>';
+    if(c.melt)content+='<path class="weld" d="M203 165 Q210 188 217 165 Z"/>';
+    if(c.side==='oposto')s+=`<g transform="translate(0 230) scale(1 -1)">${content}</g>`;else s+=content;
+    s+=line('M345 22 L240 55 M240 55 l18 -2 M240 55 l8 -16','dim')+txt(326,17,'seta','note');
+    if(c.size)s+=txt(35,204,'S = '+c.size+' mm');
+    if(c.root!==undefined&&c.root!=='')s+=txt(170,204,'r = '+c.root+' mm');
+    if(c.angle)s+=txt(300,204,c.angle+'°');
+  }
+  if(j==='Borda')s='<path class="metal" d="M160 80 H185 V185 H160 Z M190 80 H215 V185 H190 Z"/><path class="weld" d="M160 80 Q187 50 215 80 Z"/>';
+  let height=235;
+  if(c.length||c.pitch||c.continuous||c.length===0){
+    s+=txt(35,243,'VISTA LONGITUDINAL','note');
+    const length=+c.length||40,pitch=+c.pitch||0,scale=pitch?Math.min(2.5,300/(pitch*3.6)):1;
+    if(pitch){for(let x=55;x+length*scale<=390;x+=pitch*scale)s+=`<rect class="weld" x="${x}" y="255" width="${length*scale}" height="9"/>`;}
+    else s+='<rect class="weld" x="55" y="255" width="320" height="9"/>';
+    s+=txt(55,287,pitch?`L = ${length} mm · passo = ${pitch} mm`:'Solda contínua');height=305;
+  }
+  return svg(s,'Corte da junta e solda executada',`0 0 440 ${height}`)+(c.execution?`<div class="drawing-note">${c.field?'Em campo':'Em oficina'} · ${c.all?'Todo contorno executado':'Extensão da junta indicada'} · ${c.finish?'Método '+c.finish:'Sem método indicado'}</div>`:'');
+}
+function rootDetail(c={}){
+  const r=c.root??3,f=c.face??2,angle=c.angle??60;
+  return svg('<path class="metal" d="M30 45 H140 L201 135 V165 H30 Z M410 45 H300 L239 135 V165 H410 Z"/>'+line('M201 176 H239 M201 128 V184 M239 128 V184','dim')+txt(194,205,'r = '+r+' mm')+line('M255 135 H275 M255 165 H275 M270 135 V165','dim')+txt(280,155,'f = '+f+' mm')+line('M150 48 Q220 105 290 48','dim')+txt(202,40,angle+'°')+txt(28,235,'Preparação da junta · cotas em mm · sem escala','note'),'Detalhe cotado da preparação de raiz','0 0 440 250');
+}
+function filletDetail(c={}){
+  const size=c.size||6;
+  return svg('<path class="metal" d="M45 160 H370 V185 H45 Z M160 30 H185 V160 H160 Z"/><path class="weld" d="M185 80 L265 160 H185 Z"/>'+line('M185 160 L225 120 M185 80 H280 M265 160 V65 M278 80 V160','dim')+txt(285,128,'z = '+size)+txt(192,135,'a')+txt(45,215,'Filete de pernas iguais · encontro a 90°','note'),'Corte cotado de um filete');
+}
+
+function jointDrawing(j){if(j==='Topo')return cut({type:'V'});return cut({type:'Filete',joint:j});}
+function position(code,yaw=0){let n=+code[0],f=code[1]==='F',faces=[];const push=(p,cls)=>faces.push({p,cls});const quad=(a,b,c,d,cls='metal')=>push([a,b,c,d],cls);if(f){quad([-75,-5,0],[75,-5,0],[75,70,0],[-75,70,0]);quad([-75,0,0],[75,0,0],[75,0,75],[-75,0,75]);quad([-70,0,0],[70,0,0],[70,20,0],[-70,20,0],'weld');quad([-70,20,0],[70,20,0],[70,0,20],[-70,0,20],'weld');}else{quad([-80,-65,0],[80,-65,0],[80,-6,0],[-80,-6,0]);quad([-80,6,0],[80,6,0],[80,65,0],[-80,65,0]);quad([-80,-6,0],[80,-6,0],[80,6,0],[-80,6,0],'weld');}
+let rx=f?(n===1?Math.PI/4:n===4?Math.PI:0):(n===2||n===3?Math.PI/2:n===4?Math.PI:0),ry=n===3?Math.PI/2:0;function rotate(p){let[x,y,z]=p;[y,z]=[y*Math.cos(rx)-z*Math.sin(rx),y*Math.sin(rx)+z*Math.cos(rx)];[x,z]=[x*Math.cos(ry)+z*Math.sin(ry),-x*Math.sin(ry)+z*Math.cos(ry)];let angle=.6+yaw;return [x*Math.cos(angle)-y*Math.sin(angle),x*Math.sin(angle)+y*Math.cos(angle),z];}function proj(p){let[x,y,z]=rotate(p);return [220+x*1.45,150+y*.6-z*1.2];}let s='';faces.sort((a,b)=>a.p.reduce((s,p)=>s+rotate(p)[1],0)-b.p.reduce((s,p)=>s+rotate(p)[1],0));faces.sort((a,b)=>(a.cls==='weld')-(b.cls==='weld'));for(const face of faces)s+=`<polygon class="${face.cls}" points="${face.p.map(p=>proj(p).join(',')).join(' ')}"/>`;let tip=f?[0,12,12]:[0,0,0],from=f?[0,55,55]:[0,0,60];let t=proj(tip),b=proj(from);s+=`<path d="M${b} L${t}" stroke="#0878bd" stroke-width="9"/><circle cx="${t[0]}" cy="${t[1]}" r="4" fill="#f5a623"/>`+txt(18,27,'Gravidade ↓','note')+txt(18,247,'Azul: acesso da tocha · âmbar: solda','note');return svg(s,'Peça orientada, com solda, acesso da tocha e gravidade para baixo','0 0 440 270');}
+const codes=['1F','2F','3F','4F','1G','2G','3G','4G'];
+const posNames={1:'plana',2:'horizontal',3:'vertical',4:'sobrecabeça'};
+const bank=[];
+function add(id,tier,prompt,visual,answer,options,explain,kind='text'){bank.push({id,tier,prompt,visual,answer,options,explain,kind});}
+for(const type of ['Filete',...grooveNames])add('tipo-'+type,type==='Filete'||type==='V'||type==='Reto'?0:1,'Qual corte corresponde ao tipo de solda deste símbolo?',()=>symbol({type}),type,shuffle(['Filete',...grooveNames].filter(t=>t!==type)).slice(0,3).concat(type),`Compare a geometria do símbolo com a preparação e a seção da solda. A resposta é ${type}.`,'cut');
+for(const j of ['Topo','T','Canto','Sobreposta','Borda'])add('junta-'+j,0,'Qual é o tipo de junta representado?',()=>jointDrawing(j),j,['Topo','T','Canto','Sobreposta','Borda'],`É uma junta ${j.toLowerCase()}: observe a disposição das chapas, além do metal de solda.`);
+for(const side of ['seta','oposto','ambos'])add('lado-'+side,0,'Em qual lado da junta a solda é indicada?',()=>symbol({side} ),side,['seta','oposto','ambos','sem indicação de lado'],side==='ambos'?'Há símbolos acima e abaixo da linha: solda dos dois lados.':`O símbolo ${side==='seta'?'abaixo':'acima'} da linha indica o lado ${side==='seta'?'da seta':'oposto'}.`);
+for(const cont of ['Plano','Convexo','Côncavo'])add('contorno-'+cont,1,'Qual contorno da face é exigido?',()=>symbol({contour:cont}),cont,['Plano','Convexo','Côncavo','não especificado'],`O traço suplementar indica contorno ${cont.toLowerCase()}. Contorno descreve a forma; a letra, quando presente, indica o método de acabamento.`);
+for(const [letter,method] of [['G','Esmerilhamento'],['M','Usinagem'],['C','Cinzelamento'],['H','Martelamento'],['R','Laminação'],['U','Não especificado']])add('acab-'+letter,2,'Qual método de acabamento a letra determina?',()=>symbol({contour:'Plano',finish:letter}),method,['Esmerilhamento','Usinagem','Cinzelamento','Martelamento','Laminação','Não especificado'],`A letra ${letter} identifica ${method.toLowerCase()} na convenção AWS.`);
+add('campo',1,'O que significa a bandeira no encontro da seta com a linha?',()=>symbol({field:true}),'Solda em campo',['Solda em campo','Todo contorno','Backing','Penetração parcial'],'A bandeira indica soldagem em campo, no local de montagem.');
+add('all',1,'O círculo no encontro da seta com a linha indica o quê?',()=>symbol({all:true}),'Todo contorno',['Todo contorno','Solda em campo','Contorno convexo','Solda por pontos'],'O círculo solicita solda ao redor de todo o contorno da junta indicada.');
+add('backing',2,'Qual recurso está indicado pelo retângulo no lado oposto?',()=>symbol({type:'V',backing:true}),'Backing',['Backing','Melt-through','Contorno plano','Intermitência'],'O retângulo indica material de apoio na raiz (backing). Não é o semicírculo de solda de apoio/reverso.');
+add('melt',2,'Qual exigência é representada pelo semicírculo preenchido?',()=>symbol({type:'V',melt:true}),'Melt-through',['Melt-through','Backing','Solda de apoio','Todo contorno'],'Melt-through exige penetração com reforço de raiz visível no lado oposto. Não confunda com semicírculo aberto de solda de apoio/reverso.');
+add('length',1,'Na indicação 40–100 à direita, qual é o comprimento de cada trecho?',()=>symbol({size:6,length:40,pitch:100}),'40 mm',['40 mm','100 mm','60 mm','6 mm'],'O primeiro valor à direita é o comprimento do trecho. O segundo é o passo, medido entre centros.');
+add('pitch',1,'Qual é o passo entre centros dos trechos?',()=>symbol({length:40,pitch:100}),'100 mm',['40 mm','100 mm','60 mm','140 mm'],'O passo é 100 mm entre centros; o espaço livre entre trechos de 40 mm é 60 mm.');
+add('gap',2,'Qual é o espaço livre entre trechos de 40 mm com passo de 100 mm?',()=>symbol({length:40,pitch:100}),'60 mm',['40 mm','60 mm','100 mm','140 mm'],'Espaço livre = passo − comprimento: 100 − 40 = 60 mm.');
+add('continuous',0,'Sem comprimento e passo, esta indicação exige qual distribuição na junta indicada?',()=>symbol({size:6}),'Contínua',['Contínua','Intermitente','Alternada','Apenas nas extremidades'],'Na extensão da junta indicada, a ausência de comprimento e passo corresponde a solda contínua, salvo outra limitação no desenho.');
+add('size',0,'O número 6 à esquerda do símbolo de filete representa qual medida?',()=>symbol({size:6}),'Perna',['Perna','Comprimento','Passo','Abertura da raiz'],'Nesta convenção AWS, 6 à esquerda do filete é a dimensão da perna, em milímetros.');
+add('throat',1,'No corte, o segmento a representa qual medida?',filletDetail,'Garganta teórica',['Garganta teórica','Perna','Face da raiz','Reforço'],'A garganta teórica é a menor distância da raiz à face teórica plana do filete. Para pernas iguais a 90°, a ≈ 0,707z.');
+add('throat-value',2,'Com pernas iguais de 6 mm a 90°, quanto vale aproximadamente a garganta teórica?',filletDetail,'4,24 mm',['3 mm','4,24 mm','6 mm','8,48 mm'],'a = 6 × 0,707 ≈ 4,24 mm para este filete ideal de pernas iguais a 90°.');
+for(const [id,prompt,a,options,e] of [['root','Qual é a abertura da raiz r?','3 mm',['2 mm','3 mm','30 mm','60 mm'],'r é o vão entre as faces das duas peças na raiz.'],['face','Qual é a face da raiz f?','2 mm',['2 mm','3 mm','30 mm','60 mm'],'f é a porção não biselada junto à raiz, medida através da espessura.'],['angle','Qual é o ângulo total do chanfro?','60°',['30°','45°','60°','90°'],'O ângulo do chanfro é o ângulo incluído entre as duas faces preparadas.'],['bevel','Neste V simétrico de 60°, qual é o ângulo de cada bisel?','30°',['30°','45°','60°','120°'],'Em preparação V simétrica, os dois biséis contribuem igualmente: 60° ÷ 2 = 30°.']])add(id,1,prompt,rootDetail,a,options,e);
+add('penetration',2,'Em 8(10), à esquerda do V, qual é o tamanho efetivo de solda E?',()=>symbol({type:'V',size:'8(10)'}),'10 mm',['8 mm','10 mm','18 mm','2 mm'],'Na notação S(E), S é a profundidade de preparação e E é o tamanho efetivo da solda. Aqui S = 8 e E = 10 mm; o tipo V sozinho não determina penetração total.');
+function executionDrawing(c){
+  let content=cut(c);
+  if(c.showMeta){const extras=[c.field?'Soldagem em campo':'Soldagem em oficina',c.all?'Todo o contorno':'Junta indicada',c.finish?'Acabamento: '+c.finish:'Sem método de acabamento indicado'];
+    if(c.removable)extras.push('Apoio removido após soldar');
+    content+=`<div class="drawing-note">${extras.join(' · ')}</div>`;
+  }
+  return content;
+}
+function pairCase(id,tier,c,alternatives,explain){
+  const views=[c,...alternatives];
+  bank.push({id:'visual-'+id,tier,kind:'pair',config:c,views,answer:'0',options:['0','1','2','3'],explain});
+}
+for(const size of [3,4,5,6,8,10]){
+  pairCase('perna-'+size,0,{type:'Filete',side:'seta',size},[{type:'Filete',side:'seta',size:size+2},{type:'Filete',side:'oposto',size},{type:'V',size}],`O triângulo abaixo da linha indica filete no lado da seta. A dimensão ${size} à esquerda é a perna em milímetros.`);
+}
+for(const side of ['seta','oposto','ambos'])for(const size of [4,6,8]){
+  const c={type:'Filete',joint:'T',side,size};
+  pairCase('lado-'+side+'-'+size,0,c,[{...c,side:side==='seta'?'oposto':'seta'},{...c,side:side==='ambos'?'oposto':'ambos'},{type:'V',side:'seta',size}],`Observe a posição do triângulo: abaixo = seta; acima = oposto; nos dois lados = ambos. Neste caso, a perna é ${size} mm.`);
+}
+for(const contour of ['Plano','Convexo','Côncavo'])for(const length of [30,40,60]){
+  const c={type:'Filete',size:6,side:'seta',contour,length,pitch:100};
+  pairCase('contorno-'+contour+'-'+length,1,c,[{...c,contour:contour==='Plano'?'Convexo':'Plano'},{...c,length:length+20},{...c,pitch:0}],`O traço suplementar pede contorno ${contour.toLowerCase()}. À direita, ${length}–100 indica trechos de ${length} mm com passo de 100 mm, medido entre centros.`);
+}
+for(const length of [20,30,40,50,60]){
+  const c={type:'Filete',side:'ambos',size:6,length,pitch:length+60};
+  pairCase('intermitente-'+length,1,c,[{...c,pitch:0},{...c,side:'seta'},{...c,length:length+10}],`Há filetes nos dois lados da linha. Cada trecho mede ${length} mm; o passo entre centros é ${length+60} mm.`);
+}
+for(const type of grooveNames){
+  const doubled=['X','K','Duplo U','Duplo J'].includes(type),side=doubled?'ambos':'seta';
+  const c={type,side,size:8};
+  const other=grooveNames.filter(x=>x!==type);
+  pairCase('chanfro-'+type,1,c,[{...c,type:other[0]},{...c,type:other[1]},{type:'Filete',side:'seta',size:8}],`Compare as faces preparadas no corte: esta indicação representa ${type.toLowerCase()}. A posição da linha de referência também faz parte da leitura.`);
+}
+for(const type of ['V','Bisel','U','J'])for(const supp of ['backing','melt']){
+  const c={type,side:'seta',size:8,[supp]:true};
+  pairCase(supp+'-'+type,2,c,[{type,side:'seta',size:8,[supp==='backing'?'melt':'backing']:true},{type,side:'seta',size:8},{type:'Filete',side:'seta',size:8}],supp==='backing'?'O retângulo no lado oposto indica material de apoio na raiz. Compare a barra sob a junta com as alternativas.':'O semicírculo preenchido no lado oposto pede melt-through. O corte correspondente mostra reforço de raiz visível no reverso.');
+}
+for(const [field,all] of [[true,false],[false,true],[true,true]]){
+  const c={type:'Filete',size:6,side:'seta',field,all,showMeta:true};
+  pairCase('complemento-'+field+'-'+all,1,c,[{...c,field:!field},{...c,all:!all},{...c,field:!field,all:!all}],`${field?'A bandeira determina soldagem em campo.':'Não há bandeira de solda em campo.'} ${all?'O círculo pede todo o contorno.':'Não há indicação de todo o contorno.'}`);
+}
+add('apoio-removivel',2,'O R dentro do símbolo de backing exige o quê?',()=>symbol({type:'V',backing:true,removable:true}),'Remover o apoio após soldar',['Remover o apoio após soldar','Manter o apoio permanente','Raiz sem abertura','Acabamento por laminação'],'O R dentro do retângulo de backing indica que o material de apoio deve ser removido após a soldagem.');
+add('apoio-reverso',2,'Qual elemento é indicado pelo semicírculo aberto no lado oposto?',()=>symbol({type:'V',backWeld:true}),'Solda de apoio ou reverso',['Solda de apoio ou reverso','Melt-through','Backing em barra','Todo o contorno'],'O semicírculo aberto representa solda de apoio ou de reverso. A sequência e as notas do desenho distinguem as duas aplicações.');
+add('cauda',1,'Onde aparece a referência ao detalhe B neste símbolo?',()=>symbol({type:'V',tail:'DET. B'}),'Na cauda',['Na cauda','Na raiz do símbolo','Na dimensão da perna','No símbolo de contorno'],'A cauda abriga referências e informações complementares. Aqui ela remete ao detalhe B do desenho.');
+for(const size of [4,5,8,10])add('garganta-'+size,2,'Qual é a garganta teórica aproximada deste filete de pernas iguais?',()=>filletDetail({size}),String((size*.707).toFixed(2)).replace('.',',')+' mm',[String((size*.707).toFixed(2)).replace('.',',')+' mm',size+' mm',(size*2)+' mm',(size/2)+' mm'],`Para este encontro a 90°, garganta teórica = ${size} × 0,707 ≈ ${(size*.707).toFixed(2).replace('.',',')} mm.`);
+function chooseBank(){
+  const stage=difficultyFor(),difficulty=Math.min(2,stage);
+  const visualTurn=serial%4!==0;
+  let pool=newSymbolFocus?bank.filter(x=>x.added&&x.id!==lastId&&(newSymbolFocus==='all-new'||x.targetType===newSymbolFocus)):bank.filter(x=>x.tier<=difficulty&&x.id!==lastId&&(stage<3||x.tier>=1||x.added)&&(!visualTurn||x.kind==='pair'||x.kind==='cut'));
+  if(!pool.length)pool=bank.filter(x=>newSymbolFocus?x.added&&(newSymbolFocus==='all-new'||x.targetType===newSymbolFocus):x.tier<=difficulty);
+  const unused=pool.filter(x=>!state.seen[mode+'-'+x.id]);
+  const b=pick(unused.length?unused:pool);lastId=b.id;return b;
+}
+function match(){
+  const b=retry?.bank||chooseBank(),inverse=serial%2===0;
+  q={bank:b,explain:b.explain};
+  if(b.kind==='pair'){
+    q.image=true;q.correctVisual=inverse?symbol(b.config):executionDrawing(b.config);
+    shell(inverse?'Qual símbolo corresponde a esta execução?':'Qual execução corresponde ao símbolo?',inverse?executionDrawing(b.config):symbol(b.config));
+    options(shuffle(b.options),b.answer,key=>inverse?symbol(b.views[+key]):executionDrawing(b.views[+key]));
+  }else if(b.kind==='cut'){
+    q.image=true;q.correctVisual=inverse?symbol({type:b.answer}):cut({type:b.answer});
+    shell(inverse?'Qual símbolo corresponde a esta solda?':b.prompt,inverse?cut({type:b.answer}):b.visual());
+    options(shuffle(b.options),b.answer,x=>inverse?symbol({type:x}):cut({type:x}));
+  }else{
+    q.image=false;q.correctVisual=b.visual();shell(b.prompt,b.visual());
+    const distractors=shuffle(b.options.filter(x=>x!==b.answer)).slice(0,3);
+    options(shuffle([b.answer,...distractors]),b.answer);
+  }
+  if(newSymbolFocus){const focus=document.createElement('div');focus.className='new-symbol-focus';focus.innerHTML='<span>Treino: '+(newSymbolFocus==='all-new'?'novos símbolos':addedWeldInfo[newSymbolFocus].name)+'</span><button type="button" id="all-symbol-families">Misturar todas as famílias</button>';app.querySelector('.toolbar').after(focus);$('#all-symbol-families').onclick=()=>{newSymbolFocus=null;retry=null;next();};}
+}
+
+function menu(){
+  window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();
+  const heroDrawing=svg(
+    '<path class="metal" d="M55 155 L246 155 L334 109 L143 109 Z"/>'+
+    '<path class="metal" d="M146 112 L234 66 L234 12 L146 58 Z"/>'+
+    '<path class="weld" d="M146 111 L234 65 L244 73 L158 120 Z"/>'+
+    line('M271 40 H379 M271 40 L242 82 M242 82 l4 -12 M242 82 l12 -4')+
+    line('M306 40 v23 l23 -23')+
+    txt(283,64,'6')+
+    line('M64 180 H247 M64 174 V186 M247 174 V186','dim')+
+    txt(136,201,'200 mm')+
+    txt(53,28,'MW / DESENHO 01','note')+
+    txt(283,103,'SÍMBOLO','note')+
+    txt(77,224,'DA LINHA À PEÇA.','note'),
+    'Desenho original de junta em T com filete e indicação de soldagem','0 0 420 240');
+  const previews=[symbol({type:'V',size:8,angle:60}),symbol({type:'Filete',side:'ambos',size:6,length:40,pitch:100}),symbol({type:'Filete',field:true,all:true,contour:'Convexo'}),symbol({type:'Filete',size:6})+cut({type:'Filete',size:6}),position('1F',.05)];
+  const descriptions=['Encontre a solda certa para cada símbolo — e faça o caminho inverso.','Interprete o desenho anexo a uma ordem de serviço de manutenção.','Leia os requisitos da OS e monte a indicação de soldagem correspondente.','Confira se a execução atende ao desenho de manutenção e identifique divergências.','Relacione peça, código e significado: 1F–4F e 1G–4G, com referência ISO/EN.'];
+  app.innerHTML=`<div class="hero"><div><span class="eyebrow">Seu laboratório de soldagem</span><h2>Olhe o símbolo.<br>Visualize a solda.</h2><p>Treine a leitura de desenhos e ordens de serviço de manutenção com desafios rápidos e correção na hora.</p><div class="hero-tags"><span>5 jogos interativos</span><span>Desenhos originais</span><span>Uma questão por vez</span></div></div><div class="hero-art">${heroDrawing}</div></div><div class="menu-heading"><div><h2>Qual desafio você vai encarar?</h2><p>Escolha um jogo. Seu progresso vale em todos eles.</p></div><span class="menu-counter">05 BANCADAS DE TREINO</span></div><div class="menu">${names.slice(1).map((name,i)=>`<button class="mode" data-mode="${i+1}" type="button"><span class="mode-head"><span class="num">JOGO 0${i+1}</span><span class="mode-arrow" aria-hidden="true">↗</span></span><span class="game-preview ${i===3?'double':''}" aria-hidden="true">${previews[i]}</span><span class="mode-body"><h3>${name}</h3><small>${descriptions[i]}</small><span class="mode-cta"><span>Começar desafio</span><span aria-hidden="true">→</span></span></span></button>`).join('')}</div>`;
+  app.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(+b.dataset.mode));
+  attachAddedSymbolLibrary();
+}
+
+function start(m){newSymbolFocus=null;mode=m;detect=null;retry=null;next();}
+function shell(prompt,visual){app.innerHTML=`<div class="toolbar"><span class="eyebrow">${names[mode]} ${retry?'· REFORÇO':''}</span><small>Uma questão por vez</small></div><h2>${prompt}</h2>${visual?`<div class="scene">${visual}</div>`:''}<div id="work"></div><div id="feedback" aria-live="polite"></div>`;}
+function options(items,answer,render=x=>x){q.answer=answer;$('#work').innerHTML=`<div class="${q.image?'choices':'pills'}">${items.map((x,i)=>`<button class="choice" data-index="${i}"><span class="letter">${String.fromCharCode(65+i)}</span> ${render(x)}</button>`).join('')}</div>`;app.querySelectorAll('[data-index]').forEach(b=>b.onclick=()=>grade(items[+b.dataset.index],b,items));}
+function next(){window.scrollTo(0,0);locked=false;serial++;if(mode===1)match();if(mode===2)detective();if(mode===3)builder();if(mode===4)inspector();if(mode===5)positions();}
+let serviceOrderCount=0;
+const maintenanceServices={
+  T:[
+    {asset:'Transportador de correia · TC-204',location:'Conjunto de acionamento',part:'Enrijecedor do suporte do redutor',task:'Substituir o enrijecedor do suporte do redutor e restabelecer sua ligação à chapa-base. A geometria da ligação e os requisitos de soldagem estão definidos no detalhe indicado.'},
+    {asset:'Conjunto motobomba · MB-112',location:'Base do acionamento',part:'Nervura de fixação do suporte',task:'Instalar a nervura de reposição na base do suporte do acionamento. Interpretar a indicação de soldagem do desenho de manutenção antes de preencher os requisitos da intervenção.'},
+    {asset:'Mesa de transferência · MT-308',location:'Estrutura de apoio',part:'Suporte de guia lateral',task:'Substituir o suporte da guia lateral e recompor sua ligação à base existente. Considerar somente a junta identificada pela seta no detalhe do desenho.'}
+  ],
+  Canto:[
+    {asset:'Transportador de roletes · TR-207',location:'Conjunto da guia lateral',part:'Cantoneira de apoio da guia',task:'Recompor a ligação entre as chapas da cantoneira de apoio substituída. A configuração da junta e a indicação de soldagem devem ser interpretadas a partir do detalhe anexo.'},
+    {asset:'Mesa de montagem · MM-105',location:'Suporte auxiliar',part:'Esquadro de posicionamento',task:'Montar o esquadro de reposição no suporte auxiliar. Identificar no desenho os requisitos aplicáveis à união das chapas antes de registrar a indicação simbólica.'}
+  ],
+  Sobreposta:[
+    {asset:'Transportador de peças · TP-306',location:'Guia de transferência',part:'Chapa de reforço do suporte',task:'Instalar a chapa de reforço sobre o suporte existente, mantendo a disposição de montagem representada. Interpretar a indicação de soldagem referente à borda indicada pela seta.'},
+    {asset:'Mesa de alimentação · MA-118',location:'Suporte da guia',part:'Chapa de ligação de reposição',task:'Recompor a ligação da chapa de reposição ao suporte da guia. O desenho anexo define a região de união e os requisitos de distribuição da solda.'}
+  ],
+  Topo:[
+    {asset:'Transportador de roletes · TR-309',location:'Suporte da guia de entrada',part:'Segmento de chapa do suporte',task:'Substituir o segmento de chapa do suporte e recompor sua união à peça remanescente. Interpretar a preparação das bordas e os demais elementos da indicação de soldagem do detalhe anexo.'},
+    {asset:'Mesa de transferência · MT-208',location:'Conjunto de apoio da guia',part:'Extensão do suporte',task:'Unir a extensão de reposição à chapa do suporte existente. A preparação da junta, as dimensões e os complementos exigidos são os representados no desenho de manutenção.'}
+  ]
+};
+function serviceOrder(c){
+  if(c.serviceOrder)return c.serviceOrder;
+  const service=pick(maintenanceServices[c.joint]||maintenanceServices.Topo);
+  const number=String(++serviceOrderCount).padStart(4,'0');
+  c.serviceOrder={...service,id:'OS-MEC-'+number,drawing:'DM-'+number,revision:'02',detail:'A'};
+  return c.serviceOrder;
+}
+function serviceOrderPanel(c,activity){
+  const order=serviceOrder(c);
+  return `<article class="work-order" aria-label="Ordem de serviço de manutenção simulada"><div class="os-head"><div><span class="eyebrow">Manutenção mecânica · OS simulada</span><h3>${order.id} · ${order.part}</h3></div><span class="os-status">${activity}</span></div><dl class="os-data"><div><dt>Equipamento / TAG</dt><dd>${order.asset}</dd></div><div><dt>Local da intervenção</dt><dd>${order.location}</dd></div><div><dt>Documento de referência</dt><dd>${order.drawing} · rev. ${order.revision} · detalhe ${order.detail}</dd></div></dl><div class="os-description"><h4>Descrição do serviço solicitado</h4><p>${order.task}</p></div></article>`;
+}
+function serviceRequirements(c){
+  const fillet=c.type==='Filete';
+  const joint={T:'em T',Canto:'de canto',Sobreposta:'sobreposta',Topo:'de topo'}[c.joint]||c.joint;
+  const rows=[
+    `Junta ${joint}; ${fillet?'solda de filete':'solda em chanfro '+c.type}; ${fillet?'perna':'profundidade de preparação S'} = ${c.size} mm; ${c.side==='ambos'?'ambos os lados':c.side==='seta'?'lado da seta':'lado oposto à seta'}.`,
+    c.length?`Solda intermitente: comprimento de cada trecho L = ${c.length} mm; passo entre centros P = ${c.pitch} mm.`:'Solda contínua em toda a extensão da junta indicada.',
+    `${c.contour?'Contorno '+c.contour.toLowerCase():'Contorno não especificado'}; ${c.finish?'acabamento por '+(c.finish==='G'?'esmerilhamento (G)':'usinagem (M)'):'método de acabamento não especificado'}.`
+  ];
+  const details=[];
+  if(c.root)details.push('abertura da raiz r = '+c.root+' mm');
+  if(c.angle)details.push('ângulo '+(c.type==='Bisel'||c.type==='K'?'de bisel':'incluído do chanfro')+' = '+c.angle+'°');
+  if(c.backing)details.push('material de apoio na raiz (backing)');
+  if(c.melt)details.push('melt-through com reforço visível no reverso');
+  if(c.field)details.push('soldagem em campo');
+  if(c.all)details.push('soldagem em todo o contorno');
+  if(details.length)rows.push(details.join('; ')+'.');
+  return `<section class="os-specs" aria-label="Requisitos de soldagem da ordem de serviço"><h3>Requisitos técnicos · detalhe ${serviceOrder(c).detail}</h3><ul>${rows.map(x=>`<li>${x}</li>`).join('')}</ul><p class="os-instruction">Sua tarefa: converter os requisitos da OS em uma indicação de soldagem completa.</p></section>`;
+}
+
+// Difficulty is earned per mode; a high overall rank never skips a new mode's basics.
+function difficultyFor(m=mode) {
+  const correct=Math.max(0,Number(state.master[m])||0);
+  const earned=correct>=44?5:correct>=28?4:correct>=16?3:correct>=8?2:correct>=4?1:0;
+  const xp=Math.max(0,Number(state.xp)||0);
+  const rankCap=xp>=9000?5:xp>=4200?4:xp>=2000?3:2;
+  return Math.min(earned,rankCap);
+}
+
+// Returns a new configuration. Called only for a new question, never on reinforcement.
+function upgradeConfig(input,tier) {
+  const c={...input};
+  if(tier<3)return c;
+  const fillet=c.type==='Filete';
+  const doubled=['X','K','Duplo U','Duplo J'].includes(c.type);
+  c.contour=fillet?pick(['Plano','Convexo','Côncavo']):pick(['Plano','Convexo']);
+  c.finish=pick(['G','M']);
+  c.field=tier>=4||Math.random()<.6;
+  if(fillet) {
+    // Both sides remain restricted to an unambiguous T joint.
+    if(c.joint==='T'&&tier>=4)c.side='ambos';
+    if(tier>=4) {
+      c.length=pick(tier>=5?[50,60]:[30,40,50,60]);
+      c.pitch=pick(tier>=5?[80,100]:[80,100,120,150]);
+    }
+    // All-around and an intermittent pattern are trained separately here.
+    c.all=c.joint==='T'&&!c.length&&(tier>=5||c.all);
+  } else {
+    c.root=pick(tier>=5?[3,4]:[2,3,4]);
+    c.face=pick([1,2,3]);
+    c.length=0;c.pitch=0;c.all=false;
+    if(['V','Bisel','X','K'].includes(c.type))c.angle=pick(tier>=5?[60,70]:[45,60,70]);
+    else delete c.angle;
+    if(!doubled&&c.type!=='Reto') {
+      c.backing=Math.random()<.5;
+      c.melt=!c.backing;
+    } else {c.backing=false;c.melt=false;}
+    if(doubled)c.side='ambos';
+  }
+  if(tier>=5)c.size=pick([4,5,6,8,10]);
+  return c;
+}
+
+function config() {
+  if(previewActive&&maxPreviewFirst){maxPreviewFirst=false;return {type:'V',joint:'Topo',side:'seta',size:8,length:0,pitch:0,contour:'Plano',finish:'G',field:true,all:false,backing:true,melt:false,root:3,face:2,angle:60};}
+  const tier = difficultyFor();
+  const basic = ['Reto', 'V', 'Bisel'];
+  const type = Math.random() < (tier ? .45 : .65) ? 'Filete' : pick(tier ? grooveNames : basic);
+  const double = ['X', 'K', 'Duplo U', 'Duplo J'].includes(type);
+  const fillet = type === 'Filete';
+  const joint = fillet ? pick(['T', 'T', 'Canto', 'Sobreposta']) : 'Topo';
+  const c = {
+    type, joint,
+    side: double ? 'ambos' : joint === 'Canto' || joint === 'Sobreposta' ? 'seta' : pick(['seta', 'oposto', ...(fillet ? ['ambos'] : [])]),
+    size: pick(fillet ? [4, 5, 6, 8] : [6, 8, 10]),
+    length: fillet && Math.random() < .75 ? pick([30, 40, 50, 60]) : 0,
+    pitch: 0,
+    contour: fillet ? pick(['Plano', 'Convexo', 'Côncavo']) : (tier ? pick(['Plano', 'Convexo']) : ''),
+    finish: '', field: false, all: false, backing: false, melt: false
+  };
+  if (c.length) c.pitch = pick([80, 100, 120, 150]);
+  if (tier && c.contour && Math.random() < .5) c.finish = pick(['G', 'M']);
+  if (tier && Math.random() < .35) c.field = true;
+  if (tier && fillet && joint === 'T' && Math.random() < .25) c.all = true;
+  if (!fillet && tier) {
+    c.root = pick([2, 3, 4]);
+    c.face = pick([1, 2, 3]);
+    if (['V', 'Bisel', 'X', 'K'].includes(type)) c.angle = pick([45, 60, 70]);
+    if (!double && type !== 'Reto' && Math.random() < .4) {
+      c.backing = Math.random() < .5;
+      c.melt = !c.backing;
+    }
+  }
+  return upgradeConfig(c,tier);
+}
+
+const fields = {
+  type: allWeldFamilies, side: ['seta', 'oposto', 'ambos'],
+  size: ['4', '5', '6', '8', '10'], length: ['0', '30', '40', '50', '60'],
+  pitch: ['0', '80', '100', '120', '150'], contour: ['Sem contorno', 'Plano', 'Convexo', 'Côncavo'],
+  finish: ['Sem método', 'G', 'M'], root: ['2', '3', '4'], angle: ['45', '60', '70'],
+  field: ['Não', 'Sim'], all: ['Não', 'Sim'], backing: ['Não', 'Sim'], melt: ['Não', 'Sim']
+};
+const labels = {
+  type: 'Símbolo básico', side: 'Lado da linha', size: 'Dimensão (mm)',
+  length: 'Comprimento do trecho (mm)', pitch: 'Passo entre centros (mm)',
+  contour: 'Contorno', finish: 'Método de acabamento', root: 'Abertura da raiz (mm)',
+  angle: 'Ângulo do chanfro (°)', field: 'Solda em campo', all: 'Todo contorno',
+  backing: 'Material de apoio · backing', melt: 'Melt-through'
+};
+const sideLabels = { seta: 'Abaixo · lado da seta', oposto: 'Acima · lado oposto', ambos: 'Acima e abaixo · ambos' };
+
+function gameplayNumberOptions(value, unit = ' mm') {
+  const values = [...new Set([value, Math.max(1, value - 2), value + 2, value + 4])];
+  return shuffle(values).slice(0, 4).map(x => x + unit);
+}
+
+function detective() {
+  if(detect?.special)return specialDetective();
+  if(!detect&&!retry&&!maxPreviewFirst&&chooseSpecialWeld())return specialDetective(specialConfig());
+  if (!detect) {
+    const c = config();
+    const fillet = c.type === 'Filete';
+    const typeOptions = [c.type, ...shuffle(['Filete', ...grooveNames].filter(x => x !== c.type)).slice(0, 3)];
+    const base = [
+      ['Qual é o tipo de junta?', c.joint, ['Topo', 'T', 'Canto', 'Sobreposta'], 'Observe a disposição das chapas no corte, e não apenas o metal de adição.'],
+      ['Qual tipo de solda o símbolo solicita?', c.type, typeOptions, 'Compare a geometria do símbolo com a preparação da junta.'],
+      ['Em qual lado a solda foi indicada?', c.side, ['seta', 'oposto', 'ambos'], 'Abaixo: lado da seta; acima: lado oposto; indicações dos dois lados: ambos.']
+    ];
+    const extra = [
+      [fillet ? 'Qual é a perna do filete?' : 'Qual é a profundidade de preparação S?', c.size + ' mm', gameplayNumberOptions(c.size), fillet ? 'A dimensão à esquerda do triângulo é a perna.' : 'O valor à esquerda do símbolo de chanfro é a profundidade de preparação S, nesta indicação.']
+    ];
+    if (c.length) {
+      extra.push(['Qual é o comprimento de cada trecho?', c.length + ' mm', gameplayNumberOptions(c.length), 'O primeiro valor à direita é o comprimento de cada trecho.']);
+      extra.push(['Qual é o passo entre centros?', c.pitch + ' mm', gameplayNumberOptions(c.pitch), 'O segundo valor à direita é o passo, medido entre centros.']);
+    } else extra.push(['Qual distribuição foi especificada?', 'Contínua', ['Contínua', 'Intermitente', 'Alternada', 'Apenas nas extremidades'], 'A ausência de comprimento e passo solicita solda contínua na extensão da junta indicada.']);
+    if (c.contour) extra.push(['Qual contorno foi especificado?', c.contour, ['Plano', 'Convexo', 'Côncavo', 'Sem contorno'], 'Observe o traço suplementar junto ao símbolo básico.']);
+    if (c.finish) extra.push(['Qual método de acabamento foi indicado?', c.finish === 'G' ? 'Esmerilhamento' : 'Usinagem', ['Esmerilhamento', 'Usinagem', 'Cinzelamento', 'Martelamento'], c.finish === 'G' ? 'G indica esmerilhamento.' : 'M indica usinagem.']);
+    if (c.root) extra.push(['Qual é a abertura da raiz?', c.root + ' mm', gameplayNumberOptions(c.root), 'A abertura da raiz é o vão entre as faces na raiz da junta.']);
+    if (c.type === 'V' && c.face) extra.push(['Qual é a face da raiz f?', c.face + ' mm', gameplayNumberOptions(c.face), 'A face da raiz é a parte não biselada junto à raiz; veja a cota f no detalhe.']);
+    if (c.angle) extra.push(['Qual é o ângulo total do chanfro?', c.angle + '°', ['45°', '60°', '70°', '90°'], 'O ângulo do chanfro é o ângulo incluído entre as faces preparadas.']);
+    if (c.field) extra.push(['O que a bandeira exige?', 'Solda em campo', ['Solda em campo', 'Backing', 'Melt-through', 'Todo contorno'], 'A bandeira indica soldagem em campo, no local de montagem.']);
+    if (c.all) extra.push(['O que o círculo junto à seta exige?', 'Todo contorno', ['Todo contorno', 'Solda em campo', 'Contorno convexo', 'Backing'], 'O círculo solicita solda ao redor de todo o contorno da junta indicada.']);
+    if (c.backing || c.melt) extra.push(['Qual complemento foi indicado na raiz?', c.backing ? 'Backing' : 'Melt-through', ['Backing', 'Melt-through', 'Solda de apoio', 'Sem complemento'], c.backing ? 'O retângulo indica material de apoio na raiz.' : 'O semicírculo preenchido exige reforço visível de raiz no reverso.']);
+    detect = { c, index: 0, steps: [...base, ...shuffle(extra).slice(0, difficultyFor()>=4?5:difficultyFor()>=3?4:3)] };
+  }
+  const d = detect, c = d.c;
+  const [prompt, answer, opts, explain] = d.steps[d.index];
+  q = { explain: explain + ` Resposta: ${answer}.`, correctVisual: symbol(c), detect: true };
+  const detail = c.type === 'V' && c.root ? `<details><summary>Ver detalhe da raiz</summary>${rootDetail(c)}</details>` : '';
+  shell(prompt, `${serviceOrderPanel(c,'Leitura do desenho anexo')}<div class="split"><div><h3>Desenho da junta</h3>${cut(c)}</div><div><h3>Indicação de projeto</h3>${symbol(c)}</div></div>${detail}<small>Investigação ${d.index + 1}/${d.steps.length} · ${serviceOrder(c).drawing} · detalhe ${serviceOrder(c).detail} · dimensões em mm</small>`);
+  options(shuffle(opts), answer);
+}
+
+function builder() {
+  if(isSpecialWeld(retry?.config))return specialBuilder();
+  if(!retry&&!maxPreviewFirst&&chooseSpecialWeld())return specialBuilder(specialConfig());
+  const c = retry?.config ? { ...retry.config, size: pick([4, 5, 6, 8, 10].filter(x => x !== retry.config.size)) } : config();
+  const fillet = c.type === 'Filete';
+  const keys = ['type', 'side', 'size', ...(fillet ? ['length', 'pitch'] : []), 'contour', 'finish', 'field', ...(fillet ? ['all'] : []), ...(!fillet && c.root ? ['root'] : []), ...(!fillet && c.angle ? ['angle'] : []), ...(!fillet && !['X', 'K', 'Duplo U', 'Duplo J'].includes(c.type) ? ['backing', 'melt'] : [])];
+  const expected = k => k === 'finish' ? (c.finish || 'Sem método') : k === 'contour' ? (c.contour || 'Sem contorno') : ['field', 'all', 'backing', 'melt'].includes(k) ? (c[k] ? 'Sim' : 'Não') : String(c[k] || 0);
+  const format = (key, value) => key === 'side' ? sideLabels[value] : value === '0' && key === 'length' ? 'Contínua na extensão indicada' : value === '0' && key === 'pitch' ? 'Sem passo' : key === 'finish' && value === 'G' ? 'G · Esmerilhamento' : key === 'finish' && value === 'M' ? 'M · Usinagem' : value;
+  const situation = serviceRequirements(c);
+  q = { config: c, builder: true, explain: '', correctVisual: symbol(c) };
+  shell('Interprete a OS e monte a indicação de soldagem.', `${serviceOrderPanel(c,'Interpretação da OS')}<div class="split"><div><h3>Detalhe ${serviceOrder(c).detail} · junta representada</h3>${cut(c)}</div><div>${situation}</div></div>`);
+  $('#work').innerHTML = `<div class="symbol-palette" aria-label="Peças do símbolo básico">${fields.type.map(t=>`<button type="button" data-basic="${t}" aria-pressed="false">${svg(`<g transform="translate(4 48)">${glyph(t)}</g>`,t,'0 0 54 100')}<span>${t}</span></button>`).join('')}</div><div class="builder">${keys.map(key => `<label>${key === 'size' ? (fillet ? 'Perna do filete (mm)' : 'Profundidade de preparação S (mm)') : labels[key]}<select data-field="${key}"><option value="">Escolha…</option>${fields[key].map(v => `<option value="${v}">${format(key, v)}</option>`).join('')}</select></label>`).join('')}</div><h3 style="margin-top:24px">Sua montagem em tempo real</h3><div class="scene" id="live"><p class="sub">Escolha o símbolo básico para começar.</p></div><p><button class="primary" id="submit">Conferir montagem</button></p>`;
+  app.querySelectorAll('[data-basic]').forEach(b=>b.onclick=()=>{const select=app.querySelector('[data-field="type"]');select.value=b.dataset.basic;select.onchange();app.querySelectorAll('[data-basic]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));});
+  const read = () => { const r = {}; app.querySelectorAll('[data-field]').forEach(s => r[s.dataset.field] = s.value); return r; };
+  const toConfig = r => {
+    const result = { joint: c.joint };
+    for (const [k, v] of Object.entries(r)) result[k] = ['field', 'all', 'backing', 'melt'].includes(k) ? v === 'Sim' : ['size', 'length', 'pitch', 'root', 'angle'].includes(k) ? Number(v) : v === 'Sem método' || v === 'Sem contorno' ? '' : v;
+    return result;
+  };
+  app.querySelectorAll('[data-field]').forEach(s => s.onchange = () => {
+    const r = read();
+    $('#live').innerHTML = r.type ? symbol(toConfig(r)) : '<p class="sub">Escolha o símbolo básico para começar.</p>';
+    app.querySelectorAll('[data-basic]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.basic===r.type)));
+  });
+  $('#submit').onclick = () => {
+    const r = read();
+    if (Object.values(r).some(v => !v)) { $('#toast').textContent = 'Escolha todas as peças antes de conferir.'; return; }
+    $('#toast').textContent = '';
+    const errors = keys.filter(k => r[k] !== expected(k));
+    q.mine = symbol(toConfig(r));
+    q.explain = errors.length ? 'Revise ' + errors.map(k => `${labels[k]}: ${format(k, expected(k))}`).join('; ') + '.' : 'Você combinou corretamente o símbolo, o lado, as dimensões e os complementos solicitados.';
+    grade(errors.length ? 'incorreto' : 'correto', null, [], 'correto');
+  };
+}
+
+function inspector() {
+  if(isSpecialWeld(retry?.config))return specialInspector();
+  if(!retry&&!maxPreviewFirst&&chooseSpecialWeld())return specialInspector(specialConfig());
+  const c = retry?.config ? { ...retry.config, size: pick([4, 5, 6, 8, 10].filter(x => x !== retry.config.size)) } : config();
+  const hard = (state.master[mode] || 0) >= 4;
+  const fillet = c.type === 'Filete';
+  const eligible = ['Dimensão errada'];
+  if ((fillet && c.joint === 'T') || (!fillet && ['V', 'Bisel', 'U', 'J'].includes(c.type))) eligible.push('Lado errado');
+  if (c.length) eligible.push('Contínua em vez de intermitente', 'Comprimento errado', 'Passo errado');
+  if (fillet && c.side === 'seta') eligible.push('Tipo de junta errado');
+  if (hard && fillet && c.contour) eligible.push('Contorno errado');
+  if (!fillet) eligible.push('Chanfro errado');
+  if (hard && c.root) eligible.push('Abertura da raiz errada');
+  if (hard && c.angle) eligible.push('Ângulo de chanfro errado');
+  if (hard && c.finish) eligible.push('Acabamento incorreto');
+  if (hard && c.field) eligible.push('Local de execução errado');
+  if (hard && c.all) eligible.push('Todo contorno não executado');
+  const error = retry?.error && eligible.includes(retry.error) ? retry.error : pick(['Conforme', 'Conforme', ...eligible]);
+  const exec = { ...c, execution: true };
+  if (error === 'Lado errado') exec.side = c.side === 'seta' ? 'oposto' : 'seta';
+  if (error === 'Dimensão errada') exec.size = c.size === 6 ? 8 : 6;
+  if (error === 'Contínua em vez de intermitente') { exec.length = 0; exec.pitch = 0; }
+  if (error === 'Comprimento errado') exec.length = c.length === 40 ? 60 : 40;
+  if (error === 'Passo errado') exec.pitch = c.pitch === 100 ? 150 : 100;
+  if (error === 'Tipo de junta errado') exec.joint = c.joint === 'T' ? 'Sobreposta' : 'T';
+  if (error === 'Contorno errado') exec.contour = c.contour === 'Plano' ? 'Convexo' : 'Plano';
+  if (error === 'Chanfro errado') {
+    const choices = ['X', 'K'].includes(c.type) ? ['X', 'K'] : ['Duplo U', 'Duplo J'].includes(c.type) ? ['Duplo U', 'Duplo J'] : ['U', 'J'].includes(c.type) ? ['U', 'J'] : ['Reto', 'V', 'Bisel'];
+    exec.type = pick(choices.filter(t => t !== c.type));
+  }
+  if (error === 'Abertura da raiz errada') exec.root = c.root === 2 ? 4 : 2;
+  if (error === 'Ângulo de chanfro errado') exec.angle = c.angle === 60 ? 45 : 60;
+  if (error === 'Acabamento incorreto') exec.finish = c.finish === 'G' ? 'M' : 'G';
+  if (error === 'Local de execução errado') exec.field = false;
+  if (error === 'Todo contorno não executado') exec.all = false;
+  q = {
+    config: c, error, phase: 0,
+    explain: error === 'Conforme' ? 'A execução coincide com o projeto nos elementos mostrados.' : `A divergência é: ${error.toLowerCase()}. Compare a execução com a referência correta abaixo.`,
+    correctVisual: cut({ ...c, execution: true })
+  };
+  shell('O serviço executado atende à indicação da OS?', `${serviceOrderPanel(c,'Conferência da execução')}<div class="split"><div><h3>Desenho de referência</h3>${symbol(c)}</div><div><h3>Execução</h3>${cut(exec)}</div></div>`);
+  $('#work').innerHTML = '<div class="pills"><button id="approve">✓ Conforme</button><button id="reject">✕ Há divergência</button></div>';
+  $('#approve').onclick = () => grade('Conforme', null, [], error);
+  $('#reject').onclick = () => {
+    if (error === 'Conforme') { grade('divergência', null, [], error); return; }
+    q.phase = 1;
+    $('#work').innerHTML = '<h3>Qual é a divergência exata?</h3><div class="pills" id="faults"></div>';
+    const choices = shuffle([error, ...shuffle(eligible.filter(e => e !== error)).slice(0, 4)]);
+    choices.forEach(label => {
+      const b = document.createElement('button'); b.textContent = label;
+      b.onclick = () => grade(label, b, [], error);
+      $('#faults').append(b);
+    });
+  };
+}
+
+const positionGlossary={
+  '1F':{meaning:'Filete plano',iso:'PA',cue:'A face do filete está voltada para cima, com a junta em calha.'},
+  '2F':{meaning:'Filete horizontal',iso:'PB',cue:'O eixo da solda está horizontal no encontro de uma chapa horizontal com outra vertical.'},
+  '3F':{meaning:'Filete vertical',iso:null,cue:'O eixo da solda está vertical.'},
+  '4F':{meaning:'Filete sobrecabeça',iso:'PD',cue:'A solda é executada pela face inferior da junta, com acesso da tocha por baixo.'},
+  '1G':{meaning:'Topo/chanfro plano',iso:'PA',cue:'As chapas estão horizontais e a solda é executada pela face superior.'},
+  '2G':{meaning:'Topo/chanfro horizontal',iso:'PC',cue:'As chapas estão verticais e o eixo da solda está horizontal.'},
+  '3G':{meaning:'Topo/chanfro vertical',iso:null,cue:'As chapas e o eixo da solda estão na orientação vertical.'},
+  '4G':{meaning:'Topo/chanfro sobrecabeça',iso:'PE',cue:'As chapas estão horizontais e a solda é executada pela face inferior.'}
+};
+const positionVariants=codes.flatMap(code=>code[0]==='3'?[{id:code+'-up',code,travel:'up'},{id:code+'-down',code,travel:'down'}]:[{id:code,code,travel:null}]);
+function positionInfo(code,travel=null){
+  const base=positionGlossary[code];
+  const vertical=code[0]==='3';
+  const direction=travel==='up'?'ascendente':travel==='down'?'descendente':'';
+  return {...base,code,travel,meaning:base.meaning+(vertical&&direction?' '+direction:''),iso:vertical?(travel==='up'?'PF':travel==='down'?'PG':'PF ↑ / PG ↓'):base.iso};
+}
+function positionLabel(id,includeCode=true){
+  const v=positionVariants.find(v=>v.id===id),d=positionInfo(v.code,v.travel);
+  return `${includeCode?`<strong class="position-answer-code">${d.code}</strong>`:''}<span class="position-answer-meaning">${d.meaning}</span><small class="position-iso">ISO/EN · ${d.iso}</small>`;
+}
+function positionTrainingDrawing(code,yaw=0,travel=null){
+  let drawing=position(code,yaw);
+  if(code[0]!=='3'||!travel)return drawing;
+  const up=travel==='up',end=up?88:183,start=up?183:88;
+  const arrow=`<g class="travel-indicator"><path d="M392 ${start} V${end} M386 ${end+(up?10:-10)} L392 ${end} L398 ${end+(up?10:-10)}"/><text x="305" y="46">AVANÇO DA SOLDA</text><text x="305" y="64">${up?'Ascendente ↑':'Descendente ↓'}</text></g>`;
+  return drawing.replace('</svg>',arrow+'</svg>').replace('gravidade para baixo','gravidade para baixo e avanço '+(up?'ascendente':'descendente'));
+}
+function positionReference(){
+  return `<details class="position-reference"><summary>Consultar significados · ASME/AWS × ISO/EN</summary><p class="position-note">F = filete · G = solda em topo/chanfro. Compare a orientação com a gravidade; nas verticais, observe também o sentido de avanço.</p><table class="position-table"><caption>Posições básicas em chapas</caption><thead><tr><th scope="col">ASME/AWS</th><th scope="col">ISO/EN</th><th scope="col">Significado</th></tr></thead><tbody>${positionVariants.map(v=>{const d=positionInfo(v.code,v.travel);return `<tr><th scope="row">${d.code}</th><td>${d.iso}</td><td>${d.meaning}</td></tr>`;}).join('')}</tbody></table><p class="position-note">3F e 3G indicam a posição vertical; PF e PG distinguem, respectivamente, o avanço ascendente e descendente. A seta de avanço é diferente da indicação de gravidade e do acesso da tocha.</p></details>`;
+}
+function positions(){
+  const mastery=state.master[mode]||0;
+  const code=retry?.code||pick(codes.filter(c=>c!==lastId));lastId=code;
+  const travel=code[0]==='3'?(retry?.travel||pick(['up','down'])):null;
+  const answer=code+(travel?'-'+travel:'');
+  const task=retry?.positionTask??(serial%3);
+  const info=positionInfo(code,travel);
+  const yaw=pick(difficultyFor()>=3?[-.4,-.25,0,.25,.4]:mastery>=4?[-.35,-.15,.15,.35]:[0,.1]);
+  const directionSentence=code[0]==='3'?`${code} sozinho não define a progressão. Nesta figura, a seta de avanço indica soldagem ${travel==='up'?'ascendente':'descendente'}, correspondente a ${info.iso}.`:info.cue;
+  q={code,travel,positionTask:task,image:true,explain:`${code} significa ${(code[0]==='3'?positionGlossary[code].meaning:info.meaning).toLowerCase()}${code[0]==='3'?'.':` (ISO/EN ${info.iso}).`} ${directionSentence}`,correctVisual:`<div class="position-correction"><div class="position-target"><strong>${code}</strong><div><b>${info.meaning}</b><small>ISO/EN · ${info.iso}</small></div></div>${positionTrainingDrawing(code,yaw,travel)}</div>`};
+  let pool=positionVariants.filter(v=>v.id!==answer&&(mastery<4||v.code[1]===code[1]));
+  let distractors=shuffle(pool).slice(0,3);
+  if(travel){const opposite=code+(travel==='up'?'-down':'-up');distractors=[positionVariants.find(v=>v.id===opposite),...shuffle(pool.filter(v=>v.id!==opposite)).slice(0,2)];}
+  const choices=shuffle([answer,...distractors.map(v=>v.id)]);
+  const key='<div class="position-key"><span><b>F</b> · filete</span><span><b>G</b> · topo/chanfro</span><span>Orientação em relação à gravidade</span></div>';
+  if(task===0){
+    shell(`Qual peça representa ${code} — ${info.meaning.toLowerCase()}?`,`${key}<div class="position-target"><strong>${code}</strong><div><b>${info.meaning}</b><small>ISO/EN · ${info.iso}</small></div></div>`);
+    options(choices,answer,id=>{const v=positionVariants.find(v=>v.id===id);return positionTrainingDrawing(v.code,yaw+pick([-.05,0,.05]),v.travel);});
+  }else{
+    shell(task===1?'Qual posição e significado descrevem esta peça?':`O que significa ${code}${travel?' com avanço '+(travel==='up'?'ascendente':'descendente'):''}?`,`${key}${task===2?`<div class="position-target"><strong>${code}</strong><span>Interprete o número, a letra e a orientação da peça.</span></div>`:''}<div id="position-model">${positionTrainingDrawing(code,yaw,travel)}</div>`);
+    options(choices,answer,id=>positionLabel(id,task===1));
+    let cameraYaw=yaw;
+    const controls=document.createElement('div');controls.className='pills';
+    controls.innerHTML='<button type="button" id="rotateLeft" aria-label="Girar câmera à esquerda">↶ Girar vista</button><button type="button" id="rotateRight" aria-label="Girar câmera à direita">Girar vista ↷</button>';
+    app.querySelector('.scene').after(controls);
+    $('#rotateLeft').onclick=()=>{cameraYaw=Math.max(-.4,cameraYaw-.15);$('#position-model').innerHTML=positionTrainingDrawing(code,cameraYaw,travel);};
+    $('#rotateRight').onclick=()=>{cameraYaw=Math.min(.4,cameraYaw+.15);$('#position-model').innerHTML=positionTrainingDrawing(code,cameraYaw,travel);};
+  }
+  $('#work').insertAdjacentHTML('afterend',positionReference());
+}
+
+function grade(answer,button,items,override){if(locked)return;const previousLevel=levelIndex();locked=true;let correct=answer===(override||q.answer);state.total++;if(correct){state.right++;state.streak++;state.xp+=20+Math.min(20,(state.streak-1)*5);state.master[mode]=(state.master[mode]||0)+1;if(q.bank)state.seen[mode+'-'+q.bank.id]=true;}else state.streak=0;save();app.querySelectorAll('#work button,#work select').forEach(b=>b.disabled=true);app.querySelectorAll('[data-index]').forEach(b=>{let val=items[+b.dataset.index];if(val===q.answer){b.classList.add('correct');b.insertAdjacentHTML('beforeend','<strong> ✓ Correta</strong>');}else if(b===button&&!correct){b.classList.add('wrong');b.insertAdjacentHTML('beforeend','<strong> ✕ Sua escolha</strong>');}});let fb=$('#feedback');fb.innerHTML=`<div class="feedback ${correct?'':'error'}">${levelIndex()>previousLevel?`<div class="promotion" role="status">Novo nível alcançado: ${levels[levelIndex()]}!</div>`:''}<h3>${correct?'✓ Acertou!':'✕ Vamos ajustar a leitura.'}</h3><p>${q.explain}</p>${!correct||q.builder||(mode===4&&q.error!=='Conforme')?`<div class="${q.mine?'compare':''}">${q.mine?'<div><h3>Sua montagem</h3>'+q.mine+'</div>':''}<div><h3>${q.builder?'Símbolo correto':'Referência correta'}</h3>${q.correctVisual||''}</div></div>`:''}<button class="primary" id="next">${correct?(q.detect&&detect.index<detect.steps.length-1?'Investigar próximo elemento':'Próximo desafio'):'Praticar este elemento novamente'}</button></div>`;$('#next').onclick=()=>{if(q.detect){if(correct){detect.index++;if(detect.index>=detect.steps.length)detect=null;}retry=correct?null:{detect:true};}else retry=correct?null:{bank:q.bank,config:q.config,code:q.code,travel:q.travel,positionTask:q.positionTask,error:q.error};next();};fb.scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'nearest'});}
+installAddedWeldCases();
+$('#home').onclick=menu;$('#reset').onclick=()=>{if(confirm('Apagar XP, sequência e histórico neste navegador?')){state={xp:0,total:0,right:0,streak:0,master:{},seen:{}};save();menu();}};menu();if(maxPreviewRequested)enterMaxPreview();
+
+</script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+.level-progress{grid-column:1/-1;padding:16px 20px;background:#fff;border:1px solid var(--line);border-radius:14px;min-width:0}
+.level-progress-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.level-progress-head>div{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 10px}
+.level-progress-head small{font-size:12px;color:var(--muted)}
+.level-progress-head strong{font-size:14px;color:var(--blue-deep)}
+.level-progress-head>span{font-size:12px;color:var(--blue);text-align:right}
+.level-progress .progress{margin-top:10px;height:7px}
+details.level-trail{border:0;border-top:1px solid #e4edf5;border-radius:0;padding:10px 0 0;margin:12px 0 0;background:transparent}
+.level-trail summary{font-size:12px}
+.rank-grid{list-style:none;padding:0;margin:12px 0 0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.rank-grid li{display:flex;gap:10px;align-items:center;padding:12px;border-radius:9px;border:1px solid var(--line);background:#f7fafd;min-width:0}
+.rank-grid li.rank-current{border-color:var(--blue);background:var(--blue-soft)}
+.rank-grid li.rank-done{background:#f2fbf6;border-color:#c8e8d7}
+.rank-number{color:var(--blue);font-size:13px;font-weight:750;flex-shrink:0}
+.rank-grid b{font-size:12px;color:var(--ink);font-weight:650;display:block}
+.rank-grid small{font-size:11px;display:block;margin-top:2px}
+.rank-mark{margin-left:auto;font-size:13px;color:var(--blue)}
+.rank-done .rank-mark{color:var(--good)}
+.promotion{padding:12px 15px;background:#e3f1fd;border:1px solid #b1d5ef;color:var(--blue-deep);border-radius:10px;margin-bottom:15px;font-weight:650}
+@media(max-width:720px){.rank-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.level-progress{padding:13px 14px}.level-progress-head{align-items:flex-start}.level-progress-head>div{display:grid;gap:3px}}
+@media(max-width:450px){.rank-grid{grid-template-columns:1fr}.level-progress-head>span{max-width:120px}.stat b{overflow-wrap:anywhere}}
