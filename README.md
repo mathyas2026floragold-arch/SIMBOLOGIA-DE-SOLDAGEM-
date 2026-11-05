@@ -96,3 +96,7 @@ Elas cobrem níveis, progresso salvo, prévia do máximo, integração dos cinco
 O material adota a convenção AWS de linha de referência única: abaixo corresponde ao lado da seta; acima, ao lado oposto. As dimensões são em milímetros e os desenhos são esquemáticos, sem escala. Símbolos flangeados de desenhos legados são identificados no treinamento.
 
 Referências técnicas incluem o [guia de símbolos da Miller](https://www.millerwelds.com/en-us/resources/knowledge-hub/welding-basics/how-to-read-and-understand-weld-symbols) e os materiais [Design — Part 1](https://www.twi-global.com/technical-knowledge/job-knowledge/design-part-1-090) e [Design — Part 2](https://www.twi-global.com/technical-knowledge/job-knowledge/design-part-2-091), da TWI. Para fabricação, prevalecem a norma e o desenho aplicáveis.
+
+## Outros treinamentos
+
+[Metrologia Pro](metrologia/) — conversão de polegadas e milímetros, frações e leitura de régua e paquímetro. **[Abrir o treinamento online](https://mathyas2026floragold-arch.github.io/SIMBOLOGIA-DE-SOLDAGEM-/metrologia/)**.
