@@ -71,7 +71,16 @@ replace('function detective() {',`function detective() {
   if(!detect&&!retry&&shouldAnatomyDetective())return anatomyDetective();`);
 replace("!correct||q.builder||(mode===4", "!correct||q.builder||q.anatomy||(mode===4");
 replace('</style>',read('anatomy-training.css')+'\n.tail-process{font-weight:750}.tail-reference{font-size:13px}\n</style>');
+// The caliper is a sixth game in the existing menu. Welding generators stay intact.
+replace('</style>',read('caliper-ui.css')+'\n</style>');
+replace('window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();','window.CaliperGame.close();window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();');
+replace('<span>5 jogos interativos</span>','<span>6 jogos interativos</span>');
+replace('05 BANCADAS DE TREINO','06 BANCADAS DE TREINO');
+replace('Escolha um jogo. Seu progresso vale em todos eles.','Escolha um jogo. Seu progresso fica salvo neste navegador.');
+replace("  app.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(+b.dataset.mode));","  app.querySelector('.menu').insertAdjacentHTML('beforeend',window.CaliperGame.card());\n  app.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(+b.dataset.mode));");
+replace('function start(m){mode=m;detect=null;retry=null;next();}',"function start(m){if(m===6){if(previewActive)exitMaxPreview();mode=6;detect=null;retry=null;window.CaliperGame.open(app);return;}window.CaliperGame.close();mode=m;detect=null;retry=null;next();}");
+replace("installAddedWeldCases();\n$('#home')",read('caliper-engine.js')+'\n'+read('caliper-instrument.js')+'\n'+read('caliper-ui.js')+"\ninstallAddedWeldCases();\n$('#home')");
 html=html.trimEnd()+'\n';
 fs.writeFileSync(path.join(__dirname,'../SIMBOLOGIA DE SOLDAGEM.html'),html,'utf8');
 fs.writeFileSync(path.join(__dirname,'../index.html'),html,'utf8');
-console.log('Built single-file HTML and index.html with integrated content in all five modes.');
+console.log('Built single-file HTML and index.html: five welding modes plus the caliper simulator.');

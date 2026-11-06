@@ -58,6 +58,6 @@ run('state.master[2]=8;retry=null;detect=null;delete modeMix[2];');
 const kinds=new Set();let anatomyCount=0;
 for(let i=0;i<16;i++){run('start(2);');if(run('!!detect.anatomy')){anatomyCount++;kinds.add(run('detect.kind'));}}
 assert.equal(anatomyCount,4,'one in four investigations teaches symbol or fillet anatomy');assert.deepEqual(kinds,new Set(['symbol','fillet']),'normal detective entry alternates both anatomical diagrams');
-run('menu();');assert.equal(document.querySelectorAll('[data-mode]').length,5,'anatomy stays inside the existing detective game');
+run('menu();');assert.equal(document.querySelectorAll('[data-mode]').length,6,'anatomy stays inside the detective game, with the added caliper as mode six');
 assert.equal(JSON.parse(records.get('moto-work-v1')).seen.personal,true,'process and anatomy training preserve personal history');
 console.log('PASS: eight process abbreviations, compatible family choices, editable process/reference tail, exact review and scoring; symbol/fillet anatomy, unique choices, hidden labels, reinforcement and integrated scheduling.');
