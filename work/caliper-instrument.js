@@ -121,13 +121,16 @@
     s += `<g ${hook('x',pp)} transform="translate(${p(g.sliderPx)} 0)">`;
     s += rect(796-g.sliderPx,112,c.value*pp,7,`class="ci-depth-rod" fill="${paper}" stroke="${ink}" stroke-width="1"`);
     if(c.value>0)s+=line(796-g.sliderPx,115.5,796-g.sliderPx+c.value*pp,115.5,'stroke="#777e70" stroke-width=".45"');
-    s += path(`M-10 84 H${p(bodyWidth)} V99 H17 V148 H${p(bodyWidth)} V201 H-10 Z`,`class="ci-slider-body" ${outline}`);
+    s += path(`M-10 84 H${p(bodyWidth)} V99 H17 V148 H${p(bodyWidth)} V218 H-10 Z`,`class="ci-slider-body" ${outline}`);
     s += line(20,88,bodyWidth-3,88,`stroke="${ink}" stroke-width=".55"`);
-    s += line(20,197,bodyWidth-3,197,`stroke="${ink}" stroke-width=".45"`);
+    s += line(22,194,bodyWidth-3,194,`class="ci-vernier-footer" stroke="#a0a49b" stroke-width=".45"`);
+    s += line(20,214,bodyWidth-3,214,`stroke="${ink}" stroke-width=".45"`);
     s += text(23,96,'UNIVERSAL','font-size="8" letter-spacing="1.2"');
-    s += path('M0 148 H32 V193 L30 212 L26 234 L20 257 L12 278 L5 292 H0 Z',`class="ci-moving-jaw" ${outline}`);
+    // The narrow neck stays clear of the zero and its label. The jaw widens
+    // only beneath the engraved plate; measuring faces and scale origins stay fixed.
+    s += path('M0 148 H17 V218 H32 L29 237 L20 263 L12 282 L5 292 H0 Z',`class="ci-moving-jaw" ${outline}`);
     s += rect(0,164,5,126,`fill="${face}"`);
-    s += path('M27 166 V193 L25 213 L21 235 L15 259 L6 285',`class="ci-jaw-bevel" ${detail}`);
+    s += path('M12 166 V213 L27 223 L24 239 L15 265 L6 285',`class="ci-jaw-bevel ci-moving-jaw-bevel" ${detail}`);
     for(let y=169;y<286;y+=8)s+=line(0,y+4,5,y,'stroke="#7b8175" stroke-width=".5"');
     s += line(0,164,0,288,`class="ci-external-moving-contact" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?2.5:1.6}"`);
     s += path('M-1 96 V54 L0 32 V18 L6 27 L12 39 L17 54 V96 Z',outline);
@@ -140,23 +143,23 @@
     s += rect(36,55,34,12,`rx="2" ${outline}`)+line(39,58,67,58,`stroke="${ink}" stroke-width=".55"`);
     for(let x=40;x<68;x+=4)s+=line(x,59,x,65,`stroke="${ink}" stroke-width=".7"`);
     s += '</g><g class="ci-guide-screws">';
-    for(const [x,y] of [[8,110],[bodyWidth-7,190]]){
+    for(const [x,y] of [[8,110],[bodyWidth-10,207]]){
       s += `<circle cx="${p(x)}" cy="${y}" r="3.2" ${outline}/>`;
       s += line(x-1.8,y+1.5,x+1.8,y-1.5,`stroke="${ink}" stroke-width=".75"`);
     }
     s += '</g><g class="ci-thumbwheel">';
-    s += rect(bodyWidth-35,201,12,4,outline)+rect(bodyWidth-47,205,36,14,`rx="3" ${outline}`);
-    s += line(bodyWidth-44,208,bodyWidth-14,208,`stroke="${ink}" stroke-width=".5"`);
-    for(let x=bodyWidth-42;x<bodyWidth-14;x+=4)s+=line(x,210,x,217,`stroke="${ink}" stroke-width=".65"`);
+    s += rect(bodyWidth-35,218,12,4,outline)+rect(bodyWidth-47,222,36,14,`rx="3" ${outline}`);
+    s += line(bodyWidth-44,225,bodyWidth-14,225,`stroke="${ink}" stroke-width=".5"`);
+    for(let x=bodyWidth-42;x<bodyWidth-14;x+=4)s+=line(x,227,x,234,`stroke="${ink}" stroke-width=".65"`);
     s += '</g>';
 
     // Both sets of strokes meet at one edge, as on the single reading view.
     for(let k=0;k<=c.r.divisions;k++){
       const at=readOffset+k*c.r.vernierPitch*pp,stride=c.key==='mm-005'?2:5;
       s += line(at,baseline,at,baseline+(k%stride?11:19),`class="ci-whole-vernier" data-vernier-index="${k}" stroke="${ink}" stroke-width=".75"`);
-      if(k%stride===0||k===c.r.divisions)s+=text(at,184,c.key==='mm-005'?k/2:k,`font-size="${c.r.unit==='in'?9:11}" text-anchor="middle"`);
+      if(k%stride===0||k===c.r.divisions)s+=text(at,184,c.key==='mm-005'?k/2:k,`class="ci-vernier-label" font-size="${c.key==='in-1000'?7:c.r.unit==='in'?9:11}" text-anchor="middle"`);
     }
-    s += text(bodyWidth-16,195,c.r.label,'font-size="9" text-anchor="end"');
+    s += text(bodyWidth-24,207,c.r.label,'class="ci-resolution-label" font-size="9" text-anchor="end"');
     if(c.reveal){
       const index=c.ticks%c.r.mainTicks,at=readOffset+index*c.r.vernierPitch*pp;
       s+=line(at,132,at,168,'class="ci-coincidence" stroke="#087f57" stroke-width="1.5"');

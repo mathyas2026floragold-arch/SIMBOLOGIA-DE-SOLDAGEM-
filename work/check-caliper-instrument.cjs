@@ -33,6 +33,7 @@ function parse(svg) {
     const [, closing, tag, body, self] = match;
     if (closing) { assert.equal(stack.at(-1).tag, tag, 'SVG tags must be properly nested'); stack.pop(); continue; }
     const node = { tag, a: attrs(body), parent: stack.at(-1), children: [] };
+    if (tag === 'text') node.text = svg.slice(match.index + match[0].length, svg.indexOf('</text>', match.index));
     node.parent.children.push(node); all.push(node);
     if (!self) stack.push(node);
   }
@@ -68,6 +69,70 @@ function pathPoints(data) {
     assert.ok(Number.isFinite(x) && Number.isFinite(y), 'Path coordinates must be finite'); result.push({ x, y });
   }
   return result;
+}
+// Give digits a generous envelope to include side bearings and browser font
+// rasterization. Browser QA separately checks the actual rendered glyph boxes.
+function textEnvelope(node) {
+  const size = Number(node.a['font-size']), origin = point(node);
+  assert.ok(Number.isFinite(size) && size > 0, 'Instrument labels declare their font size');
+  const advance = { ' ': .278, ',': .278, '.': .278, '/': .278, m: .833, p: .556, o: .556, l: .222 };
+  const width = [...node.text].reduce((sum, char) => {
+    const em = /\d/.test(char) ? .65 : advance[char];
+    assert.ok(Number.isFinite(em), 'Unexpected character in measured instrument label: ' + char);
+    return sum + em * size;
+  }, 0);
+  const anchor = node.a['text-anchor'] || 'start';
+  const left = origin.x - (anchor === 'end' ? width : anchor === 'middle' ? width / 2 : 0);
+  return { left, right: left + width, top: origin.y - size * .93, bottom: origin.y + size * .23 };
+}
+function horizontalCrossings(points, y) {
+  const xs = [];
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1], b = points[i];
+    if (a.y === b.y) { if (Math.abs(y - a.y) < 1e-7) xs.push(a.x, b.x); continue; }
+    if (y >= Math.min(a.y, b.y) && y <= Math.max(a.y, b.y)) xs.push(a.x + (y - a.y) / (b.y - a.y) * (b.x - a.x));
+  }
+  return xs;
+}
+function assertReadingClearance(parsed, slider) {
+  const labels = parsed.descendants(slider).filter(n => hasClass(n, 'ci-vernier-label'));
+  assert.ok(labels.length >= 3, 'Whole vernier has identifiable numeric labels');
+  const boxes = labels.map(textEnvelope).sort((a, b) => a.left - b.left);
+  for (let i = 1; i < boxes.length; i++) assert.ok(boxes[i].left - boxes[i - 1].right >= .5 - 1e-6,
+    'Neighbouring vernier numbers retain visible separation, including imperial double digits');
+  const zero = parsed.first('ci-whole-vernier'), firstBox = boxes[0];
+  const jaw = parsed.first('ci-moving-jaw'), offset = translation(jaw);
+  const jawPoints = pathPoints(jaw.a.d).map(p => ({ x: p.x + offset.x, y: p.y + offset.y }));
+  for (let y = Number(zero.a.y1) + 1; y <= firstBox.bottom; y++) {
+    const xs = horizontalCrossings(jawPoints, y);
+    assert.ok(xs.length, 'Moving jaw profile remains defined below the reading edge');
+    assert.ok(firstBox.left - Math.max(...xs) >= 4,
+      'The moving jaw leaves a clear corridor for the zero stroke and label');
+  }
+  const bevel = parsed.first('ci-moving-jaw-bevel');
+  assert.ok(bevel, 'The moving measuring jaw retains its machined bevel');
+  const bevelOffset = translation(bevel), bevelPoints = pathPoints(bevel.a.d).map(p => ({ x: p.x + bevelOffset.x, y: p.y + bevelOffset.y }));
+  for (let y = firstBox.top; y <= firstBox.bottom; y++) {
+    const xs = horizontalCrossings(bevelPoints, y);
+    if (xs.length) assert.ok(firstBox.left - Math.max(...xs) >= 4, 'The jaw bevel stays clear of the zero label');
+  }
+  const resolution = parsed.first('ci-resolution-label'), separator = parsed.first('ci-vernier-footer');
+  assert.ok(resolution && separator, 'Resolution has a separate, identifiable footer');
+  const footer = textEnvelope(resolution), lastLabelBottom = Math.max(...boxes.map(b => b.bottom));
+  assert.ok(footer.top - lastLabelBottom >= 4, 'Resolution remains below the number row with clear whitespace');
+  const separatorY = Number(separator.a.y1);
+  assert.ok(separatorY - lastLabelBottom >= 4 && footer.top - separatorY >= 4,
+    'Footer separator leaves whitespace above and below');
+  const screws = parsed.descendants(parsed.first('ci-guide-screws')).filter(n => n.tag === 'circle');
+  const bottomScrew = screws.reduce((a, b) => Number(a.a.cy) > Number(b.a.cy) ? a : b);
+  const screw = point(bottomScrew, 'cx', 'cy');
+  assert.ok(screw.x - Number(bottomScrew.a.r) - footer.right >= 6,
+    'Resolution text leaves a clear lateral margin before the guide screw');
+  const guide = slider.children.find(n => n.tag === 'line' && n.a.y1 === n.a.y2 && Number(n.a.y1) > footer.bottom &&
+    point(n, 'x1', 'y1').x <= footer.left && point(n, 'x2', 'y2').x >= footer.right);
+  assert.ok(guide, 'A lower plate guide remains below the resolution footer');
+  assert.ok(Number(guide.a.y1) - footer.bottom >= 4,
+    'Lower guide line does not touch resolution text');
 }
 function assertHorizontalBounds(parsed, label) {
   const width = Number(parsed.root.a.viewBox.split(/\s+/)[2]); assert.equal(width, 1280);
@@ -138,6 +203,7 @@ function assertWhole(type, key, ticks, objectTicks = ticks) {
       }
       const principalZero = parsed.all.find(n => hasClass(n, 'ci-main-tick') && n.a['data-main-unit'] === '0');
       const vernierZero = parsed.first('ci-whole-vernier');
+      assertReadingClearance(parsed, slider);
       close(Number(principalZero.a.x1), 150, 'Principal zero is offset from the fixed measuring face');
       close(point(vernierZero, 'x1', 'y1').x - Number(principalZero.a.x1), ticks / spec.denominator * expected.scale, 'Both printed scales share the same zero offset');
       const index = ticks % Math.round(spec.main * spec.denominator), value = ticks / spec.denominator + index * spec.pitch;
@@ -257,4 +323,4 @@ assertVernier('analog', 'mm-005', 663);
 assert.throws(() => Instrument.render({ type: 'analog', resolutionKey: 'mm-001', ticks: 1 }), RangeError);
 assert.throws(() => Instrument.render({ type: 'digital', resolutionKey: 'in-128', ticks: 1 }), RangeError);
 assert.throws(() => Instrument.render({ type: 'analog', resolutionKey: 'mm-005', ticks: 1, section: 'unknown' }), RangeError);
-console.log(`PASS: 14 type/resolution combinations; ${physicalCases} physical/visibility cases; ${vernierCases} vernier alignments; ${dialCases} exact dial phases; ${freeCases} free-mode dimensions/privacy cases; technical universal line drawing, shared reading edge, coupled mechanical details, fixed target, signed travel, depth rod and SVG bounds.`);
+console.log(`PASS: 14 type/resolution combinations; ${physicalCases} physical/visibility cases; ${vernierCases} vernier alignments; ${dialCases} exact dial phases; ${freeCases} free-mode dimensions/privacy cases; zero/label/footer clearances, technical universal line drawing, shared reading edge, coupled mechanical details, fixed target, signed travel, depth rod and SVG bounds.`);
