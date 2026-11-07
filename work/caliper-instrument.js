@@ -86,9 +86,12 @@
     s += text(x + width / 2, y + height * 0.64, c.reveal ? formatReading(c) : 'VISOR OCULTO', `font-size="${width > 300 ? 36 : c.reveal ? 22 : 18}" font-family="Consolas,monospace" text-anchor="middle" fill="#203e32"`);
     return s;
   }
+  function universalPlateWidth(c,g) {
+    return Math.max(104,c.r.divisions*c.r.vernierPitch*g.pxPerUnit+48);
+  }
   function wholeUniversalDrawing(c, g) {
     const pp = g.pxPerUnit, readOffset = 30, baseline = 148;
-    const span = c.r.divisions * c.r.vernierPitch * pp, bodyWidth = Math.max(104, span + readOffset + 18);
+    const bodyWidth = universalPlateWidth(c,g);
     const ink = '#1d211b', paper = '#fff', face = '#f0f0ed';
     const outline = `fill="${paper}" stroke="${ink}" stroke-width="1.3"`;
     const detail = `fill="none" stroke="${ink}" stroke-width=".65"`;
@@ -401,16 +404,23 @@
     const c = settings(options), g = geometry(options), section = options.section || 'full';
     const technical = c.type === 'analog';
     c.prefix = 'ci-' + c.type + '-' + section;
-    if (!['full', 'instrument', 'detail', 'game', 'free'].includes(section)) throw new RangeError('Seção do instrumento desconhecida.');
-    if(section==='free'&&!technical)throw new RangeError('A vista livre usa o paquímetro universal analógico.');
+    if (!['full', 'instrument', 'detail', 'game', 'free', 'focus'].includes(section)) throw new RangeError('Seção do instrumento desconhecida.');
+    if(['free','focus'].includes(section)&&!technical)throw new RangeError('A vista livre usa o paquímetro universal analógico.');
     const instrument = section === 'detail' || section === 'game' ? '' : c.type === 'depth' ? wholeDepth(c, g) : c.type === 'height' ? wholeHeight(c, g) : wholeHorizontal(c, g);
-    const detail = section === 'instrument' || section === 'free' ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c) : vernierDetail(c);
+    const detail = ['instrument','free','focus'].includes(section) ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c) : vernierDetail(c);
     const instrumentHeight=technical?330:300;
-    const height = section === 'free' ? 360 : section === 'instrument' ? instrumentHeight : section === 'detail' || section === 'game' ? detail.height : instrumentHeight + detail.height;
-    const body = section === 'free' ? instrument+freeDimension(c,g) : section === 'instrument' ? instrument : section === 'detail' || section === 'game' ? detail.content : instrument + `<g transform="translate(0 ${instrumentHeight})">${detail.content}</g>`;
-    const width=section==='free'?840:1280,viewBox=section==='free'?'50 0 840 360':`0 0 1280 ${height}`;
+    const height = section === 'focus' ? 184 : section === 'free' ? 360 : section === 'instrument' ? instrumentHeight : section === 'detail' || section === 'game' ? detail.height : instrumentHeight + detail.height;
+    const body = section === 'free' ? instrument+freeDimension(c,g) : ['instrument','focus'].includes(section) ? instrument : section === 'detail' || section === 'game' ? detail.content : instrument + `<g transform="translate(0 ${instrumentHeight})">${detail.content}</g>`;
+    // A fixed-size lens follows the moving reading plate. Only the camera's x
+    // changes; strokes, origins and drag sensitivity remain physically identical.
+    const width=section==='focus'?universalPlateWidth(c,g)+48:section==='free'?840:1280;
+    const viewBox=section==='focus'?`${p(g.sliderPx-24)} 60 ${p(width)} 184`:section==='free'?'50 0 840 360':`0 0 1280 ${height}`;
+    // Clip in drawing coordinates as well as at the SVG viewport. With `meet`,
+    // the viewport can be wider than its viewBox and otherwise expose the beam
+    // in the unused side margins of the fixed lens.
+    const drawing=section==='focus'?`<defs><clipPath id="${c.prefix}-clip">${rect(g.sliderPx-24,60,width,184,'class="ci-focus-clip"')}</clipPath></defs><g class="ci-focus-drawing" clip-path="url(#${c.prefix}-clip)">${body}</g>`:body;
     const label = TYPES[c.type].name + (c.reveal ? '. Leitura: ' + formatReading(c) : '. Instrumento com partes móveis e escalas para leitura.');
-    return `<svg xmlns="http://www.w3.org/2000/svg" class="caliper-instrument ci-${c.type}${section === 'game' ? ' ci-game-scale' : section==='free'?' ci-free-instrument':''}" viewBox="${viewBox}" width="${width}" height="${height}" role="img" aria-label="${esc(label)}"${c.reveal ? ` data-reading="${p(c.value)}"` : ''} style="display:block;width:100%;height:auto;overflow:visible;font-family:Segoe UI,Arial,sans-serif;background:${technical || section === 'game' ? '#fff' : 'linear-gradient(180deg,#f5f6f2,#e5e8df)'};border-radius:${technical || section === 'game' ? 0 : 10}px"><g font-size="16" fill="#1c3c55">${technical ? '' : finishes(c)}${body}</g></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" class="caliper-instrument ci-${c.type}${section === 'game' ? ' ci-game-scale' : section==='free'?' ci-free-instrument':section==='focus'?' ci-focus-instrument':''}" viewBox="${viewBox}" width="${p(width)}" height="${height}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(label)}"${c.reveal ? ` data-reading="${p(c.value)}"` : ''} style="display:block;width:100%;height:auto;overflow:${section==='focus'?'hidden':'visible'};font-family:Segoe UI,Arial,sans-serif;background:${technical || section === 'game' ? '#fff' : 'linear-gradient(180deg,#f5f6f2,#e5e8df)'};border-radius:${technical || section === 'game' ? 0 : 10}px"><g font-size="16" fill="#1c3c55">${technical ? '' : finishes(c)}${drawing}</g></svg>`;
   }
   const api = Object.freeze({ RESOLUTIONS, TYPES, geometry, render });
   root.CaliperInstrument = api;

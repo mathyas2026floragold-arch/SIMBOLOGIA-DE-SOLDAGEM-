@@ -62,17 +62,17 @@ As opções da configuração correspondem ao universal analógico, com escala p
 
 - Arraste o cursor ou o nônio com o mouse ou por toque na tela. Os elementos móveis do corpo e a ampliação das escalas usam a mesma medida.
 - A abertura dos bicos e a extensão da haste de profundidade do universal acompanham o cursor.
-- Use os botões de uma ou dez divisões para ajuste fino. Com a área do instrumento em foco, **← / →** movem uma divisão, **Shift** multiplica o passo por dez e **Home / End** levam aos limites permitidos.
+- Com a área do instrumento em foco, **← / →** movem uma divisão, **Shift** multiplica o passo por dez e **Home / End** levam aos limites permitidos. A exploração livre usa arraste e teclado; os botões de movimento ficam disponíveis na medição por contato.
 - A movimentação dos modos livre e de contato respeita a resolução selecionada e o curso do instrumento. A leitura ampliada mostra a escala principal e o nônio contínuos, encostados na mesma borda do instrumento. O zoom e a rolagem acontecem nessa mesma área, inclusive no celular.
 - **Tela cheia** amplia o jogo completo, incluindo a bancada e a resposta. Use **Sair da tela cheia** ou **Escape** para retornar. Nos navegadores que não oferecem a API de tela cheia, a bancada ocupa a área disponível da página. A sessão continua na mesma posição.
-- A ampliação das escalas pode ser selecionada em **100%, 200%, 400% ou 800%**. Na vista principal do jogo métrico, os números grandes indicam centímetros e cada intervalo pequeno vale um milímetro, como no instrumento. O zoom facilita distinguir as coincidências nas resoluções mais finas.
+- Na prática de leitura e na medição por contato, a ampliação pode ser selecionada em **100%, 200%, 400% ou 800%**. Na vista principal do jogo métrico, os números grandes indicam centímetros e cada intervalo pequeno vale um milímetro, como no instrumento.
 - A leitura numérica abaixo do instrumento mostra a medida em tempo real. No modo livre, o botão com olho permite **ocultar ou revelar a medida**; ao ocultar, a explicação numérica também é escondida.
 
 ### Leitura, modo livre e medição por contato
 
 **Prática de leitura:** o jogo posiciona o paquímetro numa medida aleatória. Interprete a escala e digite a resposta. O cursor permanece na posição sorteada até a confirmação; não é preciso obter contato com uma peça nesse treino. Os acertos e erros são contados na própria linha de resposta. Ao concluir, escolha **Praticar novamente** ou **Encerrar**. É a modalidade principal de entrada do jogo.
 
-**Modo livre:** entre pelo botão **Modo livre** no cabeçalho. O jogo abre em tela cheia, com o instrumento inteiro em traço técnico, bicos chanfrados, guias do cursor, parafusos e rolete de ajuste. Arraste o cursor para abrir e fechar os bicos; a cota entre as faces e o visor grande acompanham a medida. O olho esconde os valores e a lupa alterna para a escala ampliada na mesma área. Também há ajuste por teclado e posicionamento por valor digitado.
+**Modo livre:** entre pelo botão **Modo livre** no cabeçalho. O jogo abre em tela cheia, com o instrumento inteiro em traço técnico, bicos chanfrados, guias do cursor, parafusos e rolete de ajuste. Arraste o cursor para abrir e fechar os bicos; a cota entre as faces e o visor grande acompanham a medida. O olho esconde os valores. **Ampliar nônio** aproxima a região móvel do próprio instrumento, com enquadramento fixo e proporcional que acompanha o cursor. A lupa mantém visíveis a escala principal, o zero, os traços e os números do nônio; **Ver instrumento** devolve a vista completa na mesma área. Também há ajuste por teclado e posicionamento por valor digitado.
 
 A primeira exploração começa em **56,10 mm** (ou **2,25 pol** na escala imperial). A posição e a escolha de ocultar a leitura ficam salvas. **Voltar ao simulado** recupera a questão, a resposta digitada e a pontuação; o tempo de treinamento pausa durante a exploração, enquanto o cronômetro de uma prova continua. A atividade livre não acrescenta respostas nem pontos.
 

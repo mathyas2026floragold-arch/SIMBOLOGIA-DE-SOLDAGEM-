@@ -122,11 +122,16 @@ h.click('[data-cp="finish"]');h.click('[data-cp="exit"]');
 assert.equal(h.$('#stats').hidden,false);assert.equal(h.$('main > details').hidden,false);assert.equal(h.document.querySelectorAll('[data-mode]').length,6);
 
 // Free manipulation still uses the same single viewport, alternating the full
-// physical instrument and its enlarged scale instead of duplicating drawings.
+// physical instrument and a fixed close-up of its own moving vernier.
 h=harness();h.click('[data-mode="6"]');configure(h,{activity:'free'});
 singleScene(h,'free instrument');assert.equal(h.state().session.config.activity,'free');
 assert.equal(h.state().session.ticks,E.quantize(56.1,'mm-005'),'a new metric free session opens at 56.10 mm');
 assert.ok(h.$('.cp-free'));assert.ok(h.$('.ci-free-instrument'));assert.ok(h.$('.cp-canvas-fit'));
+assert.equal(h.document.querySelector('.cp-movement'),null,'free exploration omits the open/close and step button bar');
+assert.equal(h.document.querySelector('[data-cp-step]'),null);assert.equal(h.document.querySelector('[data-cp="minimum"]'),null);assert.equal(h.document.querySelector('[data-cp="maximum"]'),null);
+assert.equal(h.document.querySelector('#cp-zoom'),null,'free exploration has a fixed proportional view rather than a variable zoom');
+assert.equal(h.document.querySelector('[data-cp="zoom-in"]'),null);assert.equal(h.document.querySelector('[data-cp="zoom-out"]'),null);
+assert.equal(h.$('[data-cp="view"]').getAttribute('aria-label'),'Ampliar nônio');
 assert.match(h.$('.ci-dimension-value').textContent,/56,10/,'the opening dimension and numeric readout share the calibrated measure');
 const jump=h.input('cp-jump','33,15');h.blur(jump);h.submit('cp-jump-form');
 assert.equal(h.state().session.ticks,663);assert.match(h.$('#cp-measure').textContent,/33,15/);
@@ -137,10 +142,29 @@ h.key('End');h.key('ArrowRight');assert.equal(h.state().session.ticks,3000);
 h.key('Home');h.key('ArrowRight');h.click('[data-cp="eye"]');hidden(h,'free');
 assert.ok(!h.$('#cp-status').textContent.includes('0,05'),'eye clears the previous numeric status');
 h.click('[data-cp="explain"]');hidden(h,'hidden help request');
-h.click('[data-cp="view"]');singleScene(h,'free enlarged scale');assert.ok(h.document.querySelector('.ci-game-scale'));hidden(h,'free enlarged scale');
+h.click('[data-cp="view"]');singleScene(h,'free vernier close-up');assert.ok(h.$('.ci-focus-instrument'));assert.ok(h.$('.cp-free-focus'));assert.ok(h.$('.ci-slider-body'));assert.ok(h.$('.cp-canvas-fit'));assert.equal(h.document.querySelector('.ci-game-scale'),null,'the close-up retains the detailed physical instrument instead of substituting an assessment drawing');hidden(h,'free vernier close-up');
 assert.equal(h.state().stats.total,0);assert.equal(h.state().stats.points,0);
 const freePosition=h.state().session.ticks;h.run('menu();');assert.equal(h.intervals.size,0);
 h=harness(h.records);h.click('[data-mode="6"]');assert.equal(h.state().session.ticks,freePosition);hidden(h,'restored free');
+
+// The fixed lens follows physical movement without changing its proportions,
+// duplicating drawings, revealing the value or introducing scroll-based zoom.
+const focused=[];
+for(const key of analogResolutions){
+  const lens=harness();lens.click('[data-mode="6"]');configure(lens,{activity:'free',resolution:key});
+  const beforeStats=JSON.stringify(lens.state().stats),beforeTicks=lens.state().session.ticks;
+  lens.click('[data-cp="view"]');const firstBox=lens.$('.ci-focus-instrument').getAttribute('viewBox').split(/\s+/).map(Number);
+  assert.match(lens.$('#cp-instrument-canvas').getAttribute('style'),/width:100%;min-width:100%/);
+  assert.equal(lens.document.querySelector('.cp-movement'),null,'the focused free instrument also omits the movement bar');
+  lens.key('ArrowRight');const movedBox=lens.$('.ci-focus-instrument').getAttribute('viewBox').split(/\s+/).map(Number);
+  assert.equal(lens.state().session.ticks,beforeTicks+1,'the close-up still moves by exactly one selected division');
+  assert.ok(movedBox[0]>firstBox[0],'the camera follows the moving reading area');assert.deepEqual(movedBox.slice(1),firstBox.slice(1),'the camera translates without changing size or stretching the instrument');
+  assert.match(lens.$('#cp-measure').textContent,new RegExp(E.format(beforeTicks+1,key).replace(/[.*+?^${}()|[\]\\]/g,'\\$&')));
+  lens.click('[data-cp="eye"]');hidden(lens,'fixed close-up '+key);singleScene(lens,'fixed close-up '+key);
+  assert.equal(lens.document.querySelector('#cp-zoom'),null);assert.equal(JSON.stringify(lens.state().stats),beforeStats);
+  const hiddenBox=lens.$('.ci-focus-instrument').getAttribute('viewBox');lens.click('[data-cp="eye"]');assert.equal(lens.$('.ci-focus-instrument').getAttribute('viewBox'),hiddenBox,'revealing does not shift the lens toward an answer-dependent graduation');
+  lens.click('[data-cp="view"]');assert.ok(lens.$('.ci-free-instrument'));assert.equal(lens.state().session.ticks,beforeTicks+1);focused.push(lens);
+}
 
 // The direct free workspace parks the exact assessment instead of replacing
 // its question, typed answer, results or score. Training time excludes the
@@ -156,7 +180,7 @@ parked.key('ArrowRight',false);parked.key('ArrowRight',false);parked.key('ArrowR
 parked.click('[data-cp="configure"]');assert.equal(parked.$('#cp-config').open,true);assert.deepEqual(parked.state().suspendedSession.results,trainingBefore.results);
 parked.click('[data-cp="view"]');singleScene(parked,'parked assessment with magnified free scale');hidden(parked,'parked free scale');
 assert.equal(parked.$('[data-cp="view"]').getAttribute('aria-label'),'Ver instrumento');parked.click('[data-cp="view"]');
-assert.equal(parked.$('[data-cp="view"]').getAttribute('aria-label'),'Ampliar escala');
+assert.equal(parked.$('[data-cp="view"]').getAttribute('aria-label'),'Ampliar nônio');
 parked.advance(9000);parked.click('[data-cp="resume-assessment"]');
 assert.equal(parked.state().session.targetTicks,trainingBefore.targetTicks);assert.equal(parked.$('#cp-answer').value,'12,');
 assert.equal(parked.state().session.startedAt,trainingBefore.startedAt+9000);assert.equal(parked.state().session.questionStartedAt,trainingBefore.questionStartedAt+9000);
@@ -260,9 +284,10 @@ async function fullscreenChecks(){
   f.input('cp-jump','33,15');const before=JSON.stringify(f.state().session),stable=f.host();f.click('[data-cp="fullscreen"]');
   assert.equal(f.host(),stable);assert.ok(f.host().classList.contains('cp-fullscreen-fallback'));assert.equal(f.document.body.style.overflow,'hidden');assert.equal(f.document.documentElement.style.overflow,'hidden');assert.equal(f.$('#cp-jump').value,'33,15');assert.equal(JSON.stringify(f.state().session),before);hidden(f,'fallback fullscreen');
   f.dispatchWindow('keydown',{key:'Escape'});assert.equal(f.host().classList.contains('cp-fullscreen-fallback'),false);assert.equal(f.document.body.style.overflow,'auto');assert.equal(f.document.documentElement.style.overflow,'scroll');assert.equal(f.window.scrollX,17);assert.equal(f.window.scrollY,420);assert.equal(f.host().scrollTop,61);assert.equal(f.host().scrollLeft,3);
-  f.$('#cp-instrument-area').scrollLeft=40;f.$('#cp-instrument-area').scrollTop=20;f.choose('cp-zoom','8');
-  assert.equal(f.$('#cp-instrument-canvas').style.width,'800%');assert.equal(f.$('#cp-instrument-canvas').style.minWidth,'6720px');assert.equal(f.$('#cp-instrument-area').scrollLeft,320);assert.equal(f.$('#cp-instrument-area').scrollTop,160);assert.equal(JSON.stringify(f.state().session),before);singleScene(f,'800 percent');hidden(f,'800 percent');
-  for(let i=0;i<4;i++)f.click('[data-cp="zoom-out"]');assert.equal(f.$('#cp-zoom-value').textContent,'100%');for(let i=0;i<4;i++)f.click('[data-cp="zoom-in"]');assert.equal(f.$('#cp-zoom-value').textContent,'800%');
+  f.click('[data-cp="view"]');assert.ok(f.$('.ci-focus-instrument'));assert.equal(f.document.querySelector('#cp-zoom'),null);assert.equal(JSON.stringify(f.state().session),before);singleScene(f,'fixed lens fullscreen');hidden(f,'fixed lens fullscreen');
+  const zoomedReading=harness();zoomedReading.click('[data-mode="6"]');zoomedReading.$('#cp-instrument-area').scrollLeft=40;zoomedReading.$('#cp-instrument-area').scrollTop=20;zoomedReading.choose('cp-zoom','8');
+  assert.equal(zoomedReading.$('#cp-instrument-canvas').style.width,'800%');assert.equal(zoomedReading.$('#cp-instrument-canvas').style.minWidth,'7680px');assert.equal(zoomedReading.$('#cp-instrument-area').scrollLeft,320);assert.equal(zoomedReading.$('#cp-instrument-area').scrollTop,160);singleScene(zoomedReading,'800 percent assessment');hidden(zoomedReading,'800 percent assessment');
+  for(let i=0;i<4;i++)zoomedReading.click('[data-cp="zoom-out"]');assert.equal(zoomedReading.$('#cp-zoom-value').textContent,'100%');for(let i=0;i<4;i++)zoomedReading.click('[data-cp="zoom-in"]');assert.equal(zoomedReading.$('#cp-zoom-value').textContent,'800%');
   f.click('[data-cp="fullscreen"]');f.run('menu();');assert.equal(f.host().classList.contains('cp-fullscreen-fallback'),false);assert.equal(f.document.body.style.overflow,'auto');
 
   const native=harness(undefined,1800000000000,'native');native.click('[data-mode="6"]');const input=native.input('cp-answer','12,50'),nativeBefore=JSON.stringify(native.state().session),nativeHost=native.host();
@@ -272,6 +297,6 @@ async function fullscreenChecks(){
   native.click('[data-cp="fullscreen"]');await settle();native.run('menu();');await settle();assert.equal(native.document.fullscreenElement,null);assert.ok(native.fullscreen.exits>=1);
   const denied=harness(undefined,1800000000000,'reject');denied.click('[data-mode="6"]');denied.click('[data-cp="fullscreen"]');await settle();assert.ok(denied.host().classList.contains('cp-fullscreen-fallback'));denied.click('[data-cp="fullscreen"]');assert.equal(denied.host().classList.contains('cp-fullscreen-fallback'),false);
   const pending=harness(undefined,1800000000000,'pending');pending.click('[data-mode="6"]');pending.click('[data-cp="fullscreen"]');pending.run('menu();');pending.fullscreen.resolve();await settle();assert.equal(pending.document.fullscreenElement,null,'a late fullscreen request cannot cover the menu');
-  for(const current of [h,exam,parked,parkedExam,universal,migrated,kept,...migratedInstruments,f,native,denied,pending])assert.equal(current.records.get('moto-work-v1'),personal,'all activity preserves welding progress byte for byte');
+  for(const current of [h,exam,parked,parkedExam,universal,migrated,kept,...migratedInstruments,...focused,f,zoomedReading,native,denied,pending])assert.equal(current.records.get('moto-work-v1'),personal,'all activity preserves welding progress byte for byte');
 }
 fullscreenChecks().then(()=>console.log('PASS: universal analog caliper only with five metric/imperial resolutions; single-scene reading, free/contact operation, exact counters, hidden exams, restart/exit, migration and unchanged welding progress; native/fallback fullscreen and 100–800% zoom.')).catch(error=>{console.error(error);process.exitCode=1;});

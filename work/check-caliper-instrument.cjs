@@ -276,6 +276,63 @@ function assertFree(key, ticks) {
   assert.ok(parsed.first('ci-dimension-value'), 'Revealing restores the dimension value');
   assert.ok(shown.includes(Engine.format(ticks, key) + (spec.unit === 'mm' ? ' mm' : ' pol')), 'Dimension value agrees with the exact engine');
 }
+function assertFocus(key, ticks) {
+  const options = { type: 'analog', resolutionKey: key, ticks };
+  const free = parse(Instrument.render({ ...options, section: 'free', reveal: true }));
+  const hidden = Instrument.render({ ...options, section: 'focus' });
+  const shown = Instrument.render({ ...options, section: 'focus', reveal: true });
+  const focused = parse(shown), concealed = parse(hidden);
+  const camera = focused.root.a.viewBox.split(/\s+/).map(Number);
+  function assertLensClip(parsed, frame) {
+    const clip = parsed.first('ci-focus-clip'), wrapper = parsed.first('ci-focus-drawing');
+    assert.ok(clip && clip.tag === 'rect' && clip.parent.tag === 'clipPath', 'Fixed magnifier defines a rectangular drawing-space clip');
+    assert.ok(wrapper && clip.parent.a.id, 'Magnifier drawing has an addressable clip path');
+    assert.equal(wrapper.a['clip-path'], `url(#${clip.parent.a.id})`, 'Original instrument is painted through the active reading clip');
+    const drawing = parsed.first('ci-technical-drawing');
+    assert.ok(parsed.descendants(wrapper).includes(drawing), 'The complete instrument drawing is inside the clipped group');
+    assert.equal(parsed.all.filter(n => hasClass(n, 'ci-technical-drawing')).length, 1, 'No duplicate, unclipped instrument can bleed into lens margins');
+    for (const [i, name] of ['x', 'y', 'width', 'height'].entries()) close(Number(clip.a[name]), frame[i], 'Magnifier drawing-space clip matches its viewBox ' + name);
+  }
+  assert.ok(camera.every(Number.isFinite) && camera[2] > 0 && camera[3] > 0, 'Focused camera has finite positive dimensions');
+  assert.ok(camera[2] < 840 && camera[3] < 360, 'Magnifier crops the original instrument to its reading assembly');
+  assert.match(focused.root.a.style, /(?:^|;)overflow:hidden(?:;|$)/, 'The magnifier clips distant jaws and beam outside its viewport');
+  assert.match(focused.root.a.preserveAspectRatio, /\bmeet$/, 'Fixed magnifier keeps the instrument proportions');
+  assertLensClip(focused, camera); assertLensClip(concealed, camera);
+  assert.equal(concealed.root.a.viewBox, focused.root.a.viewBox, 'Revealing a reading does not move or resize the camera');
+  assert.ok(!/data-reading=|ci-dimension-value|ci-coincidence|aria-label="[^"]*Leitura:/.test(hidden), 'Focused view never leaks an unrevealed numeric reading');
+  assert.ok(!focused.first('ci-opening-dimension'), 'Focused view contains only the original reading assembly, without an external dimension');
+  assert.ok(!focused.first('ci-game-window') && !focused.first('ci-detail-window'), 'Magnifier uses the original physical instrument instead of a second reading drawing');
+  const drawing = focused.first('ci-technical-drawing'), original = free.first('ci-technical-drawing');
+  assert.ok(drawing && original, 'Focused and complete views retain the same detailed instrument');
+  const shapes = (parsed, group) => parsed.descendants(group).map(n => ({ tag: n.tag, attrs: n.a, text: n.text }));
+  assert.deepEqual(shapes(focused, drawing), shapes(free, original), 'Camera magnification leaves every graduation, label, jaw and mechanical detail unchanged');
+  const sliders = focused.all.filter(n => Object.hasOwn(n.a, 'data-caliper-slider'));
+  assert.equal(sliders.length, 1, 'Focused view keeps one draggable cursor');
+  const slider = sliders[0], origin = translation(slider);
+  const inside = (x, y, label) => assert.ok(x >= camera[0] - 1e-6 && x <= camera[0] + camera[2] + 1e-6 &&
+    y >= camera[1] - 1e-6 && y <= camera[1] + camera[3] + 1e-6, label + ' remains fully visible in the fixed magnifier');
+  for (const node of focused.all.filter(n => hasClass(n, 'ci-whole-vernier'))) {
+    const a = point(node, 'x1', 'y1'), b = point(node, 'x2', 'y2');
+    inside(a.x, a.y, 'Vernier stroke'); inside(b.x, b.y, 'Vernier stroke');
+  }
+  for (const node of focused.all.filter(n => hasClass(n, 'ci-vernier-label') || hasClass(n, 'ci-resolution-label'))) {
+    const box = textEnvelope(node); inside(box.left, box.top, 'Reading label'); inside(box.right, box.bottom, 'Reading label');
+  }
+  for (const at of pathPoints(focused.first('ci-slider-body').a.d)) inside(at.x + origin.x, at.y + origin.y, 'Cursor plate');
+  for (const node of focused.descendants(focused.first('ci-thumbwheel')).filter(n => n.tag === 'rect')) {
+    const a = point(node); inside(a.x, a.y, 'Thumbwheel'); inside(a.x + Number(node.a.width), a.y + Number(node.a.height), 'Thumbwheel');
+  }
+  const max = specs[key].cap * specs[key].denominator, nextTicks = ticks === max ? ticks - 1 : ticks + 1;
+  const moved = parse(Instrument.render({ ...options, ticks: nextTicks, section: 'focus', reveal: true }));
+  const nextCamera = moved.root.a.viewBox.split(/\s+/).map(Number);
+  assertLensClip(moved, nextCamera);
+  const nextSlider = moved.all.find(n => Object.hasOwn(n.a, 'data-caliper-slider'));
+  close(nextCamera[0] - camera[0], translation(nextSlider).x - origin.x, 'Magnifier follows the moving reading by exactly its physical displacement');
+  close(nextCamera[1], camera[1], 'Cursor movement leaves camera height position fixed');
+  close(nextCamera[2], camera[2], 'Cursor movement cannot resize magnification horizontally');
+  close(nextCamera[3], camera[3], 'Cursor movement cannot resize magnification vertically');
+  close(Number(focused.root.a['data-reading']), ticks / specs[key].denominator, 'Focused revealed reading retains the exact engine value');
+}
 function assertVisibility(type, key, ticks) {
   const hidden = Instrument.render({ type, resolutionKey: key, ticks, annotated: true });
   assert.ok(!hidden.includes('data-reading=')); assert.ok(!hidden.includes('data-vernier-unit='));
@@ -291,14 +348,14 @@ function assertVisibility(type, key, ticks) {
 }
 
 assert.equal(combinations.length, 14);
-let physicalCases = 0, vernierCases = 0, dialCases = 0, freeCases = 0;
+let physicalCases = 0, vernierCases = 0, dialCases = 0, freeCases = 0, focusCases = 0;
 for (const [type, key] of combinations) {
   assert.ok(Instrument.TYPES[type].resolutions.includes(key));
   const spec = specs[key], max = spec.cap * spec.denominator;
   const samples = [...new Set([0, 1, Math.round(spec.denominator * .5), Math.floor(max / 2), max - 1, max])];
   for (const ticks of samples) {
     assertWhole(type, key, ticks); assertVisibility(type, key, ticks); physicalCases++;
-    if (type === 'analog') { assertFree(key, ticks); freeCases++; }
+    if (type === 'analog') { assertFree(key, ticks); freeCases++; assertFocus(key, ticks); focusCases++; }
     for (const section of ['instrument', 'detail', 'full']) assert.equal(Instrument.render({ type, resolutionKey: key, ticks, section }).includes('<svg'), true);
   }
   // Moving the cursor cannot secretly resize the virtual target.
@@ -322,5 +379,6 @@ assert.ok(reading3315.includes('33,15 mm')); assert.ok(reading3315.includes('3 Ã
 assertVernier('analog', 'mm-005', 663);
 assert.throws(() => Instrument.render({ type: 'analog', resolutionKey: 'mm-001', ticks: 1 }), RangeError);
 assert.throws(() => Instrument.render({ type: 'digital', resolutionKey: 'in-128', ticks: 1 }), RangeError);
+assert.throws(() => Instrument.render({ type: 'digital', resolutionKey: 'mm-001', ticks: 1, section: 'focus' }), RangeError);
 assert.throws(() => Instrument.render({ type: 'analog', resolutionKey: 'mm-005', ticks: 1, section: 'unknown' }), RangeError);
-console.log(`PASS: 14 type/resolution combinations; ${physicalCases} physical/visibility cases; ${vernierCases} vernier alignments; ${dialCases} exact dial phases; ${freeCases} free-mode dimensions/privacy cases; zero/label/footer clearances, technical universal line drawing, shared reading edge, coupled mechanical details, fixed target, signed travel, depth rod and SVG bounds.`);
+console.log(`PASS: 14 type/resolution combinations; ${physicalCases} physical/visibility cases; ${vernierCases} vernier alignments; ${dialCases} exact dial phases; ${freeCases} free-mode dimensions/privacy cases; ${focusCases} fixed magnifier geometry/follow/privacy cases; zero/label/footer clearances, technical universal line drawing, shared reading edge, coupled mechanical details, fixed target, signed travel, depth rod and SVG bounds.`);
