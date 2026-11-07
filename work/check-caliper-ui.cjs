@@ -60,6 +60,17 @@ function singleScene(h,label){
   assert.equal(h.document.querySelectorAll('#cp-detail-area').length,0,label+' has no second drawing panel');
   assert.equal(h.document.querySelectorAll('.cp-below').length,0,label+' has no separate sidebar');
 }
+const analogResolutions=['mm-01','mm-005','mm-002','in-128','in-1000'];
+function universalOnly(h,label){
+  const state=h.state();
+  assert.equal(state.settings.type,'analog',label+' settings use only the universal analog caliper');
+  assert.equal(state.session.config.type,'analog',label+' session uses only the universal analog caliper');
+  assert.deepEqual(h.$('#cp-resolution').querySelectorAll('option').map(option=>option.value),analogResolutions,label+' offers exactly the analog resolutions');
+  assert.equal(h.document.querySelector('#cp-type'),null,label+' has a fixed instrument instead of a type selector');
+  for(const unsupported of ['digital','dial','depth','height'])assert.equal(h.document.querySelectorAll('option[value="'+unsupported+'"]').length,0,label+' never offers '+unsupported);
+  assert.equal(h.$('#cp-resolution').querySelectorAll('option[value="mm-001"]').length,0,label+' does not offer a fictitious 0.01 mm vernier');
+  assert.equal(h.$('#cp-instrument-area').querySelectorAll('.ci-analog').length,1,label+' draws the analog caliper');
+}
 function hidden(h,label){
   assert.equal(h.$('#cp-instrument-area').querySelectorAll('[data-reading]').length,0,label+' does not reveal a numeric reading');
   assert.equal(h.$('#cp-instrument-area').querySelectorAll('[data-vernier-unit]').length,0,label+' does not label absolute vernier positions');
@@ -83,7 +94,7 @@ h.click('[data-mode="6"]');
 assert.ok(h.$('#stats').hidden&&h.$('#preview-notice').hidden&&h.$('main > details').hidden);
 assert.equal(h.state().session.config.activity,'reading','the game opens directly as an assessment');
 assert.equal(h.state().session.config.assessment,'training');
-singleScene(h,'reading');hidden(h,'reading');
+singleScene(h,'reading');hidden(h,'reading');universalOnly(h,'reading');
 assert.ok(h.$('#cp-answer-form'));assert.ok(h.$('.cp-correct')&&h.$('.cp-wrong'),'inline answer counters are present');
 assert.equal(h.state().session.ticks,h.state().session.targetTicks,'the displayed reading is ready to interpret');
 const target=h.state().session.ticks,handle=h.$('#cp-instrument-area').querySelector('[data-caliper-slider]');
@@ -151,27 +162,52 @@ for(let i=0;i<10;i++){
 assert.equal(exam.state().session.completed,true);assert.equal(exam.state().session.examApplied,true);assert.equal(exam.state().stats.total,10);assert.equal(exam.state().stats.correct,7);assert.equal(exam.state().stats.wrong,3);assert.equal(exam.state().stats.points,155);assert.equal(exam.state().stats.sessions,1);assert.equal(exam.intervals.size,0);
 const examSummary=JSON.stringify(exam.state().stats);exam.run('menu();');exam=harness(exam.records);exam.click('[data-mode="6"]');assert.equal(JSON.stringify(exam.state().stats),examSummary,'completed exam results apply exactly once');
 
-// Metric and imperial vertical models preserve their direction and resolution.
-let vertical=harness();vertical.click('[data-mode="6"]');
-for(const [type,resolution,forward] of [['depth','mm-002','ArrowDown'],['height','mm-002','ArrowUp']]){
-  configure(vertical,{activity:'free',type,resolution});vertical.key(forward);assert.equal(vertical.state().session.ticks,1);
-  const moving=vertical.$('#cp-instrument-area').querySelector('[data-caliper-slider]'),axis=moving.getAttribute('data-drag-axis'),factor=Number(moving.getAttribute('data-drag-px-per-unit'));
+// All supported metric and imperial resolutions remain on the same universal
+// analog caliper. Keyboard and pointer travel use the selected resolution.
+let universal=harness();universal.click('[data-mode="6"]');
+for(const resolution of analogResolutions){
+  configure(universal,{activity:'free',resolution});universalOnly(universal,'free '+resolution);
+  universal.key('ArrowRight');assert.equal(universal.state().session.ticks,1);
+  const moving=universal.$('#cp-instrument-area').querySelector('[data-caliper-slider]'),axis=moving.getAttribute('data-drag-axis'),factor=Number(moving.getAttribute('data-drag-px-per-unit'));
+  assert.equal(axis,'x','the universal analog cursor moves along the main horizontal scale');
   const event=(x,y)=>({target:moving,pointerId:14,clientX:x,clientY:y,preventDefault(){}});
-  vertical.host().onpointerdown(event(0,0));vertical.host().onpointermove(event(axis==='x'?factor*.06:0,axis==='y'?factor*.06:0));vertical.flushFrames();vertical.host().onpointerup(event(0,0));assert.equal(vertical.state().session.ticks,4);
-  vertical.key('End');assert.equal(vertical.state().session.ticks,7500);
+  universal.host().onpointerdown(event(0,0));universal.host().onpointermove(event(factor*3*E.getResolution(resolution).step,0));universal.flushFrames();universal.host().onpointerup(event(0,0));assert.equal(universal.state().session.ticks,4);
+  universal.key('End');assert.equal(universal.state().session.ticks,E.getResolution(resolution).maxTicks);
+  universal.key('Home');assert.equal(universal.state().session.ticks,0);
 }
-
-// A digital screen cannot be interpreted while hidden: it keeps the physical
-// contact activity rather than creating an impossible reading exercise.
-const digital=harness();digital.click('[data-mode="6"]');configure(digital,{type:'digital'});
-assert.equal(digital.state().session.config.activity,'challenge');assert.equal(digital.document.querySelector('#cp-answer'),null);
-digital.submit('cp-answer-form');assert.equal(digital.state().session.answered,0);digital.click('[data-cp="minimum"]');digital.submit('cp-answer-form');assert.equal(digital.state().session.correct,1);
 
 // Legacy free exploration is the only session that migrates to the new reading
 // entrance. Existing scores and genuinely active legacy exams are preserved.
 const legacyFree=harness();legacyFree.click('[data-mode="6"]');configure(legacyFree,{activity:'free'});const legacyData=legacyFree.state();delete legacyData.layoutVersion;legacyData.settings.assessment='exam';legacyData.stats={...legacyData.stats,total:5,correct:4,wrong:1,points:95};
 legacyFree.records.set(KEY,JSON.stringify(legacyData));const migrated=harness(legacyFree.records);migrated.click('[data-mode="6"]');assert.equal(migrated.state().layoutVersion,2);assert.equal(migrated.state().session.config.activity,'reading');assert.equal(migrated.state().session.config.assessment,'training');assert.equal(migrated.state().stats.points,95);assert.equal(migrated.state().stats.correct,4);
 const legacyExam=harness();legacyExam.click('[data-mode="6"]');configure(legacyExam,{assessment:'exam'});reading(legacyExam);const legacyExamData=legacyExam.state();delete legacyExamData.layoutVersion;legacyExam.records.set(KEY,JSON.stringify(legacyExamData));const kept=harness(legacyExam.records);kept.click('[data-mode="6"]');assert.equal(kept.state().session.answered,1);assert.equal(kept.state().session.config.assessment,'exam');assert.equal(kept.state().stats.total,0);
+
+// Former non-analog sessions are kept verbatim as archived evidence. They are
+// never relabelled, requantized, or regraded as universal-caliper questions.
+const migratedInstruments=[];
+for(const [type,key,expectedKey] of [['digital','mm-001','mm-005'],['dial','mm-001','mm-005'],['depth','mm-002','mm-002'],['height','in-1000','in-1000']]){
+  const fixture=harness();fixture.click('[data-mode="6"]');const data=fixture.state();
+  const oldConfig={...data.settings,type,resolutionKey:key,activity:'challenge',assessment:'exam'};
+  const record={type,key,ticks:E.quantize(1.23,key),input:E.format(E.quantize(1.23,key),key),correct:true,points:20,time:1400};
+  data.settings={...oldConfig};data.stats={...data.stats,total:5,correct:4,wrong:1,points:95};data.history=[{...record}];
+  data.session={...data.session,config:oldConfig,ticks:record.ticks,targetTicks:record.ticks,answered:1,correct:1,wrong:0,points:20,results:[record],lastResult:record,input:record.input};
+  data.legacySessions=[{marker:'earlier archive'}];
+  const originalSession=JSON.parse(JSON.stringify(data.session)),oldStats=JSON.parse(JSON.stringify(data.stats));
+  fixture.records.set(KEY,JSON.stringify(data));const migratedType=harness(fixture.records);migratedType.click('[data-mode="6"]');const restored=migratedType.state();
+  universalOnly(migratedType,'restored '+type);assert.equal(restored.session.config.resolutionKey,expectedKey);
+  assert.equal(restored.session.config.activity,'reading');assert.equal(restored.session.config.assessment,'training');assert.equal(restored.session.answered,0);
+  assert.deepEqual(restored.stats,oldStats,'archiving '+type+' neither awards nor removes accumulated scores');assert.deepEqual(restored.history,data.history,'past '+type+' results remain unchanged');
+  assert.deepEqual(restored.legacySessions[0],data.legacySessions[0]);assert.deepEqual(restored.legacySessions.at(-1),originalSession,'the former '+type+' session is archived losslessly');
+  migratedType.run('menu();');const reloaded=harness(migratedType.records);reloaded.click('[data-mode="6"]');
+  assert.equal(reloaded.state().legacySessions.length,restored.legacySessions.length,'reloading '+type+' migration does not duplicate the archive');assert.deepEqual(reloaded.state().stats,oldStats);
+  migratedInstruments.push(reloaded);
+  migratedInstruments.push(migratedType);
+}
+for(const invalidKey of ['mm-001','unknown']){
+  const fixture=harness();fixture.click('[data-mode="6"]');const data=fixture.state();data.settings.resolutionKey=invalidKey;data.session=null;
+  fixture.records.set(KEY,JSON.stringify(data));const restored=harness(fixture.records);restored.click('[data-mode="6"]');
+  universalOnly(restored,'invalid resolution '+invalidKey);assert.equal(restored.state().session.config.resolutionKey,'mm-005');migratedInstruments.push(restored);
+}
 
 async function fullscreenChecks(){
   const settle=async()=>{await Promise.resolve();await Promise.resolve();await Promise.resolve();};
@@ -192,6 +228,6 @@ async function fullscreenChecks(){
   native.click('[data-cp="fullscreen"]');await settle();native.run('menu();');await settle();assert.equal(native.document.fullscreenElement,null);assert.ok(native.fullscreen.exits>=1);
   const denied=harness(undefined,1800000000000,'reject');denied.click('[data-mode="6"]');denied.click('[data-cp="fullscreen"]');await settle();assert.ok(denied.host().classList.contains('cp-fullscreen-fallback'));denied.click('[data-cp="fullscreen"]');assert.equal(denied.host().classList.contains('cp-fullscreen-fallback'),false);
   const pending=harness(undefined,1800000000000,'pending');pending.click('[data-mode="6"]');pending.click('[data-cp="fullscreen"]');pending.run('menu();');pending.fullscreen.resolve();await settle();assert.equal(pending.document.fullscreenElement,null,'a late fullscreen request cannot cover the menu');
-  for(const current of [h,exam,vertical,digital,migrated,kept,f,native,denied,pending])assert.equal(current.records.get('moto-work-v1'),personal,'all activity preserves welding progress byte for byte');
+  for(const current of [h,exam,universal,migrated,kept,...migratedInstruments,f,native,denied,pending])assert.equal(current.records.get('moto-work-v1'),personal,'all activity preserves welding progress byte for byte');
 }
-fullscreenChecks().then(()=>console.log('PASS: one-scene reading game and inline counters; free/contact/digital/vertical operation; hidden grading and exam idempotency; restart/exit, migration, unchanged welding progress; native/fallback fullscreen and 100–800% zoom.')).catch(error=>{console.error(error);process.exitCode=1;});
+fullscreenChecks().then(()=>console.log('PASS: universal analog caliper only with five metric/imperial resolutions; single-scene reading, free/contact operation, exact counters, hidden exams, restart/exit, migration and unchanged welding progress; native/fallback fullscreen and 100–800% zoom.')).catch(error=>{console.error(error);process.exitCode=1;});

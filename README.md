@@ -48,29 +48,25 @@ O **jogo 3 começa complexo**, com todas as famílias disponíveis. Seu primeiro
 
 ## Jogo 06 — Desafio do Paquímetro
 
-O novo jogo é aberto pelo cartão **JOGO 06** no menu principal. A prática de leitura usa uma única tela: escala principal e nônio ampliados na parte superior; resposta, questão, acertos e erros logo abaixo. A configuração recolhida permite escolher o modelo, uma resolução disponível, a dificuldade, a quantidade de questões e a forma de avaliação.
+O novo jogo é aberto pelo cartão **JOGO 06** no menu principal e trabalha exclusivamente com o **paquímetro universal analógico**. A prática de leitura usa uma única tela: escala principal e nônio ampliados na parte superior; resposta, questão, acertos e erros logo abaixo. A configuração recolhida permite escolher a resolução, a dificuldade, a quantidade de questões e a forma de avaliação.
 
-### Modelos e resoluções
+### Modelo e resoluções
 
 | Modelo simulado | Resoluções disponíveis |
 | --- | --- |
 | **Universal analógico** | 0,1 mm; 0,05 mm; 0,02 mm; 1/128 pol; 0,001 pol. |
-| **Digital** | 0,01 mm; 0,001 pol. |
-| **Com relógio** | 0,01 mm; 0,001 pol. |
-| **Profundidade** | 0,05 mm; 0,02 mm; 0,001 pol. |
-| **Altura com nônio** | 0,02 mm; 0,001 pol. |
 
-Essa matriz representa os modelos implementados no simulador. As opções da configuração acompanham o tipo selecionado. O nônio de 0,1 mm é um modelo didático de dez divisões em 9 mm. Os modelos métricos têm curso de 150 mm; os imperiais, de 6 pol.
+As opções da configuração correspondem ao universal analógico, com escala principal e nônio. O nônio de 0,1 mm é um modelo didático de dez divisões em 9 mm. As escalas métricas têm curso de 150 mm; as imperiais, de 6 pol.
 
 ### Movimento e leitura
 
 - Arraste o cursor ou o nônio com o mouse ou por toque na tela. Os elementos móveis do corpo e a ampliação das escalas usam a mesma medida.
-- No universal, a abertura dos bicos e a extensão da haste de profundidade acompanham o cursor. No modelo de profundidade, a ponte é fixa e a haste graduada avança; no de altura, a base é fixa e o cursor se desloca pela coluna.
-- Use os botões de uma ou dez divisões para ajuste fino. Com a área do instrumento em foco, **← / →** movem uma divisão, **Shift** multiplica o passo por dez e **Home / End** levam aos limites permitidos. **↑ / ↓** acompanham o sentido dos modelos verticais.
+- A abertura dos bicos e a extensão da haste de profundidade do universal acompanham o cursor.
+- Use os botões de uma ou dez divisões para ajuste fino. Com a área do instrumento em foco, **← / →** movem uma divisão, **Shift** multiplica o passo por dez e **Home / End** levam aos limites permitidos.
 - A movimentação dos modos livre e de contato respeita a resolução selecionada e o curso do instrumento. A leitura ampliada mostra a escala principal e o nônio contínuos, encostados na mesma borda do instrumento. O zoom e a rolagem acontecem nessa mesma área, inclusive no celular.
 - **Tela cheia** amplia o jogo completo, incluindo a bancada e a resposta. Use **Sair da tela cheia** ou **Escape** para retornar. Nos navegadores que não oferecem a API de tela cheia, a bancada ocupa a área disponível da página. A sessão continua na mesma posição.
 - A ampliação das escalas pode ser selecionada em **100%, 200%, 400% ou 800%**. Na vista principal do jogo métrico, os números grandes indicam centímetros e cada intervalo pequeno vale um milímetro, como no instrumento. O zoom facilita distinguir as coincidências nas resoluções mais finas.
-- O visor abaixo do instrumento mostra a medida em tempo real. No modo livre, o botão com olho permite **ocultar ou revelar a medida**; ao ocultar, o visor digital e a explicação numérica também são escondidos.
+- A leitura numérica abaixo do instrumento mostra a medida em tempo real. No modo livre, o botão com olho permite **ocultar ou revelar a medida**; ao ocultar, a explicação numérica também é escondida.
 
 ### Leitura, modo livre e medição por contato
 
@@ -78,9 +74,9 @@ Essa matriz representa os modelos implementados no simulador. As opções da con
 
 **Modo livre:** explore posições sem questões obrigatórias nem pontuação. É possível abrir e fechar o instrumento, escolher uma medida para estudar, esconder a leitura e consultar a explicação da posição atual.
 
-**Medição por contato:** o sistema gera uma peça virtual de dimensão fixa. Movimente o instrumento até encostar no material e faça a leitura. O limite de contato impede atravessar a peça; movimentar o cursor não muda a dimensão que deve ser medida. No universal, o desafio usa os bicos externos; no de profundidade, a haste alcança o fundo da cavidade; no de altura, a ponta toca a face superior da peça. O instrumento e a escala ampliada são alternados na mesma área de desenho.
+**Medição por contato:** o sistema gera uma peça virtual de dimensão fixa. Movimente os bicos externos do universal até encostar no material e faça a leitura. O limite de contato impede atravessar a peça; movimentar o cursor não muda a dimensão que deve ser medida. O instrumento e a escala ampliada são alternados na mesma área de desenho.
 
-Nos modelos analógicos e com relógio, digite a medida depois de obter o contato. O campo aceita vírgula ou ponto decimal; no modelo de 1/128 pol também aceita frações, frações mistas e suas equivalências decimais. No **digital**, o desafio é posicionar corretamente e confirmar o contato: a leitura fica oculta até a correção, sem exigir que o jogador deduza casas decimais invisíveis pela escala principal.
+Na medição por contato, digite a medida depois de obter o contato. O campo aceita vírgula ou ponto decimal; na escala de 1/128 pol também aceita frações, frações mistas e suas equivalências decimais.
 
 Escolha entre dificuldade **fácil** (medidas inteiras), **média** (casas decimais progressivas) e **difícil** (resolução completa). As sessões podem ter **10, 20 ou 30 questões**, ou continuar **sem limite** até a conclusão pelo jogador.
 
@@ -101,7 +97,7 @@ O desempenho inclui pontos, acertos, erros, aproveitamento, sequência, tempo de
 
 ### Escalas e referências do simulador
 
-Os nônios métricos têm 10 divisões em 9 mm, 20 em 39 mm (nônio expandido) ou 50 em 49 mm. Em 1/128 pol, a escala principal usa 1/16 pol e oito divisões do nônio ocupam 7/16 pol. No modelo analógico decimal, cada divisão principal vale 0,025 pol e as 25 divisões do nônio têm passo de 0,024 pol. Os relógios usam 100 divisões por volta: 1 mm por volta no modelo métrico ou 0,1 pol no imperial. O digital usa leitura direta, sem nônio.
+Os nônios métricos têm 10 divisões em 9 mm, 20 em 39 mm (nônio expandido) ou 50 em 49 mm. Em 1/128 pol, a escala principal usa 1/16 pol e oito divisões do nônio ocupam 7/16 pol. Na escala imperial decimal, cada divisão principal vale 0,025 pol e as 25 divisões do nônio têm passo de 0,024 pol.
 
 O desenho vetorial e o código do instrumento são originais. O formato da prática de leitura tem como referência a [autoavaliação de paquímetro do Prof. Eduardo J. Stefanelli](https://www.stefanelli.eng.br/paquimetro-milimetro-05-autoavaliacao/), indicada pelo usuário. No nônio expandido de 0,05 mm, os números de 0 a 10 aparecem a cada dois traços; cada divisão vale 0,05 mm.
 
@@ -117,9 +113,9 @@ Para uma divisão principal `C`, passo do nônio `p` e múltiplo `K`, a resoluç
 | 1/128 pol | 1/16 pol | 7/128 pol | 8 | 1 |
 | 0,001 pol | 0,025 pol | 0,024 pol | 25 | 1 |
 
-Os modelos métricos e exemplos de leitura foram conferidos nas figuras 3 e 4 do material [Mitutoyo — Vernier Graduations](https://www.mitutoyo.com/webfoo/wp-content/uploads/E12029-Calipers.pdf). O [guia rápido da Mitutoyo](https://www2.mitutoyo.co.jp/eng/useful/E11003/pageindices/index22.html) explica o nônio longo de 0,05 mm. A suíte inclui os exemplos publicados de 11,4 mm, 30,35 mm, 15,42 mm e 16,15 mm e as leituras de relógio do manual Starrett.
+Os modelos métricos e exemplos de leitura foram conferidos nas figuras 3 e 4 do material [Mitutoyo — Vernier Graduations](https://www.mitutoyo.com/webfoo/wp-content/uploads/E12029-Calipers.pdf). O [guia rápido da Mitutoyo](https://www2.mitutoyo.co.jp/eng/useful/E11003/pageindices/index22.html) explica o nônio longo de 0,05 mm. A suíte inclui os exemplos publicados de 11,4 mm, 30,35 mm, 15,42 mm e 16,15 mm.
 
-As referências incluem [Mitutoyo — leitura de paquímetros e variantes de escala](https://www.mitutoyo.com/metrology-insights/mitutoyo-calipers-digital-dial-and-vernier-calipers-precision-measurement-tools-for-manufacturing/), [Mitutoyo — modelos de profundidade](https://www2.mitutoyo.co.jp/eng/useful/catalog-2021/pdf/284.pdf), [Mitutoyo — medidores de altura](https://pim.mitutoyo.com/products/small-tool-instruments-and-data-management/height-gages/mechanical-height-gages/vernier-height-gage/) e [Starrett — leitura de paquímetros com relógio](https://www.starrett.com/docs/default-source/user-guides/calipers/3201-and-3202-dial-caliper-user-manual-um3201-3202.pdf?sfvrsn=85608825_1). A equivalência de unidades segue o [NIST — fatores de conversão](https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8). Resolução indica o valor da divisão do modelo; não é uma garantia de exatidão de um instrumento real.
+As referências incluem [Mitutoyo — leitura de paquímetros e variantes de escala](https://www.mitutoyo.com/metrology-insights/mitutoyo-calipers-digital-dial-and-vernier-calipers-precision-measurement-tools-for-manufacturing/). A equivalência de unidades segue o [NIST — fatores de conversão](https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8). Resolução indica o valor da divisão do modelo; não é uma garantia de exatidão de um instrumento real.
 
 ## Executar
 
