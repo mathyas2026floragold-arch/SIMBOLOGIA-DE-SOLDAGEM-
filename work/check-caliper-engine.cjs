@@ -8,7 +8,8 @@ const models={
   'mm-01':[10,10,10,9,150],
   'mm-005':[20,20,20,39,150],
   'mm-002':[50,50,50,49,150],
-  'mm-001':[100,100,100,99,150],
+  // 0.01 mm belongs to the digital and 100-step dial models, not a 100-line vernier.
+  'mm-001':[100,100,0,0,150],
   'in-128':[128,8,8,7/16,6],
   'in-1000':[1000,25,25,.6,6]
 };
@@ -23,6 +24,9 @@ const minima=[0,4,10,18,30,45],names=['Conhecendo o paquímetro','Leitura da esc
 assert.deepEqual(E.LEVELS.map(l=>l.min),minima);assert.deepEqual(E.LEVELS.map(l=>l.name),names);
 for(let i=0;i<6;i++){const level=E.getLevel(minima[i]);assert.equal(level.index,i);assert.equal(level.level,i+1);assert.equal(level.next,minima[i+1]??null);if(i)assert.equal(E.getLevel(minima[i]-1).index,i-1);}
 assert.equal(E.getLevel(-1).level,1);assert.equal(E.getLevel(99999).level,6);
+assert.equal(E.formatGraduation(800,'in-128'),'6 1/4','auxiliary ruler graduations beyond capacity retain their printed values');
+assert.equal(E.format(800,'in-128'),'6','the actual reading remains clamped to the instrument capacity');
+assert.throws(()=>E.formatGraduation(.5,'in-128'),RangeError);
 
 let roundTrips=0,alignments=0;
 for(const [key,[scale,mainTicks,divisions,span,capacity]] of Object.entries(models)){
@@ -56,8 +60,41 @@ const sample=E.explain(663,'mm-005','analog');assert.equal(sample.main,33);asser
 const imperial=E.explain(1234,'in-1000','analog');near(imperial.main,1.225,'inch principal has 0.025 in increments');assert.equal(imperial.vernierIndex,9);near(imperial.contribution,.009,'nine thousandths');
 const fractions=E.explain(175,'in-128','analog');near(fractions.main,21/16,'fractional main reading');assert.equal(fractions.vernierIndex,7);near(fractions.contribution,7/128,'fractional vernier contribution');assert.equal(E.format(175,'in-128'),'1 47/128');
 assert.equal(E.grade(64,'in-128','2/4').correct,true);assert.equal(E.grade(64,'in-128','0,5').correct,true);assert.equal(E.grade(192,'in-128','1 2/4').correct,true);assert.equal(E.grade(1,'in-128','0.0078125').correct,true);
+assert.equal(E.grade(64,'in-128','9007199254740992/18014398509481984').correct,true,'equivalent fractions beyond Number safe integers remain exact within the input length limit');
+assert.equal(E.grade(192,'in-128','1 9007199254740992/18014398509481984').correct,true);
 assert.equal(E.grade(1,'in-128','1/256').correct,false,'a halfway value cannot be silently quantized into the correct response');
-assert.equal(E.grade(663,'mm-005','33.1500000002').correct,true,'tiny floating-point representation noise is accepted');
+assert.equal(E.grade(663,'mm-005','33.1500000002').correct,false,'a decimal near-miss is never accepted through a tolerance');
+assert.equal(E.grade(663,'mm-005','33.1500000000').correct,true,'extra decimal zeroes preserve exact equality');
+assert.equal(E.grade(663,'mm-005','33.150000000000000001').correct,false,'Number coercion cannot erase a significant off-grid digit');
+assert.equal(E.parseAnswer('33.150000000000000001','mm-005').normalized,'33,150000000000000001','off-grid normalization retains every source digit');
+assert.equal(E.parseAnswer('149.9999999999999999999999999','mm-005').onGrid,false,'rounding to the capacity in Number cannot turn a near-limit answer into a graduation');
+assert.equal(E.parseAnswer('150.0000000000000000000000001','mm-005').valid,false,'the exact rational limit rejects even a tiny amount above capacity');
+assert.equal(E.parseAnswer('-0.0000000000000000000000001','mm-005').valid,false,'negative values are rejected exactly');
+assert.equal(E.parseAnswer('1/256','in-128').normalized,'1/256','off-grid fractions retain their exact source rather than a rounded decimal');
+assert.equal(E.grade(64,'in-128','0.500000000000000000000').correct,true);
+assert.equal(E.grade(1,'in-128','0.007812500000000000000').correct,true);
+assert.equal(E.grade(1,'in-128','0.007812500000000000001').correct,false);
+for(const [value,key,expected] of [[.29,'mm-002',15],[.2899999999999999,'mm-002',14],[.2900000000000001,'mm-002',15],[1.005,'mm-001',101],[1.0049999999999997,'mm-001',100],[.5005,'in-1000',501],[.5004999999999998,'in-1000',500],[Number.MIN_VALUE,'mm-001',0],[1e-310,'in-1000',0],[Number.MAX_VALUE,'mm-002',7500],[-Number.MAX_VALUE,'mm-005',0]])assert.equal(E.quantize(value,key),expected,'canonical decimal rounds by exact rational comparison: '+value+'/'+key);
+for(const value of [NaN,Infinity,-Infinity,'0.29',null])assert.throws(()=>E.quantize(value,'mm-002'),TypeError);
+assert.equal(E.formatGraduation(Number.MAX_SAFE_INTEGER,'mm-005'),'450359962737049,55','large safe-integer graduations format without binary toFixed rounding');
+assert.equal(E.formatGraduation(Number.MAX_SAFE_INTEGER,'mm-001'),'90071992547409,91');
+assert.doesNotThrow(()=>JSON.stringify(E.parseAnswer('33.150000000000000001','mm-005')),'internal BigInts do not escape into serializable API objects');
+// Published independent readings: Mitutoyo E12029 Figures 3/4 and the
+// Starrett 3201/3202 manual pp.12–13. These are not generated by this engine.
+for(const [type,key,ticks,display,principal,index] of [
+  ['analog','mm-01',114,'11,4',11,4],
+  ['analog','mm-005',607,'30,35',30,7],
+  ['analog','mm-002',771,'15,42',15,21],
+  ['analog','mm-005',323,'16,15',16,3],
+  ['dial','mm-001',1481,'14,81',14,81],
+  ['dial','in-1000',622,'0,622',.6,22]
+]){
+  const reading=E.explain(ticks,key,type);
+  assert.equal(E.format(ticks,key),display,'published reading formats exactly');
+  near(reading.main,principal,'published principal reading');
+  assert.equal(type==='dial'?reading.dialIndex:reading.vernierIndex,index,'published secondary reading');
+  assert.equal(E.grade(ticks,key,display,type).correct,true,'published correct reading is accepted');
+}
 assert.equal(E.grade(663,'mm-005','33,151').correct,false,'off-grid values never count as the nearest graduation');
 assert.equal(E.grade(663,'mm-005','33,20').correct,false,'an adjacent valid graduation remains wrong');
 assert.equal(E.grade(1500,'mm-01','151').valid,false,'clamping cannot convert an out-of-capacity answer into an acerto');

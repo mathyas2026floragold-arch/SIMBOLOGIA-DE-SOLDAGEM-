@@ -48,7 +48,7 @@ O **jogo 3 começa complexo**, com todas as famílias disponíveis. Seu primeiro
 
 ## Jogo 06 — Desafio do Paquímetro
 
-O novo jogo é aberto pelo cartão **JOGO 06** no menu principal. A tela de configuração permite escolher o modelo, uma resolução disponível, a dificuldade, a quantidade de questões e a forma de avaliação.
+O novo jogo é aberto pelo cartão **JOGO 06** no menu principal. A prática de leitura usa uma única tela: escala principal e nônio ampliados na parte superior; resposta, questão, acertos e erros logo abaixo. A configuração recolhida permite escolher o modelo, uma resolução disponível, a dificuldade, a quantidade de questões e a forma de avaliação.
 
 ### Modelos e resoluções
 
@@ -67,14 +67,18 @@ Essa matriz representa os modelos implementados no simulador. As opções da con
 - Arraste o cursor ou o nônio com o mouse ou por toque na tela. Os elementos móveis do corpo e a ampliação das escalas usam a mesma medida.
 - No universal, a abertura dos bicos e a extensão da haste de profundidade acompanham o cursor. No modelo de profundidade, a ponte é fixa e a haste graduada avança; no de altura, a base é fixa e o cursor se desloca pela coluna.
 - Use os botões de uma ou dez divisões para ajuste fino. Com a área do instrumento em foco, **← / →** movem uma divisão, **Shift** multiplica o passo por dez e **Home / End** levam aos limites permitidos. **↑ / ↓** acompanham o sentido dos modelos verticais.
-- A movimentação respeita a resolução selecionada e o curso do instrumento. A área de leitura ampliada mantém o nônio contínuo e permite zoom e rolagem horizontal, inclusive no celular. O botão **Lupa** abre uma área maior; **Escape** ou **Fechar lupa** retornam à visualização normal.
+- A movimentação dos modos livre e de contato respeita a resolução selecionada e o curso do instrumento. A leitura ampliada mostra a escala principal e o nônio contínuos, encostados na mesma borda do instrumento. O zoom e a rolagem acontecem nessa mesma área, inclusive no celular.
+- **Tela cheia** amplia o jogo completo, incluindo a bancada e a resposta. Use **Sair da tela cheia** ou **Escape** para retornar. Nos navegadores que não oferecem a API de tela cheia, a bancada ocupa a área disponível da página. A sessão continua na mesma posição.
+- A ampliação das escalas pode ser selecionada em **100%, 200%, 400% ou 800%**. Na vista principal do jogo métrico, os números grandes indicam centímetros e cada intervalo pequeno vale um milímetro, como no instrumento. O zoom facilita distinguir as coincidências nas resoluções mais finas.
 - O visor abaixo do instrumento mostra a medida em tempo real. No modo livre, o botão com olho permite **ocultar ou revelar a medida**; ao ocultar, o visor digital e a explicação numérica também são escondidos.
 
-### Modo livre e modo desafio
+### Leitura, modo livre e medição por contato
+
+**Prática de leitura:** o jogo posiciona o paquímetro numa medida aleatória. Interprete a escala e digite a resposta. O cursor permanece na posição sorteada até a confirmação; não é preciso obter contato com uma peça nesse treino. Os acertos e erros são contados na própria linha de resposta. Ao concluir, escolha **Praticar novamente** ou **Encerrar**. É a modalidade principal de entrada do jogo.
 
 **Modo livre:** explore posições sem questões obrigatórias nem pontuação. É possível abrir e fechar o instrumento, escolher uma medida para estudar, esconder a leitura e consultar a explicação da posição atual.
 
-**Modo desafio:** o sistema gera uma peça virtual de dimensão fixa. Movimente o instrumento até encostar no material e faça a leitura. O limite de contato impede atravessar a peça; movimentar o cursor não muda a dimensão que deve ser medida. No universal, o desafio usa os bicos externos; no de profundidade, a haste alcança o fundo da cavidade; no de altura, a ponta toca a face superior da peça.
+**Medição por contato:** o sistema gera uma peça virtual de dimensão fixa. Movimente o instrumento até encostar no material e faça a leitura. O limite de contato impede atravessar a peça; movimentar o cursor não muda a dimensão que deve ser medida. No universal, o desafio usa os bicos externos; no de profundidade, a haste alcança o fundo da cavidade; no de altura, a ponta toca a face superior da peça. O instrumento e a escala ampliada são alternados na mesma área de desenho.
 
 Nos modelos analógicos e com relógio, digite a medida depois de obter o contato. O campo aceita vírgula ou ponto decimal; no modelo de 1/128 pol também aceita frações, frações mistas e suas equivalências decimais. No **digital**, o desafio é posicionar corretamente e confirmar o contato: a leitura fica oculta até a correção, sem exigir que o jogador deduza casas decimais invisíveis pela escala principal.
 
@@ -99,7 +103,21 @@ O desempenho inclui pontos, acertos, erros, aproveitamento, sequência, tempo de
 
 Os nônios métricos têm 10 divisões em 9 mm, 20 em 39 mm (nônio expandido) ou 50 em 49 mm. Em 1/128 pol, a escala principal usa 1/16 pol e oito divisões do nônio ocupam 7/16 pol. No modelo analógico decimal, cada divisão principal vale 0,025 pol e as 25 divisões do nônio têm passo de 0,024 pol. Os relógios usam 100 divisões por volta: 1 mm por volta no modelo métrico ou 0,1 pol no imperial. O digital usa leitura direta, sem nônio.
 
-O desenho vetorial e o código do instrumento são originais. A apresentação do universal e a prática de leitura têm como referência visual o [simulador do Prof. Eduardo J. Stefanelli](https://www.stefanelli.eng.br/paquimetro-virtual-simulador-milimetro-05/). No nônio expandido de 0,05 mm, os números de 0 a 10 aparecem a cada dois traços; cada divisão vale 0,05 mm.
+O desenho vetorial e o código do instrumento são originais. O formato da prática de leitura tem como referência a [autoavaliação de paquímetro do Prof. Eduardo J. Stefanelli](https://www.stefanelli.eng.br/paquimetro-milimetro-05-autoavaliacao/), indicada pelo usuário. No nônio expandido de 0,05 mm, os números de 0 a 10 aparecem a cada dois traços; cada divisão vale 0,05 mm.
+
+O motor, o visor e o desenho compartilham a definição de cada escala. As medidas e as coincidências são calculadas em divisões inteiras da resolução; o desenho usa proporções dessas mesmas divisões. Respostas decimais e fracionárias são comparadas por razões exatas com `BigInt`, sem tolerância para aceitar valores diferentes. O arredondamento de posicionamento escolhe a divisão mais próxima e, no ponto médio, a superior; ele não transforma uma resposta fora da resolução em acerto.
+
+Para uma divisão principal `C`, passo do nônio `p` e múltiplo `K`, a resolução é `R = K × C − p`. A leitura é `M + i × R`, com `M` igual à última divisão principal completa antes do zero e `i` igual ao índice do traço alinhado. No desenho, esse traço está em `M + i × R + i × p = M + i × K × C`, exatamente numa graduação principal.
+
+| Resolução | Divisão principal C | Passo do nônio p | Divisões | K |
+| --- | --- | --- | --- | --- |
+| 0,1 mm | 1 mm | 0,9 mm | 10 | 1 |
+| 0,05 mm expandido | 1 mm | 1,95 mm | 20 | 2 |
+| 0,02 mm | 1 mm | 0,98 mm | 50 | 1 |
+| 1/128 pol | 1/16 pol | 7/128 pol | 8 | 1 |
+| 0,001 pol | 0,025 pol | 0,024 pol | 25 | 1 |
+
+Os modelos métricos e exemplos de leitura foram conferidos nas figuras 3 e 4 do material [Mitutoyo — Vernier Graduations](https://www.mitutoyo.com/webfoo/wp-content/uploads/E12029-Calipers.pdf). O [guia rápido da Mitutoyo](https://www2.mitutoyo.co.jp/eng/useful/E11003/pageindices/index22.html) explica o nônio longo de 0,05 mm. A suíte inclui os exemplos publicados de 11,4 mm, 30,35 mm, 15,42 mm e 16,15 mm e as leituras de relógio do manual Starrett.
 
 As referências incluem [Mitutoyo — leitura de paquímetros e variantes de escala](https://www.mitutoyo.com/metrology-insights/mitutoyo-calipers-digital-dial-and-vernier-calipers-precision-measurement-tools-for-manufacturing/), [Mitutoyo — modelos de profundidade](https://www2.mitutoyo.co.jp/eng/useful/catalog-2021/pdf/284.pdf), [Mitutoyo — medidores de altura](https://pim.mitutoyo.com/products/small-tool-instruments-and-data-management/height-gages/mechanical-height-gages/vernier-height-gage/) e [Starrett — leitura de paquímetros com relógio](https://www.starrett.com/docs/default-source/user-guides/calipers/3201-and-3202-dial-caliper-user-manual-um3201-3202.pdf?sfvrsn=85608825_1). A equivalência de unidades segue o [NIST — fatores de conversão](https://www.nist.gov/pml/special-publication-811/nist-guide-si-appendix-b-conversion-factors/nist-guide-si-appendix-b8). Resolução indica o valor da divisão do modelo; não é uma garantia de exatidão de um instrumento real.
 
@@ -135,7 +153,7 @@ Consulte a [documentação oficial do GitHub Pages](https://docs.github.com/en/p
 
 ## Verificar
 
-Execute as dez verificações na raiz do projeto:
+Execute as onze verificações na raiz do projeto:
 
 ```sh
 node work/check-levels-v3.cjs
@@ -148,6 +166,7 @@ node work/check-process-anatomy.cjs
 node work/check-caliper-engine.cjs
 node work/check-caliper-instrument.cjs
 node work/check-caliper-ui.cjs
+node work/check-caliper-precision.cjs
 ```
 
 Elas cobrem níveis, progresso salvo, prévia do máximo, integração dos cinco modos de soldagem, respostas únicas, reforço, montagem e correção por campo, progressão, parâmetros técnicos, processos e anatomia. As verificações do paquímetro acrescentam quantização e limites, leitura métrica e imperial, formatos de resposta, sincronização entre cursor e elementos de medição, alvo fixo, alinhamento real das escalas SVG, ocultação da leitura e ponteiros do relógio.

@@ -20,13 +20,23 @@ Element.prototype.releasePointerCapture=function(){delete this.capturedPointer;}
 
 const KEY='desafio-paquimetro-v1';
 const personal=JSON.stringify({xp:620,total:23,right:20,streak:3,master:{1:4,2:5,3:6,4:2,5:1},seen:{personal:true}});
-function harness(records=new Map([['moto-work-v1',personal]]),initialTime=1800000000000){
-  const document=new Element('document');document.innerHTML=html.match(/<body>([\s\S]*?)<script>/)[1];document.createElement=tag=>new Element(tag);
+function harness(records=new Map([['moto-work-v1',personal]]),initialTime=1800000000000,fullscreenMode='unsupported'){
+  const document=new Element('document');document.innerHTML='<html><body>'+html.match(/<body>([\s\S]*?)<script>/)[1]+'</body></html>';document.createElement=tag=>new Element(tag);
   const query=document.querySelector.bind(document);document.querySelector=selector=>selector==='main > details'?query('main').children.find(el=>el.tagName==='details'):query(selector);
+  document.body=query('body');document.documentElement=query('html');document.fullscreenElement=null;
   const timeouts=new Map(),intervals=new Map(),frames=new Map();let sequence=0,now=initialTime,seed=793;
   const math=Object.create(Math);math.random=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed/4294967296;};
   class TestDate extends Date{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}}
-  const window={scrollTo(){},addEventListener(){}};
+  const documentEvents=new Map(),windowEvents=new Map();
+  const add=(events,name,listener)=>{if(!events.has(name))events.set(name,[]);events.get(name).push(listener);};
+  const dispatch=(events,name,event={})=>{for(const listener of events.get(name)||[])listener({preventDefault(){},...event});};
+  document.addEventListener=(name,listener)=>add(documentEvents,name,listener);
+  const window={scrollX:0,scrollY:0,scrollTo(x,y){this.scrollX=x;this.scrollY=y;},addEventListener:(name,listener)=>add(windowEvents,name,listener)};
+  const fullscreen={requests:0,exits:0,resolve:null};
+  if(fullscreenMode!=='unsupported'){
+    query('#app').requestFullscreen=()=>{fullscreen.requests++;if(fullscreenMode==='reject')return Promise.reject(new Error('NotAllowedError'));if(fullscreenMode==='pending')return new Promise(resolve=>{fullscreen.resolve=()=>{document.fullscreenElement=query('#app');dispatch(documentEvents,'fullscreenchange');resolve();};});document.fullscreenElement=query('#app');dispatch(documentEvents,'fullscreenchange');return Promise.resolve();};
+    document.exitFullscreen=()=>{fullscreen.exits++;document.fullscreenElement=null;dispatch(documentEvents,'fullscreenchange');return Promise.resolve();};
+  }
   const context=vm.createContext({console,document,window,history:{},Math:math,Date:TestDate,localStorage:{getItem:key=>records.get(key)||null,setItem:(key,value)=>records.set(key,String(value))},matchMedia:()=>({matches:true}),confirm:()=>false,
     setTimeout:fn=>{const id=++sequence;timeouts.set(id,fn);return id;},clearTimeout:id=>timeouts.delete(id),setInterval:fn=>{const id=++sequence;intervals.set(id,fn);return id;},clearInterval:id=>intervals.delete(id),requestAnimationFrame:fn=>{const id=++sequence;frames.set(id,fn);return id;},cancelAnimationFrame:id=>frames.delete(id)});
   vm.runInContext(script,context);
@@ -42,101 +52,146 @@ function harness(records=new Map([['moto-work-v1',personal]]),initialTime=180000
   const key=(name,shiftKey=false,area='#cp-instrument-area')=>{host().onkeydown({target:$(area),key:name,shiftKey,preventDefault(){}});flushFrames();flushTimers();};
   const state=()=>{flushTimers();return JSON.parse(records.get(KEY));};
   const advance=ms=>{now+=ms;for(const fn of intervals.values())fn();};
-  return {document,records,run,$,host,click,submit,choose,activity,input,blur,key,state,advance,now:()=>now,flushFrames,flushTimers,intervals,frames};
+  return {document,window,fullscreen,dispatchWindow:(name,event)=>dispatch(windowEvents,name,event),dispatchDocument:(name,event)=>dispatch(documentEvents,name,event),records,run,$,host,click,submit,choose,activity,input,blur,key,state,advance,now:()=>now,flushFrames,flushTimers,intervals,frames};
+}
+
+function singleScene(h,label){
+  assert.equal(h.$('#cp-instrument-area').querySelectorAll('.caliper-instrument').length,1,label+' renders one instrument');
+  assert.equal(h.document.querySelectorAll('#cp-detail-area').length,0,label+' has no second drawing panel');
+  assert.equal(h.document.querySelectorAll('.cp-below').length,0,label+' has no separate sidebar');
+}
+function hidden(h,label){
+  assert.equal(h.$('#cp-instrument-area').querySelectorAll('[data-reading]').length,0,label+' does not reveal a numeric reading');
+  assert.equal(h.$('#cp-instrument-area').querySelectorAll('[data-vernier-unit]').length,0,label+' does not label absolute vernier positions');
+  assert.equal(h.$('#cp-instrument-area').querySelectorAll('.ci-coincidence').length,0,label+' does not identify the answer');
+  const reading=h.document.querySelector('#cp-measure');if(reading)assert.match(reading.textContent,/—/,label+' masks the free readout');
+  const explanation=h.document.querySelector('#cp-live-explanation');if(explanation)assert.equal(explanation.textContent,'',label+' hides the explanation');
+}
+function configure(h,values){
+  h.click('[data-cp="configure"]');
+  for(const [id,value] of Object.entries(values))h.choose('cp-'+id,value);
+  h.submit('cp-setup-form');
+}
+function reading(h,correct=true){
+  const s=h.state().session,key=s.config.resolutionKey;
+  h.input('cp-answer',E.format(correct?s.targetTicks:s.targetTicks+1,key));h.advance(1250);h.submit('cp-answer-form');
 }
 
 let h=harness();
-assert.deepEqual(h.document.querySelectorAll('[data-mode]').map(el=>el.dataset.mode),['1','2','3','4','5','6'],'five welding games and the caliper share the menu');
+assert.deepEqual(h.document.querySelectorAll('[data-mode]').map(e=>e.dataset.mode),['1','2','3','4','5','6']);
 h.click('[data-mode="6"]');
-assert.ok(h.$('#stats').hidden&&h.$('#preview-notice').hidden&&h.$('main > details').hidden,'caliper setup hides the welding status and footer');
-h.run('menu();');assert.equal(h.$('#stats').hidden,false);assert.equal(h.$('#preview-notice').hidden,false);assert.equal(h.$('main > details').hidden,false);
-h.click('[data-mode="6"]');h.submit('cp-setup-form');
-assert.equal(h.state().session.config.activity,'free');
-const jump=h.input('cp-jump','33,15');h.blur(jump);
-assert.ok(h.document.querySelector('#cp-jump-form'),'text-input blur does not leave the free workspace');
-h.submit('cp-jump-form');assert.equal(h.state().session.ticks,663);assert.ok(h.$('#cp-measure').textContent.includes('33,15'),'typed position is painted synchronously');
-h.key('ArrowRight');assert.equal(h.state().session.ticks,664);assert.ok(h.$('#cp-measure').textContent.includes('33,20'));
-h.key('ArrowLeft',true);assert.equal(h.state().session.ticks,654,'Shift moves ten physical divisions');
-h.key('Home');assert.equal(h.state().session.ticks,0);h.key('ArrowLeft');assert.equal(h.state().session.ticks,0);
-h.key('End');assert.equal(h.state().session.ticks,3000);h.key('ArrowRight');assert.equal(h.state().session.ticks,3000);
-h.key('Home');h.key('ArrowRight');assert.ok(h.$('#cp-status').textContent.includes('0,05'));
-h.click('[data-cp="eye"]');
-function assertHidden(current,label){
-  assert.ok(current.$('#cp-measure').textContent.includes('—'),label+' readout is masked');
-  assert.equal(current.$('#cp-instrument-area').querySelectorAll('[data-reading]').length,0,label+' full instrument has no revealed value');
-  assert.equal(current.$('#cp-detail-area').querySelectorAll('[data-reading]').length,0,label+' detail has no revealed value');
-  assert.equal(current.$('#cp-detail-area').querySelectorAll('[data-vernier-unit]').length,0,label+' vernier does not label its absolute position');
-  assert.equal(current.$('#cp-live-explanation').textContent,'',label+' live explanation is empty');
-}
-assertHidden(h,'hidden free mode');assert.ok(!h.$('#cp-status').textContent.includes('0,05'),'hiding the readout clears the previous numeric status');
-h.click('[data-cp="loupe"]');assert.ok(h.$('.cp-simulator').classList.contains('cp-loupe-open'));assertHidden(h,'hidden enlarged loupe');
-h.key('Escape');assert.ok(!h.$('.cp-simulator').classList.contains('cp-loupe-open'),'Escape closes the focused view');
-h.click('[data-cp="explain"]');assertHidden(h,'requesting help while hidden');
-assert.equal(h.state().stats.total,0);assert.equal(h.state().stats.points,0,'free exploration never earns points');
-const savedFree=h.state().session.ticks;h.run('menu();');assert.equal(h.intervals.size,0,'closing the caliper stops its interval');
-
-// A fresh execution reads the same persisted state and restores the hidden
-// cursor position. No application internals are exposed by this harness.
-h=harness(h.records);h.click('[data-mode="6"]');h.click('[data-cp="resume"]');
-assert.equal(h.state().session.ticks,savedFree);assertHidden(h,'restored free mode');
-h.click('[data-cp="configure"]');h.activity('challenge');h.choose('cp-assessment','training');h.submit('cp-setup-form');
-let s=h.state().session;
-const answer=E.format(s.targetTicks,s.config.resolutionKey);
-h.input('cp-answer',answer);h.submit('cp-answer-form');assert.equal(h.state().session.answered,0,'a guessed answer cannot bypass physical contact');assert.match(h.$('#cp-error').textContent,/Encoste/);
-h.click('[data-cp="minimum"]');s=h.state().session;assert.equal(s.ticks,s.targetTicks);assertHidden(h,'unanswered training contact');
-h.input('cp-answer','33,xx');h.submit('cp-answer-form');assert.equal(h.state().session.answered,0,'malformed input is not scored');
-const answerInput=h.input('cp-answer',answer);h.blur(answerInput);assert.ok(h.document.querySelector('#cp-answer-form'),'answer blur preserves the challenge');
+assert.ok(h.$('#stats').hidden&&h.$('#preview-notice').hidden&&h.$('main > details').hidden);
+assert.equal(h.state().session.config.activity,'reading','the game opens directly as an assessment');
+assert.equal(h.state().session.config.assessment,'training');
+singleScene(h,'reading');hidden(h,'reading');
+assert.ok(h.$('#cp-answer-form'));assert.ok(h.$('.cp-correct')&&h.$('.cp-wrong'),'inline answer counters are present');
+assert.equal(h.state().session.ticks,h.state().session.targetTicks,'the displayed reading is ready to interpret');
+const target=h.state().session.ticks,handle=h.$('#cp-instrument-area').querySelector('[data-caliper-slider]');
+const pointer=(x,y)=>({target:handle,pointerId:7,clientX:x,clientY:y,preventDefault(){}});
+h.key('ArrowRight');h.key('End');h.host().onpointerdown(pointer(0,0));h.host().onpointermove(pointer(100,0));h.host().onpointerup(pointer(100,0));
+assert.equal(h.state().session.ticks,target,'assessment readings cannot be moved');
+h.input('cp-answer','bad');h.submit('cp-answer-form');assert.equal(h.state().session.answered,0,'invalid text is not graded');
+const typed=h.input('cp-answer',E.format(target,'mm-005'));h.blur(typed);assert.ok(h.$('#cp-answer-form'),'blur does not reset the question');
 h.advance(1250);h.submit('cp-answer-form');
-assert.equal(h.state().stats.total,1);assert.equal(h.state().stats.correct,1);assert.equal(h.state().stats.points,20);assert.equal(h.state().session.locked,true);
-h.submit('cp-answer-form');assert.equal(h.state().stats.total,1,'locked training cannot score the same measurement twice');
-const lockedTicks=h.state().session.ticks;h.key('ArrowRight');assert.equal(h.state().session.ticks,lockedTicks,'answered position remains fixed');
-h.click('[data-cp="eye"]');assertHidden(h,'hidden correction');assert.ok(!h.$('#cp-feedback').textContent.includes(answer),'hidden feedback does not leave the measurement visible');assert.equal(h.$('#cp-answer').value,'');
+assert.equal(h.state().session.correct,1);assert.equal(h.state().stats.points,20);assert.equal(h.state().session.locked,true);
+assert.match(h.$('.cp-correct').textContent,/1/);assert.match(h.$('#cp-feedback').textContent,/Correto/);
+h.submit('cp-answer-form');assert.equal(h.state().stats.total,1,'the same answer cannot score twice');
+const answer=E.format(target,'mm-005');h.click('[data-cp="eye"]');hidden(h,'hidden correction');
+assert.ok(!h.$('#cp-feedback').textContent.includes(answer));assert.equal(h.$('#cp-answer').value,'');
 h.click('[data-cp="eye"]');assert.ok(h.$('#cp-feedback').textContent.includes(answer));
-h.click('[data-cp="next"]');s=h.state().session;h.click('[data-cp="minimum"]');
-const wrong=E.format(s.targetTicks===E.getResolution(s.config.resolutionKey).maxTicks?s.targetTicks-1:s.targetTicks+1,s.config.resolutionKey);
-h.input('cp-answer',wrong);h.advance(1500);h.submit('cp-answer-form');
-assert.equal(h.state().stats.total,2);assert.equal(h.state().stats.correct,1);assert.equal(h.state().stats.wrong,1);assert.equal(h.state().stats.points,20,'incorrect reading adds no points');
-h.click('[data-cp="finish"]');assert.equal(h.state().stats.sessions,1);
-const trainingSummary=JSON.stringify(h.state().stats);h.run('menu();');h.click('[data-mode="6"]');h.click('[data-cp="resume"]');assert.equal(JSON.stringify(h.state().stats),trainingSummary,'opening a completed summary is idempotent');
+h.click('[data-cp="next"]');reading(h,false);
+assert.equal(h.state().session.correct,1);assert.equal(h.state().session.wrong,1);assert.equal(h.state().stats.points,20);
+h.click('[data-cp="finish"]');const summary=JSON.stringify(h.state().stats),config=JSON.stringify(h.state().session.config);
+assert.match(h.$('[data-cp="restart"]').textContent,/Praticar novamente/);assert.match(h.$('[data-cp="exit"]').textContent,/Encerrar/);
+h.run('menu();');h=harness(h.records);h.click('[data-mode="6"]');
+assert.equal(JSON.stringify(h.state().stats),summary,'reopening a completed result does not grade it again');
+h.click('[data-cp="restart"]');assert.equal(JSON.stringify(h.state().session.config),config);assert.equal(h.state().session.answered,0,'practise again keeps configuration and resets session counters');
+h.click('[data-cp="finish"]');h.click('[data-cp="exit"]');
+assert.equal(h.$('#stats').hidden,false);assert.equal(h.$('main > details').hidden,false);assert.equal(h.document.querySelectorAll('[data-mode]').length,6);
 
-// Exam results remain private until the final response. Aggregate counters
-// are applied exactly once, including after a page reload.
-h.click('[data-cp="configure"]');h.choose('cp-assessment','exam');h.choose('cp-quantity','10');h.submit('cp-setup-form');
-const beforeExam=h.state().stats;
+// Free manipulation still uses the same single viewport, alternating the full
+// physical instrument and its enlarged scale instead of duplicating drawings.
+h=harness();h.click('[data-mode="6"]');configure(h,{activity:'free'});
+singleScene(h,'free instrument');assert.equal(h.state().session.config.activity,'free');
+const jump=h.input('cp-jump','33,15');h.blur(jump);h.submit('cp-jump-form');
+assert.equal(h.state().session.ticks,663);assert.match(h.$('#cp-measure').textContent,/33,15/);
+h.key('ArrowRight');assert.equal(h.state().session.ticks,664);assert.match(h.$('#cp-measure').textContent,/33,20/);
+h.key('ArrowLeft',true);assert.equal(h.state().session.ticks,654);
+h.key('Home');h.key('ArrowLeft');assert.equal(h.state().session.ticks,0);
+h.key('End');h.key('ArrowRight');assert.equal(h.state().session.ticks,3000);
+h.key('Home');h.key('ArrowRight');h.click('[data-cp="eye"]');hidden(h,'free');
+assert.ok(!h.$('#cp-status').textContent.includes('0,05'),'eye clears the previous numeric status');
+h.click('[data-cp="explain"]');hidden(h,'hidden help request');
+h.click('[data-cp="view"]');singleScene(h,'free enlarged scale');assert.ok(h.document.querySelector('.ci-game-scale'));hidden(h,'free enlarged scale');
+assert.equal(h.state().stats.total,0);assert.equal(h.state().stats.points,0);
+const freePosition=h.state().session.ticks;h.run('menu();');assert.equal(h.intervals.size,0);
+h=harness(h.records);h.click('[data-mode="6"]');assert.equal(h.state().session.ticks,freePosition);hidden(h,'restored free');
+
+// Physical contact remains mandatory only in the contact activity.
+configure(h,{activity:'challenge',assessment:'training'});let s=h.state().session;
+h.input('cp-answer',E.format(s.targetTicks,s.config.resolutionKey));h.submit('cp-answer-form');
+assert.equal(h.state().session.answered,0);assert.match(h.$('#cp-error').textContent,/Encoste/);
+h.click('[data-cp="minimum"]');assert.equal(h.state().session.ticks,h.state().session.targetTicks);hidden(h,'contact before grading');
+reading(h);assert.equal(h.state().stats.total,1);assert.equal(h.state().stats.correct,1);assert.equal(h.state().stats.points,20);
+h.click('[data-cp="next"]');h.click('[data-cp="minimum"]');reading(h,false);
+assert.equal(h.state().stats.wrong,1);assert.equal(h.state().stats.points,20);
+h.click('[data-cp="finish"]');const contactSummary=JSON.stringify(h.state().stats);h.run('menu();');h.click('[data-mode="6"]');assert.equal(JSON.stringify(h.state().stats),contactSummary);
+
+// An exam never exposes correctness, hints, or a numeric answer before its
+// completion. Reload at the halfway point must preserve pending results.
+let exam=harness();exam.click('[data-mode="6"]');configure(exam,{assessment:'exam',quantity:'10'});
+const beforeExam=exam.state().stats;
 for(let i=0;i<10;i++){
-  assert.equal(h.document.querySelectorAll('[data-cp="hint"]').length,0,'exam has no hint button');
-  assert.equal(h.document.querySelectorAll('.cp-guide').length,0,'exam has no reference guide before submission');
-  assertHidden(h,'active exam');assert.equal(h.$('#cp-feedback').textContent,'','exam gives no correction between responses');
-  const target=h.state().session.targetTicks,key=h.state().session.config.resolutionKey;
-  h.click('[data-cp="minimum"]');const correct=i%3!==1;
-  h.input('cp-answer',E.format(correct?target:target+1,key));h.advance(1250);h.submit('cp-answer-form');
-  if(i<9){assert.equal(h.state().session.answered,i+1);assert.equal(JSON.stringify(h.state().stats),JSON.stringify(beforeExam),'exam score is deferred until completion');assert.equal(h.$('#cp-feedback').textContent,'');}
-  if(i===4){
-    const savedQuestion=h.state().session;h.run('menu();');
-    h=harness(h.records,h.now()+2000);h.click('[data-mode="6"]');h.click('[data-cp="resume"]');
-    assert.equal(h.state().session.answered,5,'reload preserves the number of recorded exam answers');
-    assert.equal(h.state().session.targetTicks,savedQuestion.targetTicks,'reload resumes the same unanswered piece');
-    assert.equal(h.state().session.ticks,savedQuestion.ticks,'reload preserves the manipulated opening');
-    assert.equal(JSON.stringify(h.state().stats),JSON.stringify(beforeExam),'reloading an active exam does not apply pending results');
-    assert.notEqual(h.$('#cp-clock').textContent,'00:00','the exam timer continues across reload');
-  }
+  singleScene(exam,'exam');hidden(exam,'exam');
+  assert.equal(exam.document.querySelectorAll('[data-cp="hint"]').length,0);assert.equal(exam.document.querySelectorAll('.cp-correct').length,0);assert.equal(exam.document.querySelectorAll('.cp-wrong').length,0);
+  assert.equal(exam.$('#cp-feedback').textContent,'');reading(exam,i%3!==1);
+  if(i<9){assert.equal(exam.state().session.answered,i+1);assert.equal(JSON.stringify(exam.state().stats),JSON.stringify(beforeExam));assert.equal(exam.$('#cp-feedback').textContent,'');}
+  if(i===4){const saved=exam.state().session;exam.run('menu();');exam=harness(exam.records,exam.now()+2000);exam.click('[data-mode="6"]');assert.equal(exam.state().session.answered,5);assert.equal(exam.state().session.targetTicks,saved.targetTicks);assert.equal(JSON.stringify(exam.state().stats),JSON.stringify(beforeExam));assert.notEqual(exam.$('#cp-clock').textContent,'00:00');}
 }
-assert.equal(h.state().session.completed,true);assert.equal(h.state().session.examApplied,true);
-assert.equal(h.state().stats.total,beforeExam.total+10);assert.equal(h.state().stats.correct,beforeExam.correct+7);assert.equal(h.state().stats.wrong,beforeExam.wrong+3);assert.equal(h.state().stats.points,beforeExam.points+155);
-assert.equal(h.state().stats.sessions,beforeExam.sessions+1);assert.equal(h.intervals.size,0,'completed exam stops its interval');
-const finalStats=JSON.stringify(h.state().stats);h.run('menu();');h=harness(h.records);h.click('[data-mode="6"]');h.click('[data-cp="resume"]');assert.equal(JSON.stringify(h.state().stats),finalStats,'reloaded completed exam is never applied again');
+assert.equal(exam.state().session.completed,true);assert.equal(exam.state().session.examApplied,true);assert.equal(exam.state().stats.total,10);assert.equal(exam.state().stats.correct,7);assert.equal(exam.state().stats.wrong,3);assert.equal(exam.state().stats.points,155);assert.equal(exam.state().stats.sessions,1);assert.equal(exam.intervals.size,0);
+const examSummary=JSON.stringify(exam.state().stats);exam.run('menu();');exam=harness(exam.records);exam.click('[data-mode="6"]');assert.equal(JSON.stringify(exam.state().stats),examSummary,'completed exam results apply exactly once');
 
-// Vertical geometry uses the same quantized state as horizontal geometry.
-// Pointer movement may wait for one animation frame; keyboard movement may not.
+// Metric and imperial vertical models preserve their direction and resolution.
+let vertical=harness();vertical.click('[data-mode="6"]');
 for(const [type,resolution,forward] of [['depth','mm-002','ArrowDown'],['height','mm-002','ArrowUp']]){
-  h.click('[data-cp="configure"]');h.activity('free');h.choose('cp-type',type);h.choose('cp-resolution',resolution);h.submit('cp-setup-form');
-  h.key(forward);assert.equal(h.state().session.ticks,1,type+' keyboard follows the physical vertical direction');
-  const handle=h.$('#cp-instrument-area').querySelector('[data-caliper-slider]'),axis=handle.getAttribute('data-drag-axis'),factor=Number(handle.getAttribute('data-drag-px-per-unit'));
-  const event=(x,y)=>({target:handle,pointerId:14,clientX:x,clientY:y,preventDefault(){}});
-  h.host().onpointerdown(event(0,0));h.host().onpointermove(event(axis==='x'?factor*.06:0,axis==='y'?factor*.06:0));
-  h.flushFrames();h.host().onpointerup(event(0,0));assert.equal(h.state().session.ticks,4,type+' drag advances exactly three divisions');
-  h.key('Home');assert.equal(h.state().session.ticks,0);h.key('End');assert.equal(h.state().session.ticks,7500);
+  configure(vertical,{activity:'free',type,resolution});vertical.key(forward);assert.equal(vertical.state().session.ticks,1);
+  const moving=vertical.$('#cp-instrument-area').querySelector('[data-caliper-slider]'),axis=moving.getAttribute('data-drag-axis'),factor=Number(moving.getAttribute('data-drag-px-per-unit'));
+  const event=(x,y)=>({target:moving,pointerId:14,clientX:x,clientY:y,preventDefault(){}});
+  vertical.host().onpointerdown(event(0,0));vertical.host().onpointermove(event(axis==='x'?factor*.06:0,axis==='y'?factor*.06:0));vertical.flushFrames();vertical.host().onpointerup(event(0,0));assert.equal(vertical.state().session.ticks,4);
+  vertical.key('End');assert.equal(vertical.state().session.ticks,7500);
 }
-assert.equal(h.records.get('moto-work-v1'),personal,'all caliper activity leaves the saved welding progress byte-for-byte unchanged');
-h.run('menu();');assert.equal(h.document.querySelectorAll('[data-mode]').length,6);assert.equal(h.$('#stats').hidden,false);
-console.log('PASS: six-game menu; free typed/keyboard/drag positioning, hidden readings and status, contact grading, training/exam scoring and idempotency, resume after reload, vertical geometry and unchanged welding progress.');
+
+// A digital screen cannot be interpreted while hidden: it keeps the physical
+// contact activity rather than creating an impossible reading exercise.
+const digital=harness();digital.click('[data-mode="6"]');configure(digital,{type:'digital'});
+assert.equal(digital.state().session.config.activity,'challenge');assert.equal(digital.document.querySelector('#cp-answer'),null);
+digital.submit('cp-answer-form');assert.equal(digital.state().session.answered,0);digital.click('[data-cp="minimum"]');digital.submit('cp-answer-form');assert.equal(digital.state().session.correct,1);
+
+// Legacy free exploration is the only session that migrates to the new reading
+// entrance. Existing scores and genuinely active legacy exams are preserved.
+const legacyFree=harness();legacyFree.click('[data-mode="6"]');configure(legacyFree,{activity:'free'});const legacyData=legacyFree.state();delete legacyData.layoutVersion;legacyData.settings.assessment='exam';legacyData.stats={...legacyData.stats,total:5,correct:4,wrong:1,points:95};
+legacyFree.records.set(KEY,JSON.stringify(legacyData));const migrated=harness(legacyFree.records);migrated.click('[data-mode="6"]');assert.equal(migrated.state().layoutVersion,2);assert.equal(migrated.state().session.config.activity,'reading');assert.equal(migrated.state().session.config.assessment,'training');assert.equal(migrated.state().stats.points,95);assert.equal(migrated.state().stats.correct,4);
+const legacyExam=harness();legacyExam.click('[data-mode="6"]');configure(legacyExam,{assessment:'exam'});reading(legacyExam);const legacyExamData=legacyExam.state();delete legacyExamData.layoutVersion;legacyExam.records.set(KEY,JSON.stringify(legacyExamData));const kept=harness(legacyExam.records);kept.click('[data-mode="6"]');assert.equal(kept.state().session.answered,1);assert.equal(kept.state().session.config.assessment,'exam');assert.equal(kept.state().stats.total,0);
+
+async function fullscreenChecks(){
+  const settle=async()=>{await Promise.resolve();await Promise.resolve();await Promise.resolve();};
+  const f=harness();f.click('[data-mode="6"]');configure(f,{activity:'free'});f.click('[data-cp="eye"]');
+  f.window.scrollTo(17,420);f.host().scrollTop=61;f.host().scrollLeft=3;f.document.body.style.overflow='auto';f.document.documentElement.style.overflow='scroll';
+  f.input('cp-jump','33,15');const before=JSON.stringify(f.state().session),stable=f.host();f.click('[data-cp="fullscreen"]');
+  assert.equal(f.host(),stable);assert.ok(f.host().classList.contains('cp-fullscreen-fallback'));assert.equal(f.document.body.style.overflow,'hidden');assert.equal(f.document.documentElement.style.overflow,'hidden');assert.equal(f.$('#cp-jump').value,'33,15');assert.equal(JSON.stringify(f.state().session),before);hidden(f,'fallback fullscreen');
+  f.dispatchWindow('keydown',{key:'Escape'});assert.equal(f.host().classList.contains('cp-fullscreen-fallback'),false);assert.equal(f.document.body.style.overflow,'auto');assert.equal(f.document.documentElement.style.overflow,'scroll');assert.equal(f.window.scrollX,17);assert.equal(f.window.scrollY,420);assert.equal(f.host().scrollTop,61);assert.equal(f.host().scrollLeft,3);
+  f.$('#cp-instrument-area').scrollLeft=40;f.$('#cp-instrument-area').scrollTop=20;f.choose('cp-zoom','8');
+  assert.equal(f.$('#cp-instrument-canvas').style.width,'800%');assert.equal(f.$('#cp-instrument-canvas').style.minWidth,'7680px');assert.equal(f.$('#cp-instrument-area').scrollLeft,320);assert.equal(f.$('#cp-instrument-area').scrollTop,160);assert.equal(JSON.stringify(f.state().session),before);singleScene(f,'800 percent');hidden(f,'800 percent');
+  for(let i=0;i<4;i++)f.click('[data-cp="zoom-out"]');assert.equal(f.$('#cp-zoom-value').textContent,'100%');for(let i=0;i<4;i++)f.click('[data-cp="zoom-in"]');assert.equal(f.$('#cp-zoom-value').textContent,'800%');
+  f.click('[data-cp="fullscreen"]');f.run('menu();');assert.equal(f.host().classList.contains('cp-fullscreen-fallback'),false);assert.equal(f.document.body.style.overflow,'auto');
+
+  const native=harness(undefined,1800000000000,'native');native.click('[data-mode="6"]');const input=native.input('cp-answer','12,50'),nativeBefore=JSON.stringify(native.state().session),nativeHost=native.host();
+  native.click('[data-cp="fullscreen"]');await settle();assert.equal(native.document.fullscreenElement,nativeHost);assert.equal(native.fullscreen.requests,1);assert.equal(input.value,'12,50');assert.equal(JSON.stringify(native.state().session),nativeBefore);singleScene(native,'native fullscreen');hidden(native,'native fullscreen');
+  reading(native);assert.equal(native.document.fullscreenElement,nativeHost,'a correction keeps the stable fullscreen element');native.click('[data-cp="next"]');assert.equal(native.document.fullscreenElement,nativeHost);hidden(native,'next fullscreen question');
+  native.document.fullscreenElement=null;native.dispatchDocument('fullscreenchange');assert.match(native.$('[data-cp="fullscreen"]').textContent,/Tela cheia/);
+  native.click('[data-cp="fullscreen"]');await settle();native.run('menu();');await settle();assert.equal(native.document.fullscreenElement,null);assert.ok(native.fullscreen.exits>=1);
+  const denied=harness(undefined,1800000000000,'reject');denied.click('[data-mode="6"]');denied.click('[data-cp="fullscreen"]');await settle();assert.ok(denied.host().classList.contains('cp-fullscreen-fallback'));denied.click('[data-cp="fullscreen"]');assert.equal(denied.host().classList.contains('cp-fullscreen-fallback'),false);
+  const pending=harness(undefined,1800000000000,'pending');pending.click('[data-mode="6"]');pending.click('[data-cp="fullscreen"]');pending.run('menu();');pending.fullscreen.resolve();await settle();assert.equal(pending.document.fullscreenElement,null,'a late fullscreen request cannot cover the menu');
+  for(const current of [h,exam,vertical,digital,migrated,kept,f,native,denied,pending])assert.equal(current.records.get('moto-work-v1'),personal,'all activity preserves welding progress byte for byte');
+}
+fullscreenChecks().then(()=>console.log('PASS: one-scene reading game and inline counters; free/contact/digital/vertical operation; hidden grading and exam idempotency; restart/exit, migration, unchanged welding progress; native/fallback fullscreen and 100–800% zoom.')).catch(error=>{console.error(error);process.exitCode=1;});

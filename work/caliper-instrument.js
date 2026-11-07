@@ -1,21 +1,16 @@
 (function (root) {
   'use strict';
 
-  const RESOLUTIONS = Object.freeze({
-    'mm-01': { unit: 'mm', value: 0.1, numerator: 1, denominator: 10, cap: 150, mainPitch: 1, divisions: 10, vernierPitch: 0.9, label: '0,1 mm' },
-    'mm-005': { unit: 'mm', value: 0.05, numerator: 1, denominator: 20, cap: 150, mainPitch: 1, divisions: 20, vernierPitch: 1.95, label: '0,05 mm' },
-    'mm-002': { unit: 'mm', value: 0.02, numerator: 1, denominator: 50, cap: 150, mainPitch: 1, divisions: 50, vernierPitch: 0.98, label: '0,02 mm' },
-    'mm-001': { unit: 'mm', value: 0.01, numerator: 1, denominator: 100, cap: 150, mainPitch: 1, dialPeriod: 1, label: '0,01 mm' },
-    'in-128': { unit: 'in', value: 1 / 128, numerator: 1, denominator: 128, cap: 6, mainPitch: 1 / 16, divisions: 8, vernierPitch: 7 / 128, label: '1/128 pol' },
-    'in-1000': { unit: 'in', value: 0.001, numerator: 1, denominator: 1000, cap: 6, mainPitch: 0.025, divisions: 25, vernierPitch: 0.024, dialPeriod: 0.1, label: '0,001 pol' }
-  });
-  const TYPES = Object.freeze({
-    analog: { name: 'Paquímetro universal analógico', resolutions: ['mm-01', 'mm-005', 'mm-002', 'in-128', 'in-1000'] },
-    digital: { name: 'Paquímetro digital', resolutions: ['mm-001', 'in-1000'] },
-    dial: { name: 'Paquímetro com relógio', resolutions: ['mm-001', 'in-1000'] },
-    depth: { name: 'Paquímetro de profundidade', resolutions: ['mm-005', 'mm-002', 'in-1000'] },
-    height: { name: 'Paquímetro de altura', resolutions: ['mm-002', 'in-1000'] }
-  });
+  const Engine = root.CaliperEngine || (typeof module === 'object' && module.exports ? require('./caliper-engine.js') : null);
+  if (!Engine) throw new Error('O motor de medidas deve ser carregado antes do instrumento.');
+  // Drawing, scoring and readout share one calibrated scale definition.
+  const RESOLUTIONS = Object.freeze(Object.fromEntries(Engine.RESOLUTIONS.map(r => [r.id, Object.freeze({
+    unit:r.unit,value:r.step,numerator:1,denominator:r.ticksPerUnit,cap:r.capacity,
+    mainPitch:r.mainStep,mainTicks:r.mainTicks,divisions:r.divisions || undefined,
+    vernierPitch:r.divisions?r.vernierPitchTicks/r.ticksPerUnit:undefined,
+    vernierPitchTicks:r.vernierPitchTicks,dialPeriod:r.unit==='mm'?1:.1,label:r.label.split(' · ')[0]
+  })])));
+  const TYPES = Object.freeze(Object.fromEntries(Engine.TYPES.map(t => [t.id, Object.freeze({name:t.name,resolutions:t.resolutions})])));
   const p = n => String(Math.round(n * 1e7) / 1e7);
   const clean = n => Math.round(n * 1e10) / 1e10;
   const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
@@ -54,14 +49,7 @@
   }
   const hook = (axis, scale) => `data-caliper-slider="" data-drag-axis="${axis}" data-drag-px-per-unit="${p(scale)}" style="cursor:${axis === 'x' ? 'ew' : 'ns'}-resize;touch-action:none"`;
   function formatReading(c) {
-    if (c.key === 'in-128') {
-      const whole = Math.floor(c.ticks / 128), rest = c.ticks % 128;
-      if (!rest) return whole + ' pol';
-      const gcd = (a, b) => b ? gcd(b, a % b) : a, g = gcd(rest, 128);
-      return (whole ? whole + ' ' : '') + rest / g + '/' + 128 / g + ' pol';
-    }
-    const digits = c.r.unit === 'in' ? 3 : c.key === 'mm-01' ? 1 : 2;
-    return c.value.toFixed(digits).replace('.', ',') + (c.r.unit === 'in' ? ' pol' : ' mm');
+    return Engine.format(c.ticks,c.key) + (c.r.unit === 'in' ? ' pol' : ' mm');
   }
   function scaleTicks(c, x0, y, pxPerUnit, { vertical = false, upwards = false, end = c.r.cap, centimeters = false, labelEnd = end } = {}) {
     const step = c.type === 'dial' ? (c.r.unit === 'mm' ? 1 : 0.1) : c.r.mainPitch;
@@ -114,7 +102,8 @@
     s += text(735, 116, c.r.unit === 'mm' ? 'cm' : 'in', 'font-size="12"');
     s += path('M73 96 H120 V255 H114 L101 241 L88 218 L79 188 L73 153 Z', `class="ci-fixed-jaw" fill="${steel}" stroke="#555b52" stroke-width="1.5"`);
     s += path('M114 158 H120 V255 H114 Z', 'fill="#50584e"');
-    s += path('M95 97 V56 L99 42 L108 29 L125 18 L121 36 L117 53 V97 Z', `fill="${edge}" stroke="#555b52" stroke-width="1.3"`);
+    s += path('M95 97 V56 L99 42 L108 29 L120 18 V32 L117 53 V97 Z', `fill="${edge}" stroke="#555b52" stroke-width="1.3"`);
+    s += line(120,18,120,32,'class="ci-internal-fixed-contact" stroke="#242a22" stroke-width="1.3"');
     s += line(120, 164, 120, 250, 'stroke="#242a22" stroke-width="1.7"');
     s += `<g ${hook('x', pp)} transform="translate(${p(g.sliderPx)} 0)">`;
     // The rest of the coupled rod is concealed inside the beam. Its exposed
@@ -126,7 +115,8 @@
     s += path('M0 144 H32 V181 L27 207 L18 232 L5 255 H0 Z', `class="ci-moving-jaw" fill="${steel}" stroke="#50584e" stroke-width="1.5"`);
     s += path('M0 158 H5 V255 H0 Z', 'fill="#4e574a"');
     s += line(0, 164, 0, 250, `stroke="${c.contact ? '#087d53' : '#242a22'}" stroke-width="${c.contact ? 3 : 1.7}"`);
-    s += path('M-1 96 V54 L-5 37 L-13 18 L4 29 L13 42 L17 56 V96 Z', `fill="${edge}" stroke="#555b52" stroke-width="1.3"`);
+    s += path('M-1 96 V54 L0 32 V18 L6 29 L13 42 L17 56 V96 Z', `fill="${edge}" stroke="#555b52" stroke-width="1.3"`);
+    s += line(0,18,0,32,'class="ci-internal-moving-contact" stroke="#242a22" stroke-width="1.3"');
     s += rect(48, 69, 10, 16, `fill="${edge}" stroke="#5a6156"`);
     s += rect(38, 63, 30, 10, `rx="3" fill="${edge}" stroke="#4a5145"`);
     for (let x = 42; x < 66; x += 4) s += line(x, 64, x, 71, 'stroke="#565e50" stroke-width=".8"');
@@ -137,6 +127,8 @@
       s += `<circle cx="48" cy="199" r="5" fill="#507d9b"/><circle cx="76" cy="199" r="5" fill="#687c87"/>`;
     } else if (c.type === 'dial') {
       s += dial(c, 77, 178, 48);
+      s += line(readOffset, 119, readOffset, 144, 'class="ci-dial-main-index" stroke="#172d42" stroke-width="1.7"');
+      s += path(`M${readOffset-4} 114 H${readOffset+4} L${readOffset} 120 Z`, 'fill="#172d42"');
     } else {
       s += line(readOffset - 9, 148, readOffset + span + 9, 148, 'stroke="#8c9285" stroke-width=".8"');
       for (let k = 0; k <= c.r.divisions; k++) {
@@ -205,9 +197,9 @@
   }
   function vernierDetail(c) {
     const r = c.r, scale = r.unit === 'mm' ? r.divisions === 50 ? 20 : r.divisions === 20 ? 24 : 105 : r.divisions === 8 ? 2000 : 1600;
-    const mainCount = Math.floor((c.value + 1e-9) / r.mainPitch), main = clean(mainCount * r.mainPitch);
-    const coincide = Math.round((c.value - main) / r.value), height = 228;
-    const origin = Math.max(0, main - r.mainPitch * 0.6), x = value => 140 + (value - origin) * scale;
+    const coincide = c.ticks % r.mainTicks, mainTicks = c.ticks - coincide, main = mainTicks / r.denominator, height = 228;
+    const originTicks = Math.max(0, mainTicks - r.mainTicks * 0.6), x = ticks => 140 + (ticks - originTicks) * scale / r.denominator;
+    const coincidenceTicks = c.ticks + coincide * r.vernierPitchTicks;
     const mainY = 106, vernierY = 108;
     let content = text(25, 27, 'Lupa · escala principal e nônio contínuos', 'font-size="20" font-weight="700"');
     content += '<g class="ci-detail-window" data-window="0" data-px-per-unit="' + scale + '">';
@@ -215,17 +207,19 @@
     content += rect(15, 108, 1245, 84, 'rx="2" fill="' + metal(c) + '" stroke="#787e71"');
     content += line(16, 46, 1258, 46, 'stroke="#fff" stroke-width="1.5"');
     content += text(30, 83, r.unit === 'mm' ? 'mm' : 'pol', 'font-size="17" fill="#535b4c"');
-    const first = Math.max(0, Math.ceil((origin - 1e-9) / r.mainPitch)), last = Math.floor((origin + 1090 / scale + 1e-9) / r.mainPitch);
+    const first = Math.max(0, Math.ceil(originTicks / r.mainTicks)), last = Math.floor((originTicks + 1090 * r.denominator / scale) / r.mainTicks);
+    const chars = num(last * r.mainTicks / r.denominator, r.unit === 'mm' ? 0 : 4).length;
+    const labelSize = Math.max(10, Math.min(17, Math.floor((r.mainPitch * scale - 3) / (.62 * chars))));
     for (let k = first; k <= last; k++) {
-      const value = clean(k * r.mainPitch), at = x(value), select = c.reveal && Math.abs(value - (c.value + coincide * r.vernierPitch)) < 1e-8;
-      const major = r.unit === 'mm' ? k % 5 === 0 : true, showLabel = r.unit !== 'mm' || r.divisions === 10 || major;
+      const ticks = k * r.mainTicks, value = ticks / r.denominator, at = x(ticks), select = c.reveal && ticks === coincidenceTicks;
+      const major = r.unit === 'mm' ? k % 5 === 0 : true;
       content += line(at, mainY - (major ? 27 : 17), at, mainY, 'class="ci-detail-main" data-main-unit="' + p(value) + '" stroke="' + (select ? '#087f57' : '#262c22') + '" stroke-width="' + (select ? 2.4 : 1.2) + '"');
-      if (showLabel) content += text(at, mainY - 33, num(value, r.unit === 'mm' ? 0 : 4), 'font-size="17" text-anchor="middle"');
+      content += text(at, mainY - 33, num(value, r.unit === 'mm' ? 0 : 4), `class="ci-main-label" font-size="${labelSize}" text-anchor="middle"`);
     }
     content += '<g ' + hook('x', scale) + '>';
     content += rect(90, vernierY, 1150, 82, 'fill="transparent" pointer-events="all"');
     for (let k = 0; k <= r.divisions; k++) {
-      const value = clean(c.value + k * r.vernierPitch), at = x(value), select = c.reveal && k === coincide;
+      const ticks = c.ticks + k * r.vernierPitchTicks, value = ticks / r.denominator, at = x(ticks), select = c.reveal && k === coincide;
       const stride = c.key === 'mm-005' ? 2 : r.divisions === 50 ? 5 : 1;
       content += line(at, vernierY, at, vernierY + (k % stride ? 21 : 32), 'class="ci-detail-vernier" data-vernier-index="' + k + '"' + (c.reveal ? ' data-vernier-unit="' + p(value) + '"' : '') + ' stroke="' + (select ? '#087f57' : '#262c22') + '" stroke-width="' + (select ? 2.4 : 1.2) + '"');
       if (k % stride === 0 || k === r.divisions) content += text(at, vernierY + 55, c.key === 'mm-005' ? k / 2 : k, 'font-size="18" text-anchor="middle"');
@@ -236,7 +230,7 @@
     return { content, height };
   }
   function dialDetail(c) {
-    const period = c.r.dialPeriod, main = Math.floor((c.value + 1e-9) / period) * period, remainder = c.ticks % 100;
+    const period = c.r.dialPeriod, remainder = c.ticks % 100, main = (c.ticks - remainder) / c.r.denominator;
     const origin = Math.max(0, main - period), scale = 620 / (4 * period), x = value => 80 + (value - origin) * scale;
     let content = text(25, 29, 'Ampliação · escala principal e relógio', 'font-size="21" font-weight="700"');
     content += rect(29, 59, 717, 165, 'rx="9" fill="#f2f7fb" stroke="#c7dce9"');
@@ -255,16 +249,60 @@
     content += text(25, 255, c.reveal ? 'Leitura do visor: ' + formatReading(c) : 'Visor oculto. Encoste o bico na peça e confirme a medição.', `font-size="20" fill="${c.reveal ? '#087f57' : '#52748e'}"`);
     return { content, height: 281 };
   }
+  // One enlarged caliper face for the assessment game. This is the instrument's
+  // principal scale and sliding vernier sharing one edge, not a second diagram.
+  function gameScale(c) {
+    const r = c.r;
+    const scale = r.unit === 'mm' ? r.divisions === 10 ? 50 : r.divisions === 20 ? 20 : 16 : r.divisions === 8 ? 1400 : 1200;
+    const bucketTicks = r.unit === 'mm' ? 10 * r.denominator : r.denominator / 4;
+    const marginTicks = r.unit === 'mm' ? (r.divisions === 10 ? 4 : 8) * r.denominator : r.denominator / 10;
+    const originTicks = Math.max(0, Math.floor((c.ticks - marginTicks) / bucketTicks) * bucketTicks);
+    const x = ticks => 60 + (ticks - originTicks) * scale / r.denominator;
+    const mainY = 250, height = 410, zero = x(c.ticks), end = x(c.ticks + r.divisions * r.vernierPitchTicks);
+    const index = c.ticks % r.mainTicks, coincidenceTicks = c.ticks + index * r.vernierPitchTicks;
+    const first = Math.max(0, Math.ceil((originTicks - 60 * r.denominator / scale) / r.mainTicks));
+    const last = Math.floor((originTicks + 1220 * r.denominator / scale) / r.mainTicks);
+    let content = rect(0, 0, 1280, height, 'fill="#fff"');
+    content += '<g class="ci-game-window" data-px-per-unit="' + scale + '">';
+    // Read the metric main numbers in centimetres; every small interval is 1 mm.
+    for (let k = first; k <= last; k++) {
+      const ticks = k * r.mainTicks, value = ticks / r.denominator, at = x(ticks);
+      const major = r.unit === 'mm' ? ticks % (10 * r.denominator) === 0 : r.divisions === 8 ? ticks % (r.denominator / 4) === 0 : ticks % (r.denominator / 10) === 0;
+      const middle = r.unit === 'mm' && ticks % (5 * r.denominator) === 0;
+      const selected = c.reveal && ticks === coincidenceTicks;
+      content += line(at, mainY - (major ? 100 : middle ? 73 : 45), at, mainY, `class="ci-game-main" data-main-unit="${p(value)}" stroke="${selected ? '#087f57' : '#1d211b'}" stroke-width="${selected ? 2.8 : 1.35}"`);
+      if (major && at >= 24 && at <= 1230) {
+        const label = r.unit === 'mm' ? String(value / 10) : c.key === 'in-128' ? Engine.formatGraduation(ticks,c.key) : num(value, 1);
+        content += text(at, 132, label, `font-size="${r.unit === 'mm' ? 64 : 42}" text-anchor="middle"`);
+      }
+    }
+    content += line(0, mainY, 1280, mainY, 'stroke="#262b22" stroke-width="1.3"');
+    content += text(1255, 111, r.unit === 'mm' ? 'cm' : 'pol', 'font-size="24" text-anchor="end"');
+    content += '<g ' + hook('x',scale) + '>';
+    content += rect(zero - 36, 8, end - zero + 72, 57, 'class="ci-game-cursor-top" fill="#f9faf6" stroke="#333b2e" stroke-width="1.5"');
+    content += text(zero - 14, 44, TYPES[c.type].name, 'font-size="21"');
+    content += text(end + 14, 44, r.label, 'font-size="21" text-anchor="end"');
+    content += rect(zero - 36, mainY, end - zero + 72, 140, 'class="ci-game-cursor" fill="#f9faf6" stroke="#333b2e" stroke-width="1.5"');
+    for (let k = 0; k <= r.divisions; k++) {
+      const ticks = c.ticks + k * r.vernierPitchTicks, at = x(ticks), selected = c.reveal && k === index;
+      const stride = c.key === 'mm-005' ? 2 : r.divisions === 50 ? 5 : 1;
+      content += line(at, mainY, at, mainY + (k % stride ? 49 : 77), `class="ci-game-vernier" data-vernier-index="${k}" stroke="${selected ? '#087f57' : '#1d211b'}" stroke-width="${selected ? 2.8 : 1.4}"`);
+      if (k % stride === 0 || k === r.divisions) content += text(at, mainY + 119, c.key === 'mm-005' ? k / 2 : k, 'font-size="39" text-anchor="middle"');
+      if (selected) content += line(at, mainY - 45, at, mainY + 78, 'class="ci-coincidence" stroke="#087f57" stroke-width="2.8"');
+    }
+    content += '</g></g>';
+    return { content,height };
+  }
   function render(options = {}) {
     const c = settings(options), g = geometry(options), section = options.section || 'full';
     c.prefix = 'ci-' + c.type + '-' + section;
-    if (!['full', 'instrument', 'detail'].includes(section)) throw new RangeError('Seção do instrumento desconhecida.');
-    const instrument = c.type === 'depth' ? wholeDepth(c, g) : c.type === 'height' ? wholeHeight(c, g) : wholeHorizontal(c, g);
-    const detail = c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : vernierDetail(c);
-    const height = section === 'instrument' ? 300 : section === 'detail' ? detail.height : 300 + detail.height;
-    const body = section === 'instrument' ? instrument : section === 'detail' ? detail.content : instrument + `<g transform="translate(0 300)">${detail.content}</g>`;
+    if (!['full', 'instrument', 'detail', 'game'].includes(section)) throw new RangeError('Seção do instrumento desconhecida.');
+    const instrument = section === 'detail' || section === 'game' ? '' : c.type === 'depth' ? wholeDepth(c, g) : c.type === 'height' ? wholeHeight(c, g) : wholeHorizontal(c, g);
+    const detail = section === 'instrument' ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c) : vernierDetail(c);
+    const height = section === 'instrument' ? 300 : section === 'detail' || section === 'game' ? detail.height : 300 + detail.height;
+    const body = section === 'instrument' ? instrument : section === 'detail' || section === 'game' ? detail.content : instrument + `<g transform="translate(0 300)">${detail.content}</g>`;
     const label = TYPES[c.type].name + (c.reveal ? '. Leitura: ' + formatReading(c) : '. Instrumento com partes móveis e escalas para leitura.');
-    return `<svg xmlns="http://www.w3.org/2000/svg" class="caliper-instrument ci-${c.type}" viewBox="0 0 1280 ${height}" width="1280" height="${height}" role="img" aria-label="${esc(label)}"${c.reveal ? ` data-reading="${p(c.value)}"` : ''} style="display:block;width:100%;height:auto;overflow:visible;font-family:Segoe UI,Arial,sans-serif;background:linear-gradient(180deg,#f5f6f2,#e5e8df);border-radius:10px"><g font-size="16" fill="#1c3c55">${finishes(c)}${body}</g></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" class="caliper-instrument ci-${c.type}${section === 'game' ? ' ci-game-scale' : ''}" viewBox="0 0 1280 ${height}" width="1280" height="${height}" role="img" aria-label="${esc(label)}"${c.reveal ? ` data-reading="${p(c.value)}"` : ''} style="display:block;width:100%;height:auto;overflow:visible;font-family:Segoe UI,Arial,sans-serif;background:${section === 'game' ? '#fff' : 'linear-gradient(180deg,#f5f6f2,#e5e8df)'};border-radius:${section === 'game' ? 0 : 10}px"><g font-size="16" fill="#1c3c55">${finishes(c)}${body}</g></svg>`;
   }
   const api = Object.freeze({ RESOLUTIONS, TYPES, geometry, render });
   root.CaliperInstrument = api;
