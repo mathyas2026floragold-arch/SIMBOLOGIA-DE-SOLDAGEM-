@@ -80,10 +80,12 @@ function hidden(h,label){
   const explanation=h.document.querySelector('#cp-live-explanation');if(explanation)assert.equal(explanation.textContent,'',label+' hides the explanation');
 }
 function configure(h,values){
+  if(!Object.hasOwn(values,'activity')&&['assessment','quantity','difficulty'].some(key=>Object.hasOwn(values,key)))enterReading(h);
   h.click('[data-cp="configure"]');
   for(const [id,value] of Object.entries(values))h.choose('cp-'+id,value);
   h.submit('cp-setup-form');
 }
+function enterReading(h){if(h.state().session.config.activity==='free')h.click(h.document.querySelector('[data-cp="resume-assessment"]')?'[data-cp="resume-assessment"]':'[data-cp="practice-reading"]');}
 function reading(h,correct=true){
   const s=h.state().session,key=s.config.resolutionKey;
   h.input('cp-answer',E.format(correct?s.targetTicks:s.targetTicks+1,key));h.advance(1250);h.submit('cp-answer-form');
@@ -93,7 +95,10 @@ let h=harness();
 assert.deepEqual(h.document.querySelectorAll('[data-mode]').map(e=>e.dataset.mode),['1','2','3','4','5','6']);
 h.click('[data-mode="6"]');
 assert.ok(h.$('#stats').hidden&&h.$('#preview-notice').hidden&&h.$('main > details').hidden);
-assert.equal(h.state().session.config.activity,'reading','the game opens directly as an assessment');
+assert.equal(h.state().session.config.activity,'free','the game opens directly at the physical caliper');
+assert.ok(h.$('.ci-free-instrument'));assert.ok(h.$('[data-cp="practice-reading"]'));assert.equal(h.document.querySelector('.cp-result'),null,'entry never shows an empty result screen');
+assert.equal(h.state().suspendedSession,null);assert.equal(h.state().stats.total,0);enterReading(h);
+assert.equal(h.state().session.config.activity,'reading','assessment remains available through Praticar leitura');
 assert.equal(h.state().session.config.assessment,'training');
 singleScene(h,'reading');hidden(h,'reading');universalOnly(h,'reading');
 assert.ok(h.$('#cp-answer-form'));assert.ok(h.$('.cp-correct')&&h.$('.cp-wrong'),'inline answer counters are present');
@@ -117,9 +122,20 @@ h.click('[data-cp="finish"]');const summary=JSON.stringify(h.state().stats),conf
 assert.match(h.$('[data-cp="restart"]').textContent,/Praticar novamente/);assert.match(h.$('[data-cp="exit"]').textContent,/Encerrar/);
 h.run('menu();');h=harness(h.records);h.click('[data-mode="6"]');
 assert.equal(JSON.stringify(h.state().stats),summary,'reopening a completed result does not grade it again');
-h.click('[data-cp="restart"]');assert.equal(JSON.stringify(h.state().session.config),config);assert.equal(h.state().session.answered,0,'practise again keeps configuration and resets session counters');
-h.click('[data-cp="finish"]');h.click('[data-cp="exit"]');
+assert.equal(h.state().session.config.activity,'free');assert.ok(h.$('.ci-free-instrument'));assert.equal(h.document.querySelector('.cp-result'),null);assert.equal(h.document.querySelector('[data-cp="resume-assessment"]'),null);
+h.click('[data-cp="practice-reading"]');assert.equal(JSON.stringify(h.state().session.config),config);assert.equal(h.state().session.answered,0,'new practice keeps configuration and resets session counters');
+h.click('[data-cp="finish"]');assert.ok(h.$('.ci-free-instrument'));assert.equal(h.document.querySelector('.cp-result'),null,'ending an unanswered assessment returns directly to the caliper');assert.equal(JSON.stringify(h.state().stats),summary);h.click('[data-cp="finish"]');
 assert.equal(h.$('#stats').hidden,false);assert.equal(h.$('main > details').hidden,false);assert.equal(h.document.querySelectorAll('[data-mode]').length,6);
+
+// Old unanswered result screens are bypassed on entry. Their preferred exam
+// configuration remains available for a new reading session without scoring.
+const emptyLegacy=harness();emptyLegacy.click('[data-mode="6"]');configure(emptyLegacy,{assessment:'exam',quantity:'20',difficulty:'hard'});
+const emptyData=emptyLegacy.state();emptyData.session.completed=true;emptyData.session.endedAt=emptyLegacy.now();emptyLegacy.records.set(KEY,JSON.stringify(emptyData));
+const emptyRestored=harness(emptyLegacy.records);emptyRestored.click('[data-mode="6"]');assert.ok(emptyRestored.$('.ci-free-instrument'));assert.equal(emptyRestored.document.querySelector('.cp-result'),null);assert.equal(emptyRestored.document.querySelector('[data-cp="resume-assessment"]'),null);assert.deepEqual(emptyRestored.state().stats,emptyData.stats);assert.deepEqual(emptyRestored.state().history,emptyData.history);
+emptyRestored.click('[data-cp="practice-reading"]');assert.equal(emptyRestored.state().session.config.assessment,'exam');assert.equal(emptyRestored.state().session.config.quantity,20);assert.equal(emptyRestored.state().session.config.difficulty,'hard');emptyRestored.click('[data-cp="finish"]');assert.ok(emptyRestored.$('.ci-free-instrument'));assert.deepEqual(emptyRestored.state().stats,emptyData.stats);assert.equal(emptyRestored.state().suspendedSession.examApplied,false,'an unanswered exam never applies results');
+
+const savedTraining=harness();savedTraining.click('[data-mode="6"]');enterReading(savedTraining);savedTraining.input('cp-answer','12,');savedTraining.advance(2500);const savedQuestion=savedTraining.state().session;savedTraining.run('menu();');
+const trainingEntry=harness(savedTraining.records,savedTraining.now()+6000);trainingEntry.click('[data-mode="6"]');assert.ok(trainingEntry.$('.ci-free-instrument'));assert.equal(trainingEntry.state().suspendedSession.targetTicks,savedQuestion.targetTicks);assert.equal(trainingEntry.state().suspendedSession.input,'12,');enterReading(trainingEntry);assert.equal(trainingEntry.$('#cp-answer').value,'12,');assert.equal(trainingEntry.state().session.startedAt,savedQuestion.startedAt+6000,'opening through the free caliper preserves paused training time');
 
 // Free manipulation still uses the same single viewport, alternating the full
 // physical instrument and a fixed close-up of its own moving vernier.
@@ -169,7 +185,7 @@ for(const key of analogResolutions){
 // The direct free workspace parks the exact assessment instead of replacing
 // its question, typed answer, results or score. Training time excludes the
 // exploration; an exam continues against the wall clock, including reloads.
-let parked=harness();parked.click('[data-mode="6"]');reading(parked);parked.click('[data-cp="next"]');
+let parked=harness();parked.click('[data-mode="6"]');enterReading(parked);reading(parked);parked.click('[data-cp="next"]');
 parked.input('cp-answer','12,');parked.advance(2000);
 const trainingBefore=parked.state().session,trainingStats=parked.state().stats;
 assert.match(parked.$('[data-cp="free"]').textContent,/Modo livre/);parked.click('[data-cp="free"]');
@@ -223,7 +239,7 @@ for(let i=0;i<10;i++){
   assert.equal(exam.document.querySelectorAll('[data-cp="hint"]').length,0);assert.equal(exam.document.querySelectorAll('.cp-correct').length,0);assert.equal(exam.document.querySelectorAll('.cp-wrong').length,0);
   assert.equal(exam.$('#cp-feedback').textContent,'');reading(exam,i%3!==1);
   if(i<9){assert.equal(exam.state().session.answered,i+1);assert.equal(JSON.stringify(exam.state().stats),JSON.stringify(beforeExam));assert.equal(exam.$('#cp-feedback').textContent,'');}
-  if(i===4){const saved=exam.state().session;exam.run('menu();');exam=harness(exam.records,exam.now()+2000);exam.click('[data-mode="6"]');assert.equal(exam.state().session.answered,5);assert.equal(exam.state().session.targetTicks,saved.targetTicks);assert.equal(JSON.stringify(exam.state().stats),JSON.stringify(beforeExam));assert.notEqual(exam.$('#cp-clock').textContent,'00:00');}
+  if(i===4){const saved=exam.state().session;exam.run('menu();');exam=harness(exam.records,exam.now()+2000);exam.click('[data-mode="6"]');assert.equal(exam.state().session.config.activity,'free');assert.equal(exam.state().suspendedSession.answered,5);assert.equal(exam.state().suspendedSession.targetTicks,saved.targetTicks);assert.equal(exam.state().suspendedSession.startedAt,saved.startedAt,'entering through the caliper keeps an exam clock running');enterReading(exam);assert.equal(exam.state().session.answered,5);assert.equal(exam.state().session.targetTicks,saved.targetTicks);assert.equal(JSON.stringify(exam.state().stats),JSON.stringify(beforeExam));assert.notEqual(exam.$('#cp-clock').textContent,'00:00');}
 }
 assert.equal(exam.state().session.completed,true);assert.equal(exam.state().session.examApplied,true);assert.equal(exam.state().stats.total,10);assert.equal(exam.state().stats.correct,7);assert.equal(exam.state().stats.wrong,3);assert.equal(exam.state().stats.points,155);assert.equal(exam.state().stats.sessions,1);assert.equal(exam.intervals.size,0);
 const examSummary=JSON.stringify(exam.state().stats);exam.run('menu();');exam=harness(exam.records);exam.click('[data-mode="6"]');assert.equal(JSON.stringify(exam.state().stats),examSummary,'completed exam results apply exactly once');
@@ -244,11 +260,11 @@ for(const resolution of analogResolutions){
   universal.key('Home');assert.equal(universal.state().session.ticks,0);
 }
 
-// Legacy free exploration is the only session that migrates to the new reading
-// entrance. Existing scores and genuinely active legacy exams are preserved.
+// Legacy state still opens at the caliper. Existing scores and genuinely active
+// legacy exams are preserved and can be resumed through the header.
 const legacyFree=harness();legacyFree.click('[data-mode="6"]');configure(legacyFree,{activity:'free'});const legacyData=legacyFree.state();delete legacyData.layoutVersion;legacyData.settings.assessment='exam';legacyData.stats={...legacyData.stats,total:5,correct:4,wrong:1,points:95};
-legacyFree.records.set(KEY,JSON.stringify(legacyData));const migrated=harness(legacyFree.records);migrated.click('[data-mode="6"]');assert.equal(migrated.state().layoutVersion,2);assert.equal(migrated.state().session.config.activity,'reading');assert.equal(migrated.state().session.config.assessment,'training');assert.equal(migrated.state().stats.points,95);assert.equal(migrated.state().stats.correct,4);
-const legacyExam=harness();legacyExam.click('[data-mode="6"]');configure(legacyExam,{assessment:'exam'});reading(legacyExam);const legacyExamData=legacyExam.state();delete legacyExamData.layoutVersion;legacyExam.records.set(KEY,JSON.stringify(legacyExamData));const kept=harness(legacyExam.records);kept.click('[data-mode="6"]');assert.equal(kept.state().session.answered,1);assert.equal(kept.state().session.config.assessment,'exam');assert.equal(kept.state().stats.total,0);
+legacyFree.records.set(KEY,JSON.stringify(legacyData));const migrated=harness(legacyFree.records);migrated.click('[data-mode="6"]');assert.equal(migrated.state().layoutVersion,2);assert.equal(migrated.state().session.config.activity,'free');assert.equal(migrated.state().session.config.assessment,'training');assert.equal(migrated.state().stats.points,95);assert.equal(migrated.state().stats.correct,4);
+const legacyExam=harness();legacyExam.click('[data-mode="6"]');configure(legacyExam,{assessment:'exam'});reading(legacyExam);const legacyExamData=legacyExam.state();delete legacyExamData.layoutVersion;legacyExam.records.set(KEY,JSON.stringify(legacyExamData));const kept=harness(legacyExam.records);kept.click('[data-mode="6"]');assert.equal(kept.state().session.config.activity,'free');assert.equal(kept.state().suspendedSession.answered,1);enterReading(kept);assert.equal(kept.state().session.answered,1);assert.equal(kept.state().session.config.assessment,'exam');assert.equal(kept.state().stats.total,0);
 
 // Former non-analog sessions are kept verbatim as archived evidence. They are
 // never relabelled, requantized, or regraded as universal-caliper questions.
@@ -263,7 +279,7 @@ for(const [type,key,expectedKey] of [['digital','mm-001','mm-005'],['dial','mm-0
   const originalSession=JSON.parse(JSON.stringify(data.session)),oldStats=JSON.parse(JSON.stringify(data.stats));
   fixture.records.set(KEY,JSON.stringify(data));const migratedType=harness(fixture.records);migratedType.click('[data-mode="6"]');const restored=migratedType.state();
   universalOnly(migratedType,'restored '+type);assert.equal(restored.session.config.resolutionKey,expectedKey);
-  assert.equal(restored.session.config.activity,'reading');assert.equal(restored.session.config.assessment,'training');assert.equal(restored.session.answered,0);
+  assert.equal(restored.session.config.activity,'free');assert.equal(restored.session.config.assessment,'training');assert.equal(restored.session.answered,0);
   assert.deepEqual(restored.stats,oldStats,'archiving '+type+' neither awards nor removes accumulated scores');assert.deepEqual(restored.history,data.history,'past '+type+' results remain unchanged');
   assert.deepEqual(restored.legacySessions[0],data.legacySessions[0]);assert.deepEqual(restored.legacySessions.at(-1),originalSession,'the former '+type+' session is archived losslessly');
   migratedType.run('menu();');const reloaded=harness(migratedType.records);reloaded.click('[data-mode="6"]');
@@ -285,18 +301,18 @@ async function fullscreenChecks(){
   assert.equal(f.host(),stable);assert.ok(f.host().classList.contains('cp-fullscreen-fallback'));assert.equal(f.document.body.style.overflow,'hidden');assert.equal(f.document.documentElement.style.overflow,'hidden');assert.equal(f.$('#cp-jump').value,'33,15');assert.equal(JSON.stringify(f.state().session),before);hidden(f,'fallback fullscreen');
   f.dispatchWindow('keydown',{key:'Escape'});assert.equal(f.host().classList.contains('cp-fullscreen-fallback'),false);assert.equal(f.document.body.style.overflow,'auto');assert.equal(f.document.documentElement.style.overflow,'scroll');assert.equal(f.window.scrollX,17);assert.equal(f.window.scrollY,420);assert.equal(f.host().scrollTop,61);assert.equal(f.host().scrollLeft,3);
   f.click('[data-cp="view"]');assert.ok(f.$('.ci-focus-instrument'));assert.equal(f.document.querySelector('#cp-zoom'),null);assert.equal(JSON.stringify(f.state().session),before);singleScene(f,'fixed lens fullscreen');hidden(f,'fixed lens fullscreen');
-  const zoomedReading=harness();zoomedReading.click('[data-mode="6"]');zoomedReading.$('#cp-instrument-area').scrollLeft=40;zoomedReading.$('#cp-instrument-area').scrollTop=20;zoomedReading.choose('cp-zoom','8');
+  const zoomedReading=harness();zoomedReading.click('[data-mode="6"]');enterReading(zoomedReading);zoomedReading.$('#cp-instrument-area').scrollLeft=40;zoomedReading.$('#cp-instrument-area').scrollTop=20;zoomedReading.choose('cp-zoom','8');
   assert.equal(zoomedReading.$('#cp-instrument-canvas').style.width,'800%');assert.equal(zoomedReading.$('#cp-instrument-canvas').style.minWidth,'7680px');assert.equal(zoomedReading.$('#cp-instrument-area').scrollLeft,320);assert.equal(zoomedReading.$('#cp-instrument-area').scrollTop,160);singleScene(zoomedReading,'800 percent assessment');hidden(zoomedReading,'800 percent assessment');
   for(let i=0;i<4;i++)zoomedReading.click('[data-cp="zoom-out"]');assert.equal(zoomedReading.$('#cp-zoom-value').textContent,'100%');for(let i=0;i<4;i++)zoomedReading.click('[data-cp="zoom-in"]');assert.equal(zoomedReading.$('#cp-zoom-value').textContent,'800%');
   f.click('[data-cp="fullscreen"]');f.run('menu();');assert.equal(f.host().classList.contains('cp-fullscreen-fallback'),false);assert.equal(f.document.body.style.overflow,'auto');
 
-  const native=harness(undefined,1800000000000,'native');native.click('[data-mode="6"]');const input=native.input('cp-answer','12,50'),nativeBefore=JSON.stringify(native.state().session),nativeHost=native.host();
+  const native=harness(undefined,1800000000000,'native');native.click('[data-mode="6"]');enterReading(native);const input=native.input('cp-answer','12,50'),nativeBefore=JSON.stringify(native.state().session),nativeHost=native.host();
   native.click('[data-cp="fullscreen"]');await settle();assert.equal(native.document.fullscreenElement,nativeHost);assert.equal(native.fullscreen.requests,1);assert.equal(input.value,'12,50');assert.equal(JSON.stringify(native.state().session),nativeBefore);singleScene(native,'native fullscreen');hidden(native,'native fullscreen');
   reading(native);assert.equal(native.document.fullscreenElement,nativeHost,'a correction keeps the stable fullscreen element');native.click('[data-cp="next"]');assert.equal(native.document.fullscreenElement,nativeHost);hidden(native,'next fullscreen question');
   native.document.fullscreenElement=null;native.dispatchDocument('fullscreenchange');assert.match(native.$('[data-cp="fullscreen"]').textContent,/Tela cheia/);
   native.click('[data-cp="fullscreen"]');await settle();native.run('menu();');await settle();assert.equal(native.document.fullscreenElement,null);assert.ok(native.fullscreen.exits>=1);
   const denied=harness(undefined,1800000000000,'reject');denied.click('[data-mode="6"]');denied.click('[data-cp="fullscreen"]');await settle();assert.ok(denied.host().classList.contains('cp-fullscreen-fallback'));denied.click('[data-cp="fullscreen"]');assert.equal(denied.host().classList.contains('cp-fullscreen-fallback'),false);
   const pending=harness(undefined,1800000000000,'pending');pending.click('[data-mode="6"]');pending.click('[data-cp="fullscreen"]');pending.run('menu();');pending.fullscreen.resolve();await settle();assert.equal(pending.document.fullscreenElement,null,'a late fullscreen request cannot cover the menu');
-  for(const current of [h,exam,parked,parkedExam,universal,migrated,kept,...migratedInstruments,...focused,f,zoomedReading,native,denied,pending])assert.equal(current.records.get('moto-work-v1'),personal,'all activity preserves welding progress byte for byte');
+  for(const current of [h,exam,parked,parkedExam,universal,migrated,kept,emptyRestored,trainingEntry,...migratedInstruments,...focused,f,zoomedReading,native,denied,pending])assert.equal(current.records.get('moto-work-v1'),personal,'all activity preserves welding progress byte for byte');
 }
 fullscreenChecks().then(()=>console.log('PASS: universal analog caliper only with five metric/imperial resolutions; single-scene reading, free/contact operation, exact counters, hidden exams, restart/exit, migration and unchanged welding progress; native/fallback fullscreen and 100–800% zoom.')).catch(error=>{console.error(error);process.exitCode=1;});

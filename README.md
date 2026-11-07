@@ -48,7 +48,7 @@ O **jogo 3 começa complexo**, com todas as famílias disponíveis. Seu primeiro
 
 ## Jogo 06 — Desafio do Paquímetro
 
-O novo jogo é aberto pelo cartão **JOGO 06** no menu principal e trabalha exclusivamente com o **paquímetro universal analógico**. A prática de leitura usa uma única tela: escala principal e nônio ampliados na parte superior; resposta, questão, acertos e erros logo abaixo. A configuração recolhida permite escolher a resolução, a dificuldade, a quantidade de questões e a forma de avaliação.
+O novo jogo é aberto pelo cartão **JOGO 06** no menu principal e trabalha exclusivamente com o **paquímetro universal analógico**. Ele abre diretamente no instrumento manipulável da exploração livre. **Praticar leitura** inicia o simulado; se houver uma questão em andamento, **Voltar ao simulado** a recupera. A prática de leitura usa uma única tela: escala principal e nônio ampliados na parte superior; resposta, questão, acertos e erros logo abaixo. A configuração recolhida permite escolher a resolução, a dificuldade, a quantidade de questões e a forma de avaliação.
 
 ### Modelo e resoluções
 
@@ -70,7 +70,7 @@ As opções da configuração correspondem ao universal analógico, com escala p
 
 ### Leitura, modo livre e medição por contato
 
-**Prática de leitura:** o jogo posiciona o paquímetro numa medida aleatória. Interprete a escala e digite a resposta. O cursor permanece na posição sorteada até a confirmação; não é preciso obter contato com uma peça nesse treino. Os acertos e erros são contados na própria linha de resposta. Ao concluir, escolha **Praticar novamente** ou **Encerrar**. É a modalidade principal de entrada do jogo.
+**Prática de leitura:** o jogo posiciona o paquímetro numa medida aleatória. Interprete a escala e digite a resposta. O cursor permanece na posição sorteada até a confirmação; não é preciso obter contato com uma peça nesse treino. Os acertos e erros são contados na própria linha de resposta. Ao concluir uma sessão com respostas, escolha **Praticar novamente** ou **Encerrar**. Encerrar uma sessão sem respostas devolve o instrumento diretamente, sem resultado de 0%.
 
 **Modo livre:** entre pelo botão **Modo livre** no cabeçalho. O jogo abre em tela cheia, com o instrumento inteiro em traço técnico, bicos chanfrados, guias do cursor, parafusos e rolete de ajuste. Arraste o cursor para abrir e fechar os bicos; a cota entre as faces e o visor grande acompanham a medida. O olho esconde os valores. **Ampliar nônio** aproxima a região móvel do próprio instrumento, com enquadramento fixo e proporcional que acompanha o cursor. A lupa mantém visíveis a escala principal, o zero, os traços e os números do nônio; **Ver instrumento** devolve a vista completa na mesma área. Também há ajuste por teclado e posicionamento por valor digitado.
 
