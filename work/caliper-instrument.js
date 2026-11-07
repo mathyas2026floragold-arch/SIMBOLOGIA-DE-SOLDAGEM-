@@ -86,7 +86,107 @@
     s += text(x + width / 2, y + height * 0.64, c.reveal ? formatReading(c) : 'VISOR OCULTO', `font-size="${width > 300 ? 36 : c.reveal ? 22 : 18}" font-family="Consolas,monospace" text-anchor="middle" fill="#203e32"`);
     return s;
   }
+  function wholeUniversalDrawing(c, g) {
+    const pp = g.pxPerUnit, readOffset = 30, baseline = 148;
+    const span = c.r.divisions * c.r.vernierPitch * pp, bodyWidth = Math.max(104, span + readOffset + 18);
+    const ink = '#1d211b', paper = '#fff', face = '#f0f0ed';
+    const outline = `fill="${paper}" stroke="${ink}" stroke-width="1.3"`;
+    const detail = `fill="none" stroke="${ink}" stroke-width=".65"`;
+    let s = '<g class="ci-technical-drawing" stroke-linecap="round" stroke-linejoin="round">';
+    if (c.objectValue !== null) {
+      const width = c.objectValue * pp, end = g.zeroPx + width;
+      s += rect(g.zeroPx,210,width,31,`class="ci-workpiece" fill="#f9faf6" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?3:1.5}"`);
+      for(let x=g.zeroPx+5;x<end-2;x+=9)s+=line(x,239,Math.min(x+8,end-2),231,'stroke="#8b9185" stroke-width=".6"');
+    }
+    // The beam's rated travel and auxiliary graduations use the exact same
+    // physical datum as the enlarged reading face (30 px from the jaw face).
+    s += rect(72,95,724,53,`class="ci-beam-body" ${outline}`);
+    s += line(74,98,794,98,`class="ci-beam-guide" stroke="${ink}" stroke-width=".55"`);
+    s += line(74,102,794,102,`class="ci-beam-guide" stroke="${ink}" stroke-width=".45"`);
+    s += rect(788,99,6,45,`fill="${face}" stroke="${ink}" stroke-width=".6"`);
+    s += rect(g.zeroPx,100,c.r.cap*pp,43,'data-caliper-beam="" fill="transparent" pointer-events="none"');
+    s += scaleTicks(c,g.zeroPx+readOffset,baseline,pp,{end:(790-g.zeroPx-readOffset)/pp,centimeters:true,labelEnd:c.r.cap});
+    s += text(758,119,c.r.unit==='mm'?'cm':'pol','font-size="11" text-anchor="middle"');
+
+    // Ground measuring edges and the inset bevel follow the jaw profiles.
+    s += path('M75 95 H120 V292 H113 L105 282 L96 263 L88 238 L82 214 L78 190 L75 158 Z',`class="ci-fixed-jaw" ${outline}`);
+    s += rect(115,164,5,126,`fill="${face}"`);
+    s += path('M80 104 V183 L85 213 L92 241 L102 268 L115 288',`class="ci-jaw-bevel" ${detail}`);
+    for(let y=169;y<286;y+=8)s+=line(115,y+4,120,y,'stroke="#7b8175" stroke-width=".5"');
+    s += line(120,164,120,288,`class="ci-external-fixed-contact" stroke="${ink}" stroke-width="1.6"`);
+    s += path('M94 96 V59 L98 44 L104 33 L112 24 L120 18 V32 L117 49 V96 Z',outline);
+    s += path('M99 91 V59 L103 45 L110 33 L116 27',`class="ci-jaw-bevel" ${detail}`);
+    s += line(120,18,120,32,`class="ci-internal-fixed-contact" stroke="${ink}" stroke-width="1.3"`);
+
+    s += `<g ${hook('x',pp)} transform="translate(${p(g.sliderPx)} 0)">`;
+    s += rect(796-g.sliderPx,112,c.value*pp,7,`class="ci-depth-rod" fill="${paper}" stroke="${ink}" stroke-width="1"`);
+    if(c.value>0)s+=line(796-g.sliderPx,115.5,796-g.sliderPx+c.value*pp,115.5,'stroke="#777e70" stroke-width=".45"');
+    s += path(`M-10 84 H${p(bodyWidth)} V99 H17 V148 H${p(bodyWidth)} V201 H-10 Z`,`class="ci-slider-body" ${outline}`);
+    s += line(20,88,bodyWidth-3,88,`stroke="${ink}" stroke-width=".55"`);
+    s += line(20,197,bodyWidth-3,197,`stroke="${ink}" stroke-width=".45"`);
+    s += text(23,96,'UNIVERSAL','font-size="8" letter-spacing="1.2"');
+    s += path('M0 148 H32 V193 L30 212 L26 234 L20 257 L12 278 L5 292 H0 Z',`class="ci-moving-jaw" ${outline}`);
+    s += rect(0,164,5,126,`fill="${face}"`);
+    s += path('M27 166 V193 L25 213 L21 235 L15 259 L6 285',`class="ci-jaw-bevel" ${detail}`);
+    for(let y=169;y<286;y+=8)s+=line(0,y+4,5,y,'stroke="#7b8175" stroke-width=".5"');
+    s += line(0,164,0,288,`class="ci-external-moving-contact" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?2.5:1.6}"`);
+    s += path('M-1 96 V54 L0 32 V18 L6 27 L12 39 L17 54 V96 Z',outline);
+    s += path('M12 90 V55 L8 40 L3 30',`class="ci-jaw-bevel" ${detail}`);
+    s += line(0,18,0,32,`class="ci-internal-moving-contact" stroke="${ink}" stroke-width="1.3"`);
+
+    s += '<g class="ci-locking-screw">';
+    s += rect(48,67,10,17,outline)+rect(44,79,18,4,outline);
+    for(let y=69;y<78;y+=3)s+=line(49,y,57,y,'stroke="#68715e" stroke-width=".55"');
+    s += rect(36,55,34,12,`rx="2" ${outline}`)+line(39,58,67,58,`stroke="${ink}" stroke-width=".55"`);
+    for(let x=40;x<68;x+=4)s+=line(x,59,x,65,`stroke="${ink}" stroke-width=".7"`);
+    s += '</g><g class="ci-guide-screws">';
+    for(const [x,y] of [[8,110],[bodyWidth-7,190]]){
+      s += `<circle cx="${p(x)}" cy="${y}" r="3.2" ${outline}/>`;
+      s += line(x-1.8,y+1.5,x+1.8,y-1.5,`stroke="${ink}" stroke-width=".75"`);
+    }
+    s += '</g><g class="ci-thumbwheel">';
+    s += rect(bodyWidth-35,201,12,4,outline)+rect(bodyWidth-47,205,36,14,`rx="3" ${outline}`);
+    s += line(bodyWidth-44,208,bodyWidth-14,208,`stroke="${ink}" stroke-width=".5"`);
+    for(let x=bodyWidth-42;x<bodyWidth-14;x+=4)s+=line(x,210,x,217,`stroke="${ink}" stroke-width=".65"`);
+    s += '</g>';
+
+    // Both sets of strokes meet at one edge, as on the single reading view.
+    for(let k=0;k<=c.r.divisions;k++){
+      const at=readOffset+k*c.r.vernierPitch*pp,stride=c.key==='mm-005'?2:5;
+      s += line(at,baseline,at,baseline+(k%stride?11:19),`class="ci-whole-vernier" data-vernier-index="${k}" stroke="${ink}" stroke-width=".75"`);
+      if(k%stride===0||k===c.r.divisions)s+=text(at,184,c.key==='mm-005'?k/2:k,`font-size="${c.r.unit==='in'?9:11}" text-anchor="middle"`);
+    }
+    s += text(bodyWidth-16,195,c.r.label,'font-size="9" text-anchor="end"');
+    if(c.reveal){
+      const index=c.ticks%c.r.mainTicks,at=readOffset+index*c.r.vernierPitch*pp;
+      s+=line(at,132,at,168,'class="ci-coincidence" stroke="#087f57" stroke-width="1.5"');
+    }
+    s += '</g>';
+    if(c.annotated){
+      s += text(18,323,'Bicos externos','font-size="15"')+line(114,312,113,286,`stroke="${ink}" stroke-width=".65"`);
+      s += text(18,15,'Bicos internos','font-size="14"')+line(105,21,110,30,`stroke="${ink}" stroke-width=".65"`);
+      s += text(793,88,'Haste de profundidade','font-size="14" text-anchor="end"');
+    }
+    return s+'</g>';
+  }
+  function freeDimension(c,g){
+    const left=g.zeroPx,right=g.sliderPx,opening=right-left,y=330,ink='#1d211b';
+    let s='<g class="ci-opening-dimension" stroke-linecap="round" stroke-linejoin="round">';
+    s+=line(left,296,left,338,`stroke="${ink}" stroke-width=".7"`)+line(right,296,right,338,`stroke="${ink}" stroke-width=".7"`);
+    s+=line(left,y,right,y,`class="ci-dimension-span" stroke="${ink}" stroke-width=".8"`);
+    if(opening>=16){
+      s+=path(`M${p(left)} ${y} L${p(left+8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
+      s+=path(`M${p(right)} ${y} L${p(right-8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
+    }else{
+      s+=line(left-15,y,left,y,`stroke="${ink}" stroke-width=".8"`)+line(right,y,right+15,y,`stroke="${ink}" stroke-width=".8"`);
+      s+=path(`M${p(left)} ${y} L${p(left-8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
+      s+=path(`M${p(right)} ${y} L${p(right+8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
+    }
+    if(c.reveal)s+=text(Math.max(160,(left+right)/2),352,formatReading(c),'class="ci-dimension-value" font-size="26" text-anchor="middle"');
+    return s+'</g>';
+  }
   function wholeHorizontal(c, g) {
+    if(c.type==='analog')return wholeUniversalDrawing(c,g);
     const pp = g.pxPerUnit, span = c.r.divisions ? c.r.divisions * c.r.vernierPitch * pp : 0, readOffset = 30;
     const bodyWidth = Math.max(c.type === 'digital' ? 208 : c.type === 'dial' ? 146 : 98, span + readOffset + 18);
     const steel = metal(c), edge = metal(c, 'edge');
@@ -197,14 +297,15 @@
   }
   function vernierDetail(c) {
     const r = c.r, scale = r.unit === 'mm' ? r.divisions === 50 ? 20 : r.divisions === 20 ? 24 : 105 : r.divisions === 8 ? 2000 : 1600;
+    const surface = c.type === 'analog' ? '#f9faf6' : metal(c);
     const coincide = c.ticks % r.mainTicks, mainTicks = c.ticks - coincide, main = mainTicks / r.denominator, height = 228;
     const originTicks = Math.max(0, mainTicks - r.mainTicks * 0.6), x = ticks => 140 + (ticks - originTicks) * scale / r.denominator;
     const coincidenceTicks = c.ticks + coincide * r.vernierPitchTicks;
     const mainY = 106, vernierY = 108;
     let content = text(25, 27, 'Lupa · escala principal e nônio contínuos', 'font-size="20" font-weight="700"');
     content += '<g class="ci-detail-window" data-window="0" data-px-per-unit="' + scale + '">';
-    content += rect(15, 44, 1245, 62, 'rx="2" fill="' + metal(c) + '" stroke="#787e71"');
-    content += rect(15, 108, 1245, 84, 'rx="2" fill="' + metal(c) + '" stroke="#787e71"');
+    content += rect(15, 44, 1245, 62, 'rx="2" fill="' + surface + '" stroke="#787e71"');
+    content += rect(15, 108, 1245, 84, 'rx="2" fill="' + surface + '" stroke="#787e71"');
     content += line(16, 46, 1258, 46, 'stroke="#fff" stroke-width="1.5"');
     content += text(30, 83, r.unit === 'mm' ? 'mm' : 'pol', 'font-size="17" fill="#535b4c"');
     const first = Math.max(0, Math.ceil(originTicks / r.mainTicks)), last = Math.floor((originTicks + 1090 * r.denominator / scale) / r.mainTicks);
@@ -295,14 +396,18 @@
   }
   function render(options = {}) {
     const c = settings(options), g = geometry(options), section = options.section || 'full';
+    const technical = c.type === 'analog';
     c.prefix = 'ci-' + c.type + '-' + section;
-    if (!['full', 'instrument', 'detail', 'game'].includes(section)) throw new RangeError('Seção do instrumento desconhecida.');
+    if (!['full', 'instrument', 'detail', 'game', 'free'].includes(section)) throw new RangeError('Seção do instrumento desconhecida.');
+    if(section==='free'&&!technical)throw new RangeError('A vista livre usa o paquímetro universal analógico.');
     const instrument = section === 'detail' || section === 'game' ? '' : c.type === 'depth' ? wholeDepth(c, g) : c.type === 'height' ? wholeHeight(c, g) : wholeHorizontal(c, g);
-    const detail = section === 'instrument' ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c) : vernierDetail(c);
-    const height = section === 'instrument' ? 300 : section === 'detail' || section === 'game' ? detail.height : 300 + detail.height;
-    const body = section === 'instrument' ? instrument : section === 'detail' || section === 'game' ? detail.content : instrument + `<g transform="translate(0 300)">${detail.content}</g>`;
+    const detail = section === 'instrument' || section === 'free' ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c) : vernierDetail(c);
+    const instrumentHeight=technical?330:300;
+    const height = section === 'free' ? 360 : section === 'instrument' ? instrumentHeight : section === 'detail' || section === 'game' ? detail.height : instrumentHeight + detail.height;
+    const body = section === 'free' ? instrument+freeDimension(c,g) : section === 'instrument' ? instrument : section === 'detail' || section === 'game' ? detail.content : instrument + `<g transform="translate(0 ${instrumentHeight})">${detail.content}</g>`;
+    const width=section==='free'?840:1280,viewBox=section==='free'?'50 0 840 360':`0 0 1280 ${height}`;
     const label = TYPES[c.type].name + (c.reveal ? '. Leitura: ' + formatReading(c) : '. Instrumento com partes móveis e escalas para leitura.');
-    return `<svg xmlns="http://www.w3.org/2000/svg" class="caliper-instrument ci-${c.type}${section === 'game' ? ' ci-game-scale' : ''}" viewBox="0 0 1280 ${height}" width="1280" height="${height}" role="img" aria-label="${esc(label)}"${c.reveal ? ` data-reading="${p(c.value)}"` : ''} style="display:block;width:100%;height:auto;overflow:visible;font-family:Segoe UI,Arial,sans-serif;background:${section === 'game' ? '#fff' : 'linear-gradient(180deg,#f5f6f2,#e5e8df)'};border-radius:${section === 'game' ? 0 : 10}px"><g font-size="16" fill="#1c3c55">${finishes(c)}${body}</g></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" class="caliper-instrument ci-${c.type}${section === 'game' ? ' ci-game-scale' : section==='free'?' ci-free-instrument':''}" viewBox="${viewBox}" width="${width}" height="${height}" role="img" aria-label="${esc(label)}"${c.reveal ? ` data-reading="${p(c.value)}"` : ''} style="display:block;width:100%;height:auto;overflow:visible;font-family:Segoe UI,Arial,sans-serif;background:${technical || section === 'game' ? '#fff' : 'linear-gradient(180deg,#f5f6f2,#e5e8df)'};border-radius:${technical || section === 'game' ? 0 : 10}px"><g font-size="16" fill="#1c3c55">${technical ? '' : finishes(c)}${body}</g></svg>`;
   }
   const api = Object.freeze({ RESOLUTIONS, TYPES, geometry, render });
   root.CaliperInstrument = api;

@@ -217,6 +217,12 @@ svg .travel-indicator path{fill:none;stroke:var(--good);stroke-width:3;stroke-li
 .cp-config .cp-model-label{grid-column:1/-1;margin:0;padding:3px 0;font-size:12px;line-height:1.5;color:#3b4d5f}
 /* Keep the answer immediately below the instrument on one white surface. */
 .caliper-game .cp-game-shell{height:auto;min-height:0;padding:8px 0;border:0;border-radius:0;box-shadow:none}.caliper-game .cp-scale-stage{flex:0 1 auto;height:auto;min-height:0;max-height:calc(100dvh - 240px);border:0}.caliper-game:fullscreen>.cp-game-shell,.caliper-game.cp-fullscreen-fallback>.cp-game-shell{height:auto!important;min-height:0!important}.caliper-game .cp-reading .cp-scale-canvas{min-width:100%!important}@media(max-width:650px){.caliper-game .cp-scale-stage{max-height:calc(100dvh - 300px)}.caliper-game .cp-game-shell{padding:6px 0}}
+/* One continuous workspace for the full, manipulable universal caliper. */
+.caliper-game .cp-game-shell.cp-free{height:calc(100dvh - 125px);min-height:480px;gap:7px}.caliper-game:fullscreen>.cp-free,.caliper-game.cp-fullscreen-fallback>.cp-free{height:100%!important;min-height:0!important}.cp-free .cp-config:not([open]){display:none}.caliper-game .cp-free .cp-scale-stage{flex:1 1 auto;min-height:180px;max-height:none;overflow:auto}.cp-free-instrument .cp-canvas-fit{height:100%}.cp-free-instrument .cp-canvas-fit>svg{height:100%!important;width:100%}.cp-free .cp-scale-toolbar{min-height:31px}.cp-free .cp-free-line{flex-direction:row-reverse;gap:10px;align-items:center;padding-top:0}.cp-free .cp-free-reading{gap:8px;justify-content:flex-end}.cp-free .cp-free-reading output{font:500 clamp(30px,3.6vw,54px)/1.1 "Segoe UI",Arial,sans-serif;color:#8b1010;min-width:180px;letter-spacing:-1px}.cp-free .cp-free-line form{gap:6px}.cp-free .cp-free-line label{font-size:11px;font-weight:500}.caliper-game .cp-free #cp-jump{font-size:17px;min-height:32px;width:123px;padding:5px 8px}.cp-free .cp-movement{gap:4px}.cp-free #cp-live-explanation:empty,.cp-free #cp-feedback:empty{display:none}.caliper-game .cp-icon{display:inline-block;position:relative;vertical-align:-2px;flex-shrink:0;box-sizing:border-box;margin-right:3px}.caliper-game .cp-icon-search{width:12px;height:12px;border:1.6px solid currentColor;border-radius:50%;margin-right:6px}.cp-icon-search:after{content:"";position:absolute;right:-5px;bottom:-3px;width:6px;height:1.6px;background:currentColor;transform:rotate(45deg);transform-origin:left center}.caliper-game .cp-icon-eye{width:17px;height:11px;border:1.5px solid currentColor;border-radius:70% 20%;transform:rotate(45deg);margin-right:4px}.cp-icon-eye:after{content:"";position:absolute;left:5px;top:2px;width:4px;height:4px;border:1px solid currentColor;border-radius:50%}.cp-eye-button[aria-pressed="true"] .cp-icon-eye:before{content:"";position:absolute;left:6px;top:-4px;height:17px;border-left:1.5px solid currentColor}
+@media(max-width:1000px){.cp-free .cp-free-line{flex-wrap:wrap}.cp-free .cp-free-reading output{min-width:145px}.cp-free .cp-free-line #cp-readout{margin-left:auto}.cp-free .cp-free-line form{margin-right:auto}}
+@media(max-width:650px){.caliper-game .cp-game-shell.cp-free{height:calc(100dvh - 110px);min-height:490px;gap:5px}.cp-free .cp-scale-toolbar{flex-wrap:wrap;gap:4px}.cp-free .cp-scale-toolbar>span{max-width:none;flex:1;font-size:10px}.cp-free .cp-zoom{gap:3px}.caliper-game .cp-free .cp-scale-stage{min-height:160px}.cp-free .cp-free-line{flex-direction:column;align-items:stretch;gap:6px}.cp-free .cp-free-line #cp-readout{margin:0}.cp-free .cp-free-reading{justify-content:center;flex-wrap:nowrap;gap:6px}.cp-free .cp-free-reading output{font-size:30px;min-width:0;margin-right:auto;letter-spacing:-.6px}.cp-free .cp-free-reading .cp-button{font-size:10px;padding:5px 6px}.cp-free .cp-free-line form{margin:0;justify-content:center;flex-wrap:nowrap;width:100%;gap:5px}.cp-free .cp-free-line label{width:auto;font-size:10px;white-space:nowrap}.caliper-game .cp-free #cp-jump{width:110px;font-size:16px}.cp-free .cp-movement{gap:3px}.cp-free .cp-movement>span{font-size:9px}.caliper-game .cp-free .cp-top-actions .cp-free-button{font-size:11px}}
+@media(max-height:500px) and (min-width:651px){.caliper-game .cp-game-shell.cp-free{min-height:430px}.cp-free .cp-game-top h2{font-size:17px}.cp-free .cp-game-top p{font-size:10px}.cp-free .cp-free-reading output{font-size:30px}.caliper-game .cp-free .cp-scale-stage{min-height:170px}}
+@media(max-width:650px) and (orientation:portrait){.caliper-game .cp-free-instrument .cp-scale-stage{flex:0 0 auto;height:calc((100vw - 16px)*3/7);min-height:0}}
 
 </style>
 </head>
@@ -2139,7 +2145,107 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     s += text(x + width / 2, y + height * 0.64, c.reveal ? formatReading(c) : 'VISOR OCULTO', `font-size="${width > 300 ? 36 : c.reveal ? 22 : 18}" font-family="Consolas,monospace" text-anchor="middle" fill="#203e32"`);
     return s;
   }
+  function wholeUniversalDrawing(c, g) {
+    const pp = g.pxPerUnit, readOffset = 30, baseline = 148;
+    const span = c.r.divisions * c.r.vernierPitch * pp, bodyWidth = Math.max(104, span + readOffset + 18);
+    const ink = '#1d211b', paper = '#fff', face = '#f0f0ed';
+    const outline = `fill="${paper}" stroke="${ink}" stroke-width="1.3"`;
+    const detail = `fill="none" stroke="${ink}" stroke-width=".65"`;
+    let s = '<g class="ci-technical-drawing" stroke-linecap="round" stroke-linejoin="round">';
+    if (c.objectValue !== null) {
+      const width = c.objectValue * pp, end = g.zeroPx + width;
+      s += rect(g.zeroPx,210,width,31,`class="ci-workpiece" fill="#f9faf6" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?3:1.5}"`);
+      for(let x=g.zeroPx+5;x<end-2;x+=9)s+=line(x,239,Math.min(x+8,end-2),231,'stroke="#8b9185" stroke-width=".6"');
+    }
+    // The beam's rated travel and auxiliary graduations use the exact same
+    // physical datum as the enlarged reading face (30 px from the jaw face).
+    s += rect(72,95,724,53,`class="ci-beam-body" ${outline}`);
+    s += line(74,98,794,98,`class="ci-beam-guide" stroke="${ink}" stroke-width=".55"`);
+    s += line(74,102,794,102,`class="ci-beam-guide" stroke="${ink}" stroke-width=".45"`);
+    s += rect(788,99,6,45,`fill="${face}" stroke="${ink}" stroke-width=".6"`);
+    s += rect(g.zeroPx,100,c.r.cap*pp,43,'data-caliper-beam="" fill="transparent" pointer-events="none"');
+    s += scaleTicks(c,g.zeroPx+readOffset,baseline,pp,{end:(790-g.zeroPx-readOffset)/pp,centimeters:true,labelEnd:c.r.cap});
+    s += text(758,119,c.r.unit==='mm'?'cm':'pol','font-size="11" text-anchor="middle"');
+
+    // Ground measuring edges and the inset bevel follow the jaw profiles.
+    s += path('M75 95 H120 V292 H113 L105 282 L96 263 L88 238 L82 214 L78 190 L75 158 Z',`class="ci-fixed-jaw" ${outline}`);
+    s += rect(115,164,5,126,`fill="${face}"`);
+    s += path('M80 104 V183 L85 213 L92 241 L102 268 L115 288',`class="ci-jaw-bevel" ${detail}`);
+    for(let y=169;y<286;y+=8)s+=line(115,y+4,120,y,'stroke="#7b8175" stroke-width=".5"');
+    s += line(120,164,120,288,`class="ci-external-fixed-contact" stroke="${ink}" stroke-width="1.6"`);
+    s += path('M94 96 V59 L98 44 L104 33 L112 24 L120 18 V32 L117 49 V96 Z',outline);
+    s += path('M99 91 V59 L103 45 L110 33 L116 27',`class="ci-jaw-bevel" ${detail}`);
+    s += line(120,18,120,32,`class="ci-internal-fixed-contact" stroke="${ink}" stroke-width="1.3"`);
+
+    s += `<g ${hook('x',pp)} transform="translate(${p(g.sliderPx)} 0)">`;
+    s += rect(796-g.sliderPx,112,c.value*pp,7,`class="ci-depth-rod" fill="${paper}" stroke="${ink}" stroke-width="1"`);
+    if(c.value>0)s+=line(796-g.sliderPx,115.5,796-g.sliderPx+c.value*pp,115.5,'stroke="#777e70" stroke-width=".45"');
+    s += path(`M-10 84 H${p(bodyWidth)} V99 H17 V148 H${p(bodyWidth)} V201 H-10 Z`,`class="ci-slider-body" ${outline}`);
+    s += line(20,88,bodyWidth-3,88,`stroke="${ink}" stroke-width=".55"`);
+    s += line(20,197,bodyWidth-3,197,`stroke="${ink}" stroke-width=".45"`);
+    s += text(23,96,'UNIVERSAL','font-size="8" letter-spacing="1.2"');
+    s += path('M0 148 H32 V193 L30 212 L26 234 L20 257 L12 278 L5 292 H0 Z',`class="ci-moving-jaw" ${outline}`);
+    s += rect(0,164,5,126,`fill="${face}"`);
+    s += path('M27 166 V193 L25 213 L21 235 L15 259 L6 285',`class="ci-jaw-bevel" ${detail}`);
+    for(let y=169;y<286;y+=8)s+=line(0,y+4,5,y,'stroke="#7b8175" stroke-width=".5"');
+    s += line(0,164,0,288,`class="ci-external-moving-contact" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?2.5:1.6}"`);
+    s += path('M-1 96 V54 L0 32 V18 L6 27 L12 39 L17 54 V96 Z',outline);
+    s += path('M12 90 V55 L8 40 L3 30',`class="ci-jaw-bevel" ${detail}`);
+    s += line(0,18,0,32,`class="ci-internal-moving-contact" stroke="${ink}" stroke-width="1.3"`);
+
+    s += '<g class="ci-locking-screw">';
+    s += rect(48,67,10,17,outline)+rect(44,79,18,4,outline);
+    for(let y=69;y<78;y+=3)s+=line(49,y,57,y,'stroke="#68715e" stroke-width=".55"');
+    s += rect(36,55,34,12,`rx="2" ${outline}`)+line(39,58,67,58,`stroke="${ink}" stroke-width=".55"`);
+    for(let x=40;x<68;x+=4)s+=line(x,59,x,65,`stroke="${ink}" stroke-width=".7"`);
+    s += '</g><g class="ci-guide-screws">';
+    for(const [x,y] of [[8,110],[bodyWidth-7,190]]){
+      s += `<circle cx="${p(x)}" cy="${y}" r="3.2" ${outline}/>`;
+      s += line(x-1.8,y+1.5,x+1.8,y-1.5,`stroke="${ink}" stroke-width=".75"`);
+    }
+    s += '</g><g class="ci-thumbwheel">';
+    s += rect(bodyWidth-35,201,12,4,outline)+rect(bodyWidth-47,205,36,14,`rx="3" ${outline}`);
+    s += line(bodyWidth-44,208,bodyWidth-14,208,`stroke="${ink}" stroke-width=".5"`);
+    for(let x=bodyWidth-42;x<bodyWidth-14;x+=4)s+=line(x,210,x,217,`stroke="${ink}" stroke-width=".65"`);
+    s += '</g>';
+
+    // Both sets of strokes meet at one edge, as on the single reading view.
+    for(let k=0;k<=c.r.divisions;k++){
+      const at=readOffset+k*c.r.vernierPitch*pp,stride=c.key==='mm-005'?2:5;
+      s += line(at,baseline,at,baseline+(k%stride?11:19),`class="ci-whole-vernier" data-vernier-index="${k}" stroke="${ink}" stroke-width=".75"`);
+      if(k%stride===0||k===c.r.divisions)s+=text(at,184,c.key==='mm-005'?k/2:k,`font-size="${c.r.unit==='in'?9:11}" text-anchor="middle"`);
+    }
+    s += text(bodyWidth-16,195,c.r.label,'font-size="9" text-anchor="end"');
+    if(c.reveal){
+      const index=c.ticks%c.r.mainTicks,at=readOffset+index*c.r.vernierPitch*pp;
+      s+=line(at,132,at,168,'class="ci-coincidence" stroke="#087f57" stroke-width="1.5"');
+    }
+    s += '</g>';
+    if(c.annotated){
+      s += text(18,323,'Bicos externos','font-size="15"')+line(114,312,113,286,`stroke="${ink}" stroke-width=".65"`);
+      s += text(18,15,'Bicos internos','font-size="14"')+line(105,21,110,30,`stroke="${ink}" stroke-width=".65"`);
+      s += text(793,88,'Haste de profundidade','font-size="14" text-anchor="end"');
+    }
+    return s+'</g>';
+  }
+  function freeDimension(c,g){
+    const left=g.zeroPx,right=g.sliderPx,opening=right-left,y=330,ink='#1d211b';
+    let s='<g class="ci-opening-dimension" stroke-linecap="round" stroke-linejoin="round">';
+    s+=line(left,296,left,338,`stroke="${ink}" stroke-width=".7"`)+line(right,296,right,338,`stroke="${ink}" stroke-width=".7"`);
+    s+=line(left,y,right,y,`class="ci-dimension-span" stroke="${ink}" stroke-width=".8"`);
+    if(opening>=16){
+      s+=path(`M${p(left)} ${y} L${p(left+8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
+      s+=path(`M${p(right)} ${y} L${p(right-8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
+    }else{
+      s+=line(left-15,y,left,y,`stroke="${ink}" stroke-width=".8"`)+line(right,y,right+15,y,`stroke="${ink}" stroke-width=".8"`);
+      s+=path(`M${p(left)} ${y} L${p(left-8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
+      s+=path(`M${p(right)} ${y} L${p(right+8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
+    }
+    if(c.reveal)s+=text(Math.max(160,(left+right)/2),352,formatReading(c),'class="ci-dimension-value" font-size="26" text-anchor="middle"');
+    return s+'</g>';
+  }
   function wholeHorizontal(c, g) {
+    if(c.type==='analog')return wholeUniversalDrawing(c,g);
     const pp = g.pxPerUnit, span = c.r.divisions ? c.r.divisions * c.r.vernierPitch * pp : 0, readOffset = 30;
     const bodyWidth = Math.max(c.type === 'digital' ? 208 : c.type === 'dial' ? 146 : 98, span + readOffset + 18);
     const steel = metal(c), edge = metal(c, 'edge');
@@ -2250,14 +2356,15 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
   }
   function vernierDetail(c) {
     const r = c.r, scale = r.unit === 'mm' ? r.divisions === 50 ? 20 : r.divisions === 20 ? 24 : 105 : r.divisions === 8 ? 2000 : 1600;
+    const surface = c.type === 'analog' ? '#f9faf6' : metal(c);
     const coincide = c.ticks % r.mainTicks, mainTicks = c.ticks - coincide, main = mainTicks / r.denominator, height = 228;
     const originTicks = Math.max(0, mainTicks - r.mainTicks * 0.6), x = ticks => 140 + (ticks - originTicks) * scale / r.denominator;
     const coincidenceTicks = c.ticks + coincide * r.vernierPitchTicks;
     const mainY = 106, vernierY = 108;
     let content = text(25, 27, 'Lupa · escala principal e nônio contínuos', 'font-size="20" font-weight="700"');
     content += '<g class="ci-detail-window" data-window="0" data-px-per-unit="' + scale + '">';
-    content += rect(15, 44, 1245, 62, 'rx="2" fill="' + metal(c) + '" stroke="#787e71"');
-    content += rect(15, 108, 1245, 84, 'rx="2" fill="' + metal(c) + '" stroke="#787e71"');
+    content += rect(15, 44, 1245, 62, 'rx="2" fill="' + surface + '" stroke="#787e71"');
+    content += rect(15, 108, 1245, 84, 'rx="2" fill="' + surface + '" stroke="#787e71"');
     content += line(16, 46, 1258, 46, 'stroke="#fff" stroke-width="1.5"');
     content += text(30, 83, r.unit === 'mm' ? 'mm' : 'pol', 'font-size="17" fill="#535b4c"');
     const first = Math.max(0, Math.ceil(originTicks / r.mainTicks)), last = Math.floor((originTicks + 1090 * r.denominator / scale) / r.mainTicks);
@@ -2348,14 +2455,18 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
   }
   function render(options = {}) {
     const c = settings(options), g = geometry(options), section = options.section || 'full';
+    const technical = c.type === 'analog';
     c.prefix = 'ci-' + c.type + '-' + section;
-    if (!['full', 'instrument', 'detail', 'game'].includes(section)) throw new RangeError('Seção do instrumento desconhecida.');
+    if (!['full', 'instrument', 'detail', 'game', 'free'].includes(section)) throw new RangeError('Seção do instrumento desconhecida.');
+    if(section==='free'&&!technical)throw new RangeError('A vista livre usa o paquímetro universal analógico.');
     const instrument = section === 'detail' || section === 'game' ? '' : c.type === 'depth' ? wholeDepth(c, g) : c.type === 'height' ? wholeHeight(c, g) : wholeHorizontal(c, g);
-    const detail = section === 'instrument' ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c) : vernierDetail(c);
-    const height = section === 'instrument' ? 300 : section === 'detail' || section === 'game' ? detail.height : 300 + detail.height;
-    const body = section === 'instrument' ? instrument : section === 'detail' || section === 'game' ? detail.content : instrument + `<g transform="translate(0 300)">${detail.content}</g>`;
+    const detail = section === 'instrument' || section === 'free' ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c) : vernierDetail(c);
+    const instrumentHeight=technical?330:300;
+    const height = section === 'free' ? 360 : section === 'instrument' ? instrumentHeight : section === 'detail' || section === 'game' ? detail.height : instrumentHeight + detail.height;
+    const body = section === 'free' ? instrument+freeDimension(c,g) : section === 'instrument' ? instrument : section === 'detail' || section === 'game' ? detail.content : instrument + `<g transform="translate(0 ${instrumentHeight})">${detail.content}</g>`;
+    const width=section==='free'?840:1280,viewBox=section==='free'?'50 0 840 360':`0 0 1280 ${height}`;
     const label = TYPES[c.type].name + (c.reveal ? '. Leitura: ' + formatReading(c) : '. Instrumento com partes móveis e escalas para leitura.');
-    return `<svg xmlns="http://www.w3.org/2000/svg" class="caliper-instrument ci-${c.type}${section === 'game' ? ' ci-game-scale' : ''}" viewBox="0 0 1280 ${height}" width="1280" height="${height}" role="img" aria-label="${esc(label)}"${c.reveal ? ` data-reading="${p(c.value)}"` : ''} style="display:block;width:100%;height:auto;overflow:visible;font-family:Segoe UI,Arial,sans-serif;background:${section === 'game' ? '#fff' : 'linear-gradient(180deg,#f5f6f2,#e5e8df)'};border-radius:${section === 'game' ? 0 : 10}px"><g font-size="16" fill="#1c3c55">${finishes(c)}${body}</g></svg>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" class="caliper-instrument ci-${c.type}${section === 'game' ? ' ci-game-scale' : section==='free'?' ci-free-instrument':''}" viewBox="${viewBox}" width="${width}" height="${height}" role="img" aria-label="${esc(label)}"${c.reveal ? ` data-reading="${p(c.value)}"` : ''} style="display:block;width:100%;height:auto;overflow:visible;font-family:Segoe UI,Arial,sans-serif;background:${technical || section === 'game' ? '#fff' : 'linear-gradient(180deg,#f5f6f2,#e5e8df)'};border-radius:${technical || section === 'game' ? 0 : 10}px"><g font-size="16" fill="#1c3c55">${technical ? '' : finishes(c)}${body}</g></svg>`;
   }
   const api = Object.freeze({ RESOLUTIONS, TYPES, geometry, render });
   root.CaliperInstrument = api;
@@ -2376,7 +2487,7 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     let activity=['reading','free','challenge'].includes(input.activity)?input.activity:'reading';
     return {type,resolutionKey,activity,difficulty:['easy','medium','hard'].includes(input.difficulty)?input.difficulty:'medium',quantity:[0,10,20,30].includes(Number(input.quantity))?Number(input.quantity):10,assessment:input.assessment==='exam'?'exam':'training'};
   }
-  const initial=()=>({version:1,layoutVersion:2,settings:{...defaults},stats:{total:0,correct:0,wrong:0,points:0,streak:0,bestStreak:0,time:0,sessions:0,bestPercent:0,bestCount:0},history:[],legacySessions:[],session:null});
+  const initial=()=>({version:1,layoutVersion:2,settings:{...defaults},stats:{total:0,correct:0,wrong:0,points:0,streak:0,bestStreak:0,time:0,sessions:0,bestPercent:0,bestCount:0},history:[],legacySessions:[],session:null,suspendedSession:null,freeSession:null});
   let store=initial(),storage=true,host=null,active=false,refs=[],timer=null,persistTimer=null,frame=null,drag=null,detailZoom=1,view='scale',configOpen=false,notice='';
   let fullscreenFallback=false,fullscreenView=null,fullscreenPending=false,fullscreenEpoch=0;
   const q=selector=>host?.querySelector(selector),session=()=>store.session;
@@ -2386,7 +2497,14 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
   const contact=()=>session()?.config.activity==='challenge'&&session().ticks===session().targetTicks;
   const canMove=()=>!!session()&&!session().locked&&!session().completed&&session().config.activity!=='reading';
   const elapsed=()=>{const s=session();return s?Math.max(0,(s.endedAt||s.pausedAt||Date.now())-s.startedAt):0;};
-  const section=()=>session()?.config.activity==='reading'||view==='scale'?'game':'instrument';
+  const section=()=>session()?.config.activity==='reading'||view==='scale'?'game':session()?.config.activity==='free'?'free':'instrument';
+  const canvasMinimum=()=>section()==='free'?(detailZoom===1?'100%':detailZoom*840+'px'):detailZoom*960+'px';
+  function savedSession(s){
+    if(!s?.config||!Number.isFinite(s.ticks)||!Array.isArray(s.results))return null;
+    if(s.config.type!=='analog'){store.legacySessions.push(s);store.legacySessions=store.legacySessions.slice(-5);return null;}
+    const config=configOf(s.config),result={...s,config,ticks:E.clampTicks(s.ticks,config.resolutionKey),targetTicks:Number.isFinite(s.targetTicks)?E.clampTicks(s.targetTicks,config.resolutionKey):null,answered:sane(s.answered),correct:sane(s.correct),wrong:sane(s.wrong),points:sane(s.points),streak:sane(s.streak),bestStreak:sane(s.bestStreak),time:sane(s.time),results:s.results.slice(-30),locked:s.locked===true,completed:s.completed===true,reveal:s.reveal===true,hint:s.hint===true,annotations:s.annotations===true,input:typeof s.input==='string'?s.input:''};
+    return config.activity!=='free'&&result.targetTicks===null?null:result;
+  }
   function load(){try{
     const data=JSON.parse(localStorage.getItem(KEY)||'null');if(!data||data.version!==1)return;
     store.settings=configOf(data.settings);for(const key of Object.keys(store.stats))store.stats[key]=sane(data.stats?.[key]);store.stats.correct=Math.min(store.stats.correct,store.stats.total);store.stats.wrong=store.stats.total-store.stats.correct;
@@ -2395,13 +2513,13 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     const s=data.session;
     // Keep old answers in their original model and resolution. A fresh analog
     // session starts instead of reinterpreting digital/dial/vertical readings.
-    if(s?.config&&s.config.type!=='analog'){
-      store.legacySessions.push(s);store.legacySessions=store.legacySessions.slice(-5);
-      store.settings=configOf({...store.settings,activity:'reading',assessment:'training'});
-    }else if(s&&s.config&&Number.isFinite(s.ticks)&&Array.isArray(s.results)){
-      const config=configOf(s.config);store.session={...s,config,ticks:E.clampTicks(s.ticks,config.resolutionKey),targetTicks:Number.isFinite(s.targetTicks)?E.clampTicks(s.targetTicks,config.resolutionKey):null,answered:sane(s.answered),correct:sane(s.correct),wrong:sane(s.wrong),points:sane(s.points),streak:sane(s.streak),bestStreak:sane(s.bestStreak),time:sane(s.time),results:s.results.slice(-30),locked:s.locked===true,completed:s.completed===true,reveal:s.reveal===true,hint:s.hint===true,annotations:s.annotations===true,input:typeof s.input==='string'?s.input:''};
-      if(config.activity!=='free'&&store.session.targetTicks===null)store.session=null;
-    }
+    store.session=savedSession(s);
+    if(s?.config&&s.config.type!=='analog')store.settings=configOf({...store.settings,activity:'reading',assessment:'training'});
+    const suspended=savedSession(data.suspendedSession),free=savedSession(data.freeSession);
+    store.suspendedSession=suspended?.config.activity!=='free'?suspended:null;
+    store.freeSession=free?.config.activity==='free'?free:null;
+    store.suspendedView=data.suspendedView==='instrument'?'instrument':'scale';
+    store.suspendedZoom=ZOOMS.includes(data.suspendedZoom)?data.suspendedZoom:1;
     // Only legacy, unscored free exploration migrates to the new reading view.
     // Scores/history and active training or exams retain their existing state.
     if(data.layoutVersion!==2){if(store.session?.config.activity==='free')store.session=null;if(store.settings.activity==='free')store.settings=configOf({...store.settings,activity:'reading',assessment:'training'});}
@@ -2428,24 +2546,40 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     if(epoch!==fullscreenEpoch)return;fullscreenPending=false;if(!active||host!==element){restoreFullscreenView();return;}fullscreenFallback=true;element.classList.add('cp-fullscreen-fallback');if(document.body)document.body.style.overflow='hidden';if(document.documentElement)document.documentElement.style.overflow='hidden';element.scrollTop=0;syncFullscreen();
   }
   function scrollGameTop(){if(isFullscreen())host.scrollTop=0;else root.scrollTo(0,0);}
-  function setZoom(value){const next=ZOOMS.includes(value)?value:1,area=q('#cp-instrument-area'),canvas=q('#cp-instrument-canvas'),ratio=next/detailZoom;detailZoom=next;if(canvas){canvas.style.width=detailZoom*100+'%';canvas.style.minWidth=detailZoom*960+'px';}if(area){area.scrollLeft=(area.scrollLeft||0)*ratio;area.scrollTop=(area.scrollTop||0)*ratio;}const select=q('#cp-zoom');if(select)select.value=String(detailZoom);const output=q('#cp-zoom-value');if(output)output.textContent=detailZoom*100+'%';}
+  function setZoom(value){const next=ZOOMS.includes(value)?value:1,area=q('#cp-instrument-area'),canvas=q('#cp-instrument-canvas'),ratio=next/detailZoom;detailZoom=next;if(canvas){canvas.style.width=detailZoom*100+'%';canvas.style.minWidth=canvasMinimum();canvas.classList.toggle('cp-canvas-fit',section()==='free'&&detailZoom===1);}if(area){area.scrollLeft=(area.scrollLeft||0)*ratio;area.scrollTop=(area.scrollTop||0)*ratio;}const select=q('#cp-zoom');if(select)select.value=String(detailZoom);const output=q('#cp-zoom-value');if(output)output.textContent=detailZoom*100+'%';}
   function close(){if(!active)return;exitFullscreen();pause();stopTimer();if(frame!==null)cancelAnimationFrame(frame);frame=null;drag=null;for(const event of ['onclick','onchange','onsubmit','onkeydown','oninput','onpointerdown','onpointermove','onpointerup','onpointercancel'])host[event]=null;host.classList.remove('caliper-game');for(const [element,hidden]of refs)element.hidden=hidden;refs=[];active=false;}
   function exitToMenu(){close();if(typeof menu==='function')menu();}
   function open(element){close();host=element;active=true;host.classList.add('caliper-game');refs=['#stats','#preview-notice','main > details'].map(selector=>document.querySelector(selector)).filter(Boolean).map(element=>[element,element.hidden]);for(const [element]of refs)element.hidden=true;configOpen=false;detailZoom=1;view=session()?.config.activity==='reading'?'scale':'instrument';bind();if(!session())start();else if(session().completed)renderSummary();else{resumeTime();renderSimulator();}scrollGameTop();}
   function card(){return `<button class="mode" data-mode="6" type="button"><span class="mode-head"><span class="num">JOGO 06</span><span class="mode-arrow" aria-hidden="true">↗</span></span><span class="game-preview cp-menu-preview" aria-hidden="true">${I.render({type:'analog',ticks:663,resolutionKey:'mm-005',reveal:false,section:'game'})}</span><span class="mode-body"><h3>DESAFIO DO PAQUÍMETRO</h3><small>Interprete uma escala ampliada e pratique medidas com resolução técnica.</small><span class="mode-cta"><span>Praticar leitura</span><span aria-hidden="true">→</span></span></span></button>`;}
-  function start(config=store.settings){store.settings=configOf(config);const now=Date.now();store.session={config:{...store.settings},ticks:0,targetTicks:null,startedAt:now,questionStartedAt:now,answered:0,correct:0,wrong:0,points:0,streak:store.stats.streak,bestStreak:store.stats.streak,time:0,results:[],locked:false,completed:false,reveal:store.settings.activity==='free',hint:false,annotations:false,input:'',examApplied:false,summaryRecorded:false};view=store.settings.activity==='reading'?'scale':'instrument';detailZoom=1;configOpen=false;notice='';if(store.settings.activity!=='free')makeQuestion();persist();renderSimulator();scrollGameTop();}
+  function newSession(config){const c=configOf(config),now=Date.now(),r=E.getResolution(c.resolutionKey);return {config:c,ticks:c.activity==='free'?E.quantize(r.unit==='in'?2.25:56.1,r):0,targetTicks:null,startedAt:now,questionStartedAt:now,answered:0,correct:0,wrong:0,points:0,streak:store.stats.streak,bestStreak:store.stats.streak,time:0,results:[],locked:false,completed:false,reveal:c.activity==='free',hint:false,annotations:false,input:'',examApplied:false,summaryRecorded:false};}
+  function enterFree(config=store.settings,fullscreen=false){
+    const current=session(),c=configOf({...config,activity:'free',assessment:'training'});
+    if(current?.config.activity!=='free'&&current){
+      if(!current.completed&&current.config.assessment!=='exam'&&!current.pausedAt)current.pausedAt=Date.now();
+      store.suspendedSession=current;store.suspendedView=view;store.suspendedZoom=detailZoom;
+    }
+    const existing=current?.config.activity==='free'?current:store.freeSession;
+    store.session=existing?.config.resolutionKey===c.resolutionKey?existing:newSession(c);
+    store.freeSession=null;store.settings={...store.session.config};view='instrument';detailZoom=1;configOpen=false;notice='';resumeTime();persist();renderSimulator();scrollGameTop();
+    if(fullscreen&&!isFullscreen())void toggleFullscreen();
+  }
+  function resumeAssessment(){
+    if(!store.suspendedSession)return;const free=session();if(free?.config.activity==='free'){if(!free.pausedAt)free.pausedAt=Date.now();store.freeSession=free;}
+    store.session=store.suspendedSession;store.suspendedSession=null;store.settings={...session().config};view=session().config.activity==='reading'?'scale':store.suspendedView||'instrument';detailZoom=store.suspendedZoom||1;delete store.suspendedView;delete store.suspendedZoom;configOpen=false;notice='';resumeTime();persist();if(session().completed){stopTimer();renderSummary();}else renderSimulator();scrollGameTop();
+  }
+  function start(config=store.settings){const c=configOf(config);if(c.activity==='free')return enterFree(c);const previous=session();if(previous?.config.activity==='free'){if(!previous.pausedAt)previous.pausedAt=Date.now();store.freeSession=previous;}store.suspendedSession=null;delete store.suspendedView;delete store.suspendedZoom;store.settings=c;store.session=newSession(c);view=c.activity==='reading'?'scale':'instrument';detailZoom=1;configOpen=false;notice='';makeQuestion();persist();renderSimulator();scrollGameTop();}
   function makeQuestion(){const s=session(),c=s.config;let next,last=s.targetTicks;for(let i=0;i<20;i++){next=E.nextMeasure({resolutionKey:c.resolutionKey,difficulty:c.difficulty,questionIndex:s.answered,level:E.getLevel(store.stats.correct).level});if(next!==last)break;}s.targetTicks=next;const gap=Math.max(1,E.quantize(resolution().capacity*.08,c.resolutionKey));s.ticks=c.activity==='reading'?next:c.type==='depth'?Math.max(0,next-gap):Math.min(resolution().maxTicks,next+gap);s.questionStartedAt=Date.now();s.locked=false;s.reveal=false;s.annotations=false;s.input='';s.hint=false;s.lastResult=null;}
   function opts(){const s=session();return {type:s.config.type,ticks:s.ticks,resolutionKey:s.config.resolutionKey,reveal:visible(),annotated:visible()&&s.annotations,objectTicks:s.config.activity==='challenge'?s.targetTicks:undefined,contact:contact(),section:section()};}
   function configHTML(){const c=store.settings,free=c.activity==='free';return `<details id="cp-config" class="cp-config" ${configOpen?'open':''}><summary>Configurar instrumento e sessão</summary><form id="cp-setup-form"><p class="cp-model-label">Modelo: <strong>Paquímetro universal analógico</strong></p><label>Resolução<select id="cp-resolution">${E.supportedResolutions(c.type).map(r=>`<option value="${r.id}" ${r.id===c.resolutionKey?'selected':''}>${esc(r.label)}</option>`).join('')}</select></label><label>Atividade<select id="cp-activity" name="cp-activity"><option value="reading" ${c.activity==='reading'?'selected':''}>Leitura da escala</option><option value="free" ${free?'selected':''}>Exploração livre</option><option value="challenge" ${c.activity==='challenge'?'selected':''}>Medição por contato</option></select></label><label>Dificuldade<select id="cp-difficulty" ${free?'disabled':''}>${[['easy','Fácil'],['medium','Médio'],['hard','Difícil']].map(([value,label])=>`<option value="${value}" ${c.difficulty===value?'selected':''}>${label}</option>`).join('')}</select></label><label>Questões<select id="cp-quantity" ${free?'disabled':''}>${[10,20,30,0].map(value=>`<option value="${value}" ${c.quantity===value?'selected':''}>${value||'Sem limite'}</option>`).join('')}</select></label><label>Avaliação<select id="cp-assessment" ${free?'disabled':''}><option value="training" ${c.assessment==='training'?'selected':''}>Treinamento</option><option value="exam" ${c.assessment==='exam'?'selected':''}>Prova</option></select></label><button type="submit" class="cp-button primary">Iniciar nova sessão</button><p class="cp-config-note">Escala principal e nônio do paquímetro universal analógico.</p></form></details>`;}
-  function header(summary=false){const s=session(),c=s.config,r=resolution();return `<header class="cp-game-top"><div><h2 tabindex="-1">${summary?'Resultado da sessão':'Desafio do Paquímetro'}</h2><p>${esc(E.getType(c.type).label)} · ${esc(r.label)}${!summary?' · '+(c.activity==='free'?'Modo livre':isExam()?'Prova':c.activity==='reading'?'Leitura da escala':'Contato com a peça'):''}</p></div><div class="cp-top-actions">${!summary?'<button type="button" class="cp-button" data-cp="configure" aria-controls="cp-config">Configurar</button>':''}${fullscreenButton()}${!summary?'<button type="button" class="cp-button" data-cp="finish">Encerrar</button>':''}</div></header>`;}
-  function zoomHTML(){return `<div class="cp-scale-toolbar"><span>${session().config.activity==='reading'?'Interprete a escala e digite sua resposta.':view==='instrument'?'Arraste o cursor ou use as setas.':'Escala ampliada do mesmo instrumento.'}</span><div class="cp-zoom">${session().config.activity!=='reading'?`<button class="cp-button" data-cp="view">${view==='instrument'?'Ampliar escala':'Ver instrumento'}</button>`:''}<button data-cp="zoom-out" aria-label="Diminuir ampliação">−</button><label>Ampliação<select id="cp-zoom">${ZOOMS.map(value=>`<option value="${value}" ${value===detailZoom?'selected':''}>${value*100}%</option>`).join('')}</select></label><button data-cp="zoom-in" aria-label="Aumentar ampliação">+</button><output id="cp-zoom-value" class="cp-sr">${detailZoom*100}%</output></div></div>`;}
+  function header(summary=false){const s=session(),c=s.config,r=resolution(),free=c.activity==='free';return `<header class="cp-game-top"><div><h2 tabindex="-1">${summary?'Resultado da sessão':free?'Paquímetro universal':'Desafio do Paquímetro'}</h2><p>${esc(E.getType(c.type).label)} · ${esc(r.label)}${!summary?' · '+(free?'Modo livre':isExam()?'Prova':c.activity==='reading'?'Leitura da escala':'Contato com a peça'):''}</p></div><div class="cp-top-actions">${!free?'<button type="button" class="cp-button primary cp-free-button" data-cp="free">Modo livre</button>':store.suspendedSession?'<button type="button" class="cp-button primary" data-cp="resume-assessment">Voltar ao simulado</button>':''}${!summary?'<button type="button" class="cp-button" data-cp="configure" aria-controls="cp-config">Configurar</button>':''}${fullscreenButton()}${!summary?'<button type="button" class="cp-button" data-cp="finish">Encerrar</button>':''}</div></header>`;}
+  function zoomHTML(){const label=view==='instrument'?'Ampliar escala':'Ver instrumento';return `<div class="cp-scale-toolbar"><span>${session().config.activity==='reading'?'Interprete a escala e digite sua resposta.':view==='instrument'?'Arraste o cursor ou use as setas.':'Escala ampliada do mesmo instrumento.'}</span><div class="cp-zoom">${session().config.activity!=='reading'?`<button type="button" class="cp-button cp-view-button" data-cp="view" aria-label="${label}" aria-pressed="${view==='scale'}"><span aria-hidden="true" class="cp-icon cp-icon-search"></span> ${label}</button>`:''}<button data-cp="zoom-out" aria-label="Diminuir ampliação">−</button><label>Ampliação<select id="cp-zoom">${ZOOMS.map(value=>`<option value="${value}" ${value===detailZoom?'selected':''}>${value*100}%</option>`).join('')}</select></label><button data-cp="zoom-in" aria-label="Aumentar ampliação">+</button><output id="cp-zoom-value" class="cp-sr">${detailZoom*100}%</output></div></div>`;}
   function counters(){const s=session(),c=s.config;return `<div class="cp-counters" aria-label="Desempenho da sessão">${isExam()?`<div><span>Registradas</span><strong>${s.answered}</strong></div>`:`<div class="cp-correct"><span>Acertos</span><strong>${s.correct}</strong></div><div class="cp-wrong"><span>Erros</span><strong>${s.wrong}</strong></div>`}<div><span>Questão</span><strong>${s.locked?s.answered:s.answered+1}${c.quantity?'/'+c.quantity:''}</strong></div><div><span>Tempo</span><output id="cp-clock">${clock(elapsed())}</output></div></div>`;}
-  function readout(){return `<div class="cp-free-reading"><output id="cp-measure">${visible()?E.format(session().ticks,resolution())+' '+(resolution().unit==='in'?'pol':'mm'):'— — —'}</output><button type="button" class="cp-button" data-cp="eye">${visible()?'Ocultar medida':'Revelar medida'}</button><button type="button" class="cp-button" data-cp="explain">Como ler</button></div>`;}
+  function readout(){const label=visible()?'Ocultar medida':'Revelar medida';return `<div class="cp-free-reading"><output id="cp-measure" aria-label="Medida atual">${visible()?E.format(session().ticks,resolution())+' '+(resolution().unit==='in'?'pol':'mm'):'— — —'}</output><button type="button" class="cp-button cp-eye-button" data-cp="eye" aria-label="${label}" aria-pressed="${!visible()}"><span aria-hidden="true" class="cp-icon cp-icon-eye"></span> ${label}</button><button type="button" class="cp-button" data-cp="explain">Como ler</button></div>`;}
   function movementHTML(){const c=session().config;return `<div class="cp-movement" role="group" aria-label="Movimentação do cursor"><button data-cp="minimum">${c.type==='depth'?'Recolher':'Fechar'}${c.activity==='challenge'&&c.type!=='depth'?' até contato':''}</button><button data-cp-step="-10">−10</button><button data-cp-step="-1">−</button><span>${esc(resolution().label)}/passo</span><button data-cp-step="1">+</button><button data-cp-step="10">+10</button><button data-cp="maximum">${c.type==='depth'?'Avançar'+(c.activity==='challenge'?' até contato':''):'Abrir'}</button>${c.activity==='challenge'?`<span id="cp-contact" class="cp-contact ${contact()?'yes':''}">${contact()?'Em contato':'Aproxime da peça'}</span>`:''}</div>`;}
-  function taskHTML(){const s=session(),c=s.config,free=c.activity==='free',digital=c.type==='digital';if(free)return `<div class="cp-free-line"><form id="cp-jump-form"><label for="cp-jump">Posicionar em ${resolution().unit==='in'?'polegadas':'mm'}</label><input id="cp-jump" type="text" autocomplete="off" inputmode="${resolution().id==='in-128'?'text':'decimal'}" placeholder="Digite a medida"><button class="cp-button primary" type="submit">Posicionar</button></form><div id="cp-readout">${readout()}</div></div><div id="cp-live-explanation"></div>`;
+  function taskHTML(){const s=session(),c=s.config,free=c.activity==='free',digital=c.type==='digital';if(free)return `<div class="cp-free-line"><div id="cp-readout">${readout()}</div><form id="cp-jump-form"><label for="cp-jump">Posicionar em ${resolution().unit==='in'?'polegadas':'mm'}</label><input id="cp-jump" type="text" autocomplete="off" inputmode="${resolution().id==='in-128'?'text':'decimal'}" placeholder="Digite a medida"><button class="cp-button primary" type="submit">Posicionar</button></form></div><div id="cp-live-explanation"></div>`;
     return `<div class="cp-answer-line"><form id="cp-answer-form" novalidate>${digital?'<label>Encoste na peça e confirme.</label>':`<label for="cp-answer">Digite sua resposta</label><div class="cp-answer-input"><input id="cp-answer" type="text" inputmode="${resolution().id==='in-128'?'text':'decimal'}" value="${s.locked&&!visible()?'':esc(s.input)}" placeholder="Sua leitura" autocomplete="off" spellcheck="false" ${s.locked?'disabled':''}><span>${resolution().unit==='in'?'pol':'mm'}</span></div>`}<button class="cp-button primary" type="submit" ${s.locked?'disabled':''}>${digital?'Confirmar contato':'Confirmar'}</button>${!isExam()&&!s.locked?'<button type="button" class="cp-button cp-hint" data-cp="hint">Dica</button>':''}</form>${counters()}</div>${s.hint&&!isExam()?`<p class="cp-hint-text">${esc(hintText())} Com dica, o acerto vale 10 pontos.</p>`:''}`;
   }
-  function renderSimulator(){const s=session();if(!s)return start();if(s.completed)return renderSummary();resumeTime();host.innerHTML=`<section class="cp-game-shell ${s.config.activity==='reading'?'cp-reading':''}">${header()}${configHTML()}${zoomHTML()}<div id="cp-instrument-area" class="cp-scale-stage" role="region" tabindex="0" aria-label="${s.config.activity==='reading'?'Escala ampliada para interpretação.':'Instrumento manipulável: arraste o cursor ou use as setas.'}"><div id="cp-instrument-canvas" class="cp-scale-canvas" style="width:${detailZoom*100}%;min-width:${detailZoom*960}px">${I.render(opts())}</div></div>${s.config.activity!=='reading'?movementHTML():''}${taskHTML()}<p id="cp-error" class="cp-error" role="alert"></p><div id="cp-feedback">${s.locked?feedbackHTML():''}</div><p id="cp-status" class="cp-status" role="status" aria-live="polite">${esc(notice)}</p>${!storage?'<p class="cp-storage-note">O navegador não está salvando o progresso desta sessão.</p>':''}</section>`;runTimer();}
+  function renderSimulator(){const s=session();if(!s)return start();if(s.completed)return renderSummary();resumeTime();host.innerHTML=`<section class="cp-game-shell ${s.config.activity==='reading'?'cp-reading':s.config.activity==='free'?'cp-free '+(view==='instrument'?'cp-free-instrument':'cp-free-scale'):''}">${header()}${configHTML()}${zoomHTML()}<div id="cp-instrument-area" class="cp-scale-stage" role="region" tabindex="0" aria-label="${s.config.activity==='reading'?'Escala ampliada para interpretação.':'Instrumento manipulável: arraste o cursor ou use as setas.'}"><div id="cp-instrument-canvas" class="cp-scale-canvas ${section()==='free'&&detailZoom===1?'cp-canvas-fit':''}" style="width:${detailZoom*100}%;min-width:${canvasMinimum()}">${I.render(opts())}</div></div>${s.config.activity!=='reading'?movementHTML():''}${taskHTML()}<p id="cp-error" class="cp-error" role="alert"></p><div id="cp-feedback">${s.locked?feedbackHTML():''}</div><p id="cp-status" class="cp-status" role="status" aria-live="polite">${esc(notice)}</p>${!storage?'<p class="cp-storage-note">O navegador não está salvando o progresso desta sessão.</p>':''}</section>`;runTimer();}
   function hintText(){if(session().config.type==='digital')return'Obtenha contato correto; este modelo usa visor, sem nônio.';if(session().config.type==='dial')return'Leia a escala principal e some a divisão do ponteiro vezes a resolução.';return'Leia a última graduação principal antes do zero do nônio. Some o índice alinhado multiplicado por '+resolution().label+'.';}
   function explanationHTML(ticks=session().ticks){return `<div class="cp-reading-steps">${E.explain(ticks,resolution(),session().config.type).steps.map(text=>`<span>${esc(text)}</span>`).join('')}</div>`;}
   function feedbackHTML(){const s=session();if(!s.lastResult||isExam())return'';return `<section class="cp-feedback ${s.lastResult.correct?'ok':'review'}" tabindex="-1"><div><strong>${s.lastResult.correct?'Correto!':'Revise sua leitura.'}</strong>${visible()?'<span>Medida: '+E.format(s.targetTicks,resolution())+' '+(resolution().unit==='in'?'pol':'mm')+'</span>':'<span>Correção ocultada.</span>'}<button class="cp-button" data-cp="eye">${visible()?'Ocultar':'Revelar'}</button><button class="cp-button primary" data-cp="next">Próxima questão</button></div>${visible()?explanationHTML(s.targetTicks):''}</section>`;}
@@ -2466,7 +2600,7 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
   function pointerUp(event){if(!drag||event.pointerId!==drag.id)return;try{host.releasePointerCapture(event.pointerId);}catch(error){}drag=null;if(frame!==null){cancelAnimationFrame(frame);frame=null;}paint();persist();message(contact()?'Contato obtido.':'Cursor posicionado.');}
   function bind(){host.onpointerdown=pointerDown;host.onpointermove=pointerMove;host.onpointerup=pointerUp;host.onpointercancel=pointerUp;
     host.onclick=event=>{const button=event.target.closest('button');if(!button||button.disabled)return;if(button.dataset.cpStep!==undefined)return step(Number(button.dataset.cpStep));const action=button.dataset.cp;if(!action)return;const s=session();
-      if(action==='fullscreen')return void toggleFullscreen();if(action==='configure'){configOpen=!q('#cp-config').open;q('#cp-config').open=configOpen;return;}if(action==='exit')return exitToMenu();if(action==='restart')return start({...s.config});if(action==='finish')return finish();
+      if(action==='fullscreen')return void toggleFullscreen();if(action==='free')return enterFree(s.config,true);if(action==='resume-assessment')return resumeAssessment();if(action==='configure'){configOpen=!q('#cp-config').open;q('#cp-config').open=configOpen;return;}if(action==='exit')return exitToMenu();if(action==='restart')return start({...s.config});if(action==='finish')return finish();
       if(action==='minimum')setTicks(bounds()[0]);if(action==='maximum')setTicks(bounds()[1]);if(action==='view'){view=view==='instrument'?'scale':'instrument';renderSimulator();}
       if(action==='eye'){s.reveal=!s.reveal;if(!s.reveal)s.annotations=false;else if(s.locked)s.annotations=true;paint();message(s.reveal?'Leitura numérica revelada.':'Leitura numérica ocultada.');persist();}
       if(action==='explain'){if(!visible())return message('Revele a medida para consultar a explicação.');s.annotations=!s.annotations;paint();persist();}

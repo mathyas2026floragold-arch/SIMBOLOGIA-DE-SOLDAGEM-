@@ -115,6 +115,27 @@ function assertWhole(type, key, ticks, objectTicks = ticks) {
     close(Number(rod.a.x) + Number(rod.a.width) + move.x, 796 + ticks / spec.denominator * expected.scale, 'Rod protrusion equals jaw opening');
     const jaw = parsed.first('ci-moving-jaw'); assert.ok(parsed.descendants(slider).includes(jaw), 'External jaw moves with the slider');
     if (type === 'analog') {
+      const drawing = parsed.first('ci-technical-drawing');
+      assert.ok(drawing, 'Universal overview uses the same technical line-drawing style as the reading scale');
+      assert.ok(!/(?:linear|radial)-gradient\s*\(/i.test(parsed.root.a.style || ''), 'Technical overview has a plain background');
+      for (const node of parsed.all) {
+        for (const attribute of ['fill', 'stroke']) assert.ok(!/^url\(/i.test(node.a[attribute] || ''), 'Technical overview does not paint metallic gradients');
+      }
+      const movingParts = parsed.descendants(slider);
+      for (const name of ['ci-locking-screw', 'ci-thumbwheel', 'ci-guide-screws']) {
+        const part = parsed.first(name); assert.ok(part, 'Detailed universal includes ' + name);
+        assert.ok(movingParts.includes(part), name + ' stays physically coupled to the measuring cursor');
+        assert.ok(parsed.descendants(part).length >= 2, name + ' contains mechanical detail rather than a static label');
+      }
+      assert.ok(parsed.first('ci-jaw-bevel'), 'Detailed jaws include a visible machined bevel');
+      const beamGuide = parsed.first('ci-beam-guide'); assert.ok(beamGuide, 'The fixed beam includes its guide edge');
+      assert.ok(!movingParts.includes(beamGuide), 'The beam guide remains fixed while the cursor travels');
+      for (const node of parsed.all.filter(n => hasClass(n, 'ci-main-tick'))) {
+        close(Math.max(point(node, 'x1', 'y1').y, point(node, 'x2', 'y2').y), 148, 'Every principal stroke ends at the shared reading edge');
+      }
+      for (const node of parsed.all.filter(n => hasClass(n, 'ci-whole-vernier'))) {
+        close(Math.min(point(node, 'x1', 'y1').y, point(node, 'x2', 'y2').y), 148, 'Every vernier stroke starts at the same reading edge');
+      }
       const principalZero = parsed.all.find(n => hasClass(n, 'ci-main-tick') && n.a['data-main-unit'] === '0');
       const vernierZero = parsed.first('ci-whole-vernier');
       close(Number(principalZero.a.x1), 150, 'Principal zero is offset from the fixed measuring face');
@@ -175,6 +196,20 @@ function assertDial(key, ticks) {
   assert.ok(svg.includes(spec.unit === 'mm' ? 'uma volta = 1 mm' : 'uma volta = 0,1 pol'));
   assertHorizontalBounds(parsed, `dial/${key}/${ticks}/full`);
 }
+function assertFree(key, ticks) {
+  const spec = specs[key], options = { type: 'analog', resolutionKey: key, ticks, section: 'free' };
+  const hidden = Instrument.render(options), shown = Instrument.render({ ...options, reveal: true });
+  const parsed = parse(shown), span = parsed.first('ci-dimension-span');
+  const fixed = parsed.first('ci-external-fixed-contact'), moving = parsed.first('ci-external-moving-contact');
+  assert.equal(parsed.root.a.viewBox, '50 0 840 360', 'Free viewport stays fixed during dragging');
+  assert.ok(span && fixed && moving, 'The opening dimension is attached to the actual jaw faces');
+  close(Number(span.a.x1), point(fixed, 'x1', 'y1').x, 'Dimension starts at the fixed measuring face');
+  close(Number(span.a.x2), point(moving, 'x1', 'y1').x, 'Dimension ends at the moving measuring face');
+  close(Number(span.a.x2) - Number(span.a.x1), ticks / spec.denominator * 480 / spec.cap, 'Dimension uses the exact metric or imperial scale');
+  assert.ok(!/data-reading=|ci-dimension-value|ci-coincidence|aria-label="[^"]*Leitura:/.test(hidden), 'The eye also hides the opening dimension and accessible reading');
+  assert.ok(parsed.first('ci-dimension-value'), 'Revealing restores the dimension value');
+  assert.ok(shown.includes(Engine.format(ticks, key) + (spec.unit === 'mm' ? ' mm' : ' pol')), 'Dimension value agrees with the exact engine');
+}
 function assertVisibility(type, key, ticks) {
   const hidden = Instrument.render({ type, resolutionKey: key, ticks, annotated: true });
   assert.ok(!hidden.includes('data-reading=')); assert.ok(!hidden.includes('data-vernier-unit='));
@@ -190,13 +225,14 @@ function assertVisibility(type, key, ticks) {
 }
 
 assert.equal(combinations.length, 14);
-let physicalCases = 0, vernierCases = 0, dialCases = 0;
+let physicalCases = 0, vernierCases = 0, dialCases = 0, freeCases = 0;
 for (const [type, key] of combinations) {
   assert.ok(Instrument.TYPES[type].resolutions.includes(key));
   const spec = specs[key], max = spec.cap * spec.denominator;
   const samples = [...new Set([0, 1, Math.round(spec.denominator * .5), Math.floor(max / 2), max - 1, max])];
   for (const ticks of samples) {
     assertWhole(type, key, ticks); assertVisibility(type, key, ticks); physicalCases++;
+    if (type === 'analog') { assertFree(key, ticks); freeCases++; }
     for (const section of ['instrument', 'detail', 'full']) assert.equal(Instrument.render({ type, resolutionKey: key, ticks, section }).includes('<svg'), true);
   }
   // Moving the cursor cannot secretly resize the virtual target.
@@ -221,4 +257,4 @@ assertVernier('analog', 'mm-005', 663);
 assert.throws(() => Instrument.render({ type: 'analog', resolutionKey: 'mm-001', ticks: 1 }), RangeError);
 assert.throws(() => Instrument.render({ type: 'digital', resolutionKey: 'in-128', ticks: 1 }), RangeError);
 assert.throws(() => Instrument.render({ type: 'analog', resolutionKey: 'mm-005', ticks: 1, section: 'unknown' }), RangeError);
-console.log(`PASS: 14 type/resolution combinations; ${physicalCases} physical/visibility cases; ${vernierCases} vernier alignments; ${dialCases} exact dial phases; fixed target, signed travel, coupled depth rod and SVG bounds.`);
+console.log(`PASS: 14 type/resolution combinations; ${physicalCases} physical/visibility cases; ${vernierCases} vernier alignments; ${dialCases} exact dial phases; ${freeCases} free-mode dimensions/privacy cases; technical universal line drawing, shared reading edge, coupled mechanical details, fixed target, signed travel, depth rod and SVG bounds.`);
