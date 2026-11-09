@@ -2212,9 +2212,7 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     // completely visible; only the nônio sits below its reading edge.
     s += rect(18,84,bodyWidth-18,15,`class="ci-slider-carriage" fill="#fff" stroke="${ink}" stroke-width="1.1"`);
     s += path(`M18 148 H${p(bodyWidth)} V218 H18 Z`,`class="ci-slider-body" fill="#fff" stroke="${ink}" stroke-width="1.1"`);
-    s += rect(20,195,bodyWidth-22,19,`fill="${shade}" opacity=".3" pointer-events="none"`);
     s += line(20,88,bodyWidth-3,88,`stroke="${ink}" stroke-width=".55"`);
-    s += line(22,194,bodyWidth-3,194,`class="ci-vernier-footer" stroke="#a0a49b" stroke-width=".45"`);
     s += line(20,214,bodyWidth-3,214,`stroke="${ink}" stroke-width=".45"`);
     s += text(23,96,'UNIVERSAL','font-size="8" letter-spacing="1.2"');
     s += path(movingOuter,`class="ci-moving-jaw" fill="#e7e7e7" stroke="${ink}" stroke-width="1.1"`);
@@ -2249,7 +2247,6 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
       s += line(at,baseline,at,baseline+(k%stride?11:19),`class="ci-whole-vernier" data-vernier-index="${k}" stroke="${ink}" stroke-width=".75"`);
       if(k%stride===0||k===c.r.divisions)s+=text(at,184,c.key==='mm-005'?k/2:k,`class="ci-vernier-label" font-size="${c.key==='in-1000'?7:c.r.unit==='in'?8:9}" text-anchor="middle"`);
     }
-    s += text(24,207,c.r.unit==='mm'?'mm':'pol','class="ci-vernier-unit" font-size="8"')+text(bodyWidth-24,207,c.r.label,'class="ci-resolution-label" font-size="9" text-anchor="end"');
     const index=c.ticks%c.r.mainTicks,at=readOffset+index*c.r.vernierPitch*pp;
     if(['free','focus'].includes(c.section)){
       s+=line(at,128,at,170,'class="ci-alignment-line" stroke="#d12626" stroke-width="1"');

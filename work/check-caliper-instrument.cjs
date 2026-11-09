@@ -132,23 +132,16 @@ function assertReadingClearance(parsed, slider) {
     const xs = horizontalCrossings(bevelPoints, y);
     if (xs.length) assert.ok(firstBox.left - Math.max(...xs) >= 4, 'The jaw bevel stays clear of the zero label');
   }
-  const resolution = parsed.first('ci-resolution-label'), separator = parsed.first('ci-vernier-footer');
-  assert.ok(resolution && separator, 'Resolution has a separate, identifiable footer');
-  const footer = textEnvelope(resolution), lastLabelBottom = Math.max(...boxes.map(b => b.bottom));
-  assert.ok(footer.top - lastLabelBottom >= 4, 'Resolution remains below the number row with clear whitespace');
-  const separatorY = Number(separator.a.y1);
-  assert.ok(separatorY - lastLabelBottom >= 4 && footer.top - separatorY >= 4,
-    'Footer separator leaves whitespace above and below');
+  const lastLabelBottom = Math.max(...boxes.map(b => b.bottom));
   const screws = parsed.descendants(parsed.first('ci-guide-screws')).filter(n => n.tag === 'circle');
   const bottomScrew = screws.reduce((a, b) => Number(a.a.cy) > Number(b.a.cy) ? a : b);
   const screw = point(bottomScrew, 'cx', 'cy');
-  assert.ok(screw.x - Number(bottomScrew.a.r) - footer.right >= 6,
-    'Resolution text leaves a clear lateral margin before the guide screw');
-  const guide = slider.children.find(n => n.tag === 'line' && n.a.y1 === n.a.y2 && Number(n.a.y1) > footer.bottom &&
-    point(n, 'x1', 'y1').x <= footer.left && point(n, 'x2', 'y2').x >= footer.right);
-  assert.ok(guide, 'A lower plate guide remains below the resolution footer');
-  assert.ok(Number(guide.a.y1) - footer.bottom >= 4,
-    'Lower guide line does not touch resolution text');
+  assert.ok(screw.y - Number(bottomScrew.a.r) - lastLabelBottom >= 4,
+    'The guide screw stays clear of the vernier numbers');
+  const guide = slider.children.find(n => n.tag === 'line' && n.a.y1 === n.a.y2 && Number(n.a.y1) > lastLabelBottom);
+  assert.ok(guide, 'A lower plate guide remains below the vernier numbers');
+  assert.ok(Number(guide.a.y1) - lastLabelBottom >= 4,
+    'Lower guide line does not touch the number row');
 }
 function assertHorizontalBounds(parsed, label) {
   const width = Number(parsed.root.a.viewBox.split(/\s+/)[2]); assert.equal(width, 1280);
