@@ -220,15 +220,57 @@ hidden(parkedExam,'resumed exam');assert.equal(parkedExam.$('#cp-feedback').text
 assert.equal(parkedExam.state().session.answered,2);assert.equal(parkedExam.state().stats.total,0,'exploring and resuming never commits partial exam points');
 parkedExam.click('[data-cp="finish"]');assert.equal(parkedExam.state().stats.total,2);assert.equal(parkedExam.state().stats.correct,2);
 
-// Physical contact remains mandatory only in the contact activity.
+// The third activity asks for a value and grades the actual physical cursor.
+// No typed answer or target workpiece can substitute for positioning it.
 configure(h,{activity:'challenge',assessment:'training'});let s=h.state().session;
-h.input('cp-answer',E.format(s.targetTicks,s.config.resolutionKey));h.submit('cp-answer-form');
-assert.equal(h.state().session.answered,0);assert.match(h.$('#cp-error').textContent,/Encoste/);
-h.click('[data-cp="minimum"]');assert.equal(h.state().session.ticks,h.state().session.targetTicks);hidden(h,'contact before grading');
-reading(h);assert.equal(h.state().stats.total,1);assert.equal(h.state().stats.correct,1);assert.equal(h.state().stats.points,20);
-h.click('[data-cp="next"]');h.click('[data-cp="minimum"]');reading(h,false);
-assert.equal(h.state().stats.wrong,1);assert.equal(h.state().stats.points,20);
-h.click('[data-cp="finish"]');const contactSummary=JSON.stringify(h.state().stats);h.run('menu();');h.click('[data-mode="6"]');assert.equal(JSON.stringify(h.state().stats),contactSummary);
+assert.match(h.$('#cp-target-measure').textContent,new RegExp(E.format(s.targetTicks,s.config.resolutionKey)));
+assert.equal(h.document.querySelector('#cp-answer'),null,'positioning uses the caliper instead of a typed answer');
+assert.equal(h.document.querySelector('.ci-workpiece'),null,'a physical stop must not reveal the required position');
+assert.equal(s.ticks,0,'a positioning question starts with the caliper closed');
+h.click('[data-cp="maximum"]');assert.equal(h.state().session.ticks,E.getResolution(s.config.resolutionKey).maxTicks,'the cursor may pass the requested position');
+h.click('[data-cp="minimum"]');assert.equal(h.state().session.ticks,0,'Fechar closes fully rather than stopping automatically at the answer');
+hidden(h,'position before grading');h.submit('cp-answer-form');
+assert.equal(h.state().stats.total,1);assert.equal(h.state().stats.wrong,1);assert.equal(h.state().stats.points,0);
+assert.match(h.$('#cp-feedback').textContent,/Sua posição: 0,00/);
+h.submit('cp-answer-form');assert.equal(h.state().stats.total,1,'a position is scored only once');
+h.click('[data-cp="next"]');
+function positionCursor(test,ticks){
+  const current=test.state().session,key=current.config.resolutionKey;
+  const handle=test.$('#cp-instrument-area').querySelector('[data-caliper-slider]');
+  const factor=Number(handle.getAttribute('data-drag-px-per-unit'));
+  const event=x=>({target:handle,pointerId:42,clientX:x,clientY:0,preventDefault(){}});
+  const travel=(E.valueOf(ticks,key)-E.valueOf(current.ticks,key))*factor;
+  test.host().onpointerdown(event(0));test.host().onpointermove(event(travel));test.flushFrames();test.host().onpointerup(event(travel));
+}
+s=h.state().session;positionCursor(h,s.targetTicks+1);assert.equal(h.state().session.ticks,s.targetTicks+1);
+h.key('ArrowLeft');assert.equal(h.state().session.ticks,s.targetTicks,'fine keyboard movement reaches exactly one selected division');
+h.submit('cp-answer-form');assert.equal(h.state().stats.total,2);assert.equal(h.state().stats.correct,1);assert.equal(h.state().stats.points,20);
+assert.match(h.$('#cp-feedback').textContent,/Correto/);
+h.click('[data-cp="finish"]');const positionSummary=JSON.stringify(h.state().stats);h.run('menu();');h.click('[data-mode="6"]');assert.equal(JSON.stringify(h.state().stats),positionSummary);
+
+// Every available resolution grades the snapped cursor, not a displayed value.
+for(const key of analogResolutions){
+  const placement=harness();placement.click('[data-mode="6"]');configure(placement,{activity:'challenge',resolution:key});
+  const target=placement.state().session.targetTicks;positionCursor(placement,target+1);placement.submit('cp-answer-form');
+  assert.equal(placement.state().session.wrong,1,'one-division positioning error is rejected for '+key);
+  placement.click('[data-cp="next"]');positionCursor(placement,placement.state().session.targetTicks);placement.submit('cp-answer-form');
+  assert.equal(placement.state().session.correct,1,'exact physical position is accepted for '+key);
+}
+
+let positionExam=harness();positionExam.click('[data-mode="6"]');configure(positionExam,{activity:'challenge',assessment:'exam',quantity:'10'});
+for(let i=0;i<10;i++){
+  const requested=positionExam.state().session.targetTicks;
+  positionCursor(positionExam,requested+(i%2));
+  if(i===4){
+    const saved=positionExam.state().session;positionExam.run('menu();');positionExam=harness(positionExam.records);
+    positionExam.click('[data-mode="6"]');enterReading(positionExam);
+    assert.equal(positionExam.state().session.ticks,saved.ticks,'reopening preserves an unfinished positioning answer');
+    assert.equal(positionExam.state().session.targetTicks,saved.targetTicks,'reopening preserves the requested measure');
+  }
+  positionExam.submit('cp-answer-form');
+  if(i<9){assert.equal(positionExam.state().stats.total,0);assert.equal(positionExam.$('#cp-feedback').textContent,'','positioning exams defer corrections');}
+}
+assert.equal(positionExam.state().stats.total,10);assert.equal(positionExam.state().stats.correct,5);assert.equal(positionExam.state().stats.wrong,5);
 
 // An exam never exposes correctness, hints, or a numeric answer before its
 // completion. Reload at the halfway point must preserve pending results.
@@ -315,4 +357,4 @@ async function fullscreenChecks(){
   const pending=harness(undefined,1800000000000,'pending');pending.click('[data-mode="6"]');pending.click('[data-cp="fullscreen"]');pending.run('menu();');pending.fullscreen.resolve();await settle();assert.equal(pending.document.fullscreenElement,null,'a late fullscreen request cannot cover the menu');
   for(const current of [h,exam,parked,parkedExam,universal,migrated,kept,emptyRestored,trainingEntry,...migratedInstruments,...focused,f,zoomedReading,native,denied,pending])assert.equal(current.records.get('moto-work-v1'),personal,'all activity preserves welding progress byte for byte');
 }
-fullscreenChecks().then(()=>console.log('PASS: universal analog caliper only with five metric/imperial resolutions; single-scene reading, free/contact operation, exact counters, hidden exams, restart/exit, migration and unchanged welding progress; native/fallback fullscreen and 100–800% zoom.')).catch(error=>{console.error(error);process.exitCode=1;});
+fullscreenChecks().then(()=>console.log('PASS: universal analog caliper only with five metric/imperial resolutions; reading, free manipulation and physical positioning; exact counters, hidden exams, restart/exit, migration and unchanged welding progress; native/fallback fullscreen and 100–800% zoom.')).catch(error=>{console.error(error);process.exitCode=1;});

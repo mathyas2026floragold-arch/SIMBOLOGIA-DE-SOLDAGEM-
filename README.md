@@ -63,12 +63,12 @@ As opções da configuração correspondem ao universal analógico, com escala p
 - Arraste o cursor ou o nônio com o mouse ou por toque na tela. Os elementos móveis do corpo e a ampliação das escalas usam a mesma medida.
 - A abertura dos bicos e a extensão da haste de profundidade do universal acompanham o cursor.
 - Com a área do instrumento em foco, **← / →** movem uma divisão, **Shift** multiplica o passo por dez e **Home / End** levam aos limites permitidos. A exploração livre usa arraste e teclado; os botões de movimento ficam disponíveis na medição por contato.
-- A movimentação dos modos livre e de contato respeita a resolução selecionada e o curso do instrumento. A leitura ampliada mostra a escala principal e o nônio contínuos, encostados na mesma borda do instrumento. O zoom e a rolagem acontecem nessa mesma área, inclusive no celular.
+- A movimentação dos modos livre e de posicionamento respeita a resolução selecionada e o curso do instrumento. A leitura ampliada mostra a escala principal e o nônio contínuos, encostados na mesma borda do instrumento. O zoom e a rolagem acontecem nessa mesma área, inclusive no celular.
 - **Tela cheia** amplia o jogo completo, incluindo a bancada e a resposta. Use **Sair da tela cheia** ou **Escape** para retornar. Nos navegadores que não oferecem a API de tela cheia, a bancada ocupa a área disponível da página. A sessão continua na mesma posição.
-- Na prática de leitura e na medição por contato, a ampliação pode ser selecionada em **100%, 200%, 400% ou 800%**. Na vista principal do jogo métrico, os números grandes indicam centímetros e cada intervalo pequeno vale um milímetro, como no instrumento.
+- Na prática de leitura e no posicionamento, a ampliação pode ser selecionada em **100%, 200%, 400% ou 800%**. Na vista principal do jogo métrico, os números grandes indicam centímetros e cada intervalo pequeno vale um milímetro, como no instrumento.
 - A leitura numérica abaixo do instrumento mostra a medida em tempo real. No modo livre, o botão com olho permite **ocultar ou revelar a medida**; ao ocultar, a explicação numérica também é escondida.
 
-### Leitura, modo livre e medição por contato
+### Leitura, modo livre e posicionamento
 
 **Prática de leitura:** o jogo posiciona o paquímetro numa medida aleatória. Interprete a escala e digite a resposta. O cursor permanece na posição sorteada até a confirmação; não é preciso obter contato com uma peça nesse treino. Os acertos e erros são contados na própria linha de resposta. Ao concluir uma sessão com respostas, escolha **Praticar novamente** ou **Encerrar**. Encerrar uma sessão sem respostas devolve o instrumento diretamente, sem resultado de 0%.
 
@@ -76,9 +76,9 @@ As opções da configuração correspondem ao universal analógico, com escala p
 
 A primeira exploração começa em **56,10 mm** (ou **2,25 pol** na escala imperial). A posição e a escolha de ocultar a leitura ficam salvas. **Configurar → Retomar prática** recupera a questão, a resposta digitada e a pontuação; o tempo de treinamento pausa durante a exploração, enquanto o cronômetro de uma prova continua. A atividade livre não acrescenta respostas nem pontos.
 
-**Medição por contato:** o sistema gera uma peça virtual de dimensão fixa. Movimente os bicos externos do universal até encostar no material e faça a leitura. O limite de contato impede atravessar a peça; movimentar o cursor não muda a dimensão que deve ser medida. O instrumento e a escala ampliada são alternados na mesma área de desenho.
+**Posicione a medida (terceira opção de Atividade):** o jogo informa uma medida, por exemplo **2,50 mm**. Arraste o cursor do paquímetro até representar esse valor e clique em **Confirmar posição**. O jogo compara a posição real com a medida pedida e conta acertos e erros. Não há campo de resposta digitada nem peça que faça o instrumento parar automaticamente na posição correta. O ajuste fino usa as setas do teclado ou os botões de passo. A correção só aparece após confirmar.
 
-Na medição por contato, digite a medida depois de obter o contato. O campo aceita vírgula ou ponto decimal; na escala de 1/128 pol também aceita frações, frações mistas e suas equivalências decimais.
+Esse treino usa a unidade da resolução escolhida: milímetros nas escalas métricas e polegadas nas imperiais. O modo livre continua permitindo posicionar por valor digitado; na terceira atividade, a resposta é exclusivamente o posicionamento manual do instrumento.
 
 Escolha entre dificuldade **fácil** (medidas inteiras), **média** (casas decimais progressivas) e **difícil** (resolução completa). As sessões podem ter **10, 20 ou 30 questões**, ou continuar **sem limite** até a conclusão pelo jogador.
 
