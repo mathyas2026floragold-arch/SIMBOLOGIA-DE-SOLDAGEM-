@@ -101,10 +101,21 @@ function assertReadingClearance(parsed, slider) {
   for (let i = 1; i < boxes.length; i++) assert.ok(boxes[i].left - boxes[i - 1].right >= .5 - 1e-6,
     'Neighbouring vernier numbers retain visible separation, including imperial double digits');
   const zero = parsed.first('ci-whole-vernier'), firstBox = boxes[0];
-  const plate = parsed.first('ci-slider-body');
-  assert.ok(plate, 'The reading plate remains present after the front guide is removed');
-  assert.equal(parsed.first('ci-moving-jaw'), undefined,
-    'The oversized mobile front base is absent from the clean reading view');
+  const jaw = parsed.first('ci-moving-jaw'), offset = translation(jaw);
+  const jawPoints = pathPoints(jaw.a.d).map(p => ({ x: p.x + offset.x, y: p.y + offset.y }));
+  for (let y = Number(zero.a.y1) + 1; y <= firstBox.bottom; y++) {
+    const xs = horizontalCrossings(jawPoints, y);
+    assert.ok(xs.length, 'Moving jaw profile remains defined below the reading edge');
+    assert.ok(firstBox.left - Math.max(...xs) >= 4,
+      'The moving jaw leaves a clear corridor for the zero stroke and label');
+  }
+  const bevel = parsed.first('ci-moving-jaw-bevel');
+  assert.ok(bevel, 'The moving measuring jaw retains its machined bevel');
+  const bevelOffset = translation(bevel), bevelPoints = pathPoints(bevel.a.d).map(p => ({ x: p.x + bevelOffset.x, y: p.y + bevelOffset.y }));
+  for (let y = firstBox.top; y <= firstBox.bottom; y++) {
+    const xs = horizontalCrossings(bevelPoints, y);
+    if (xs.length) assert.ok(firstBox.left - Math.max(...xs) >= 4, 'The jaw bevel stays clear of the zero label');
+  }
   const resolution = parsed.first('ci-resolution-label'), separator = parsed.first('ci-vernier-footer');
   assert.ok(resolution && separator, 'Resolution has a separate, identifiable footer');
   const footer = textEnvelope(resolution), lastLabelBottom = Math.max(...boxes.map(b => b.bottom));
@@ -167,8 +178,7 @@ function assertWhole(type, key, ticks, objectTicks = ticks) {
     if (ticks === objectTicks) close(Number(piece.a.x) + Number(piece.a.width), move.x, 'Moving jaw touches the target face');
     const rod = parsed.first('ci-depth-rod'); assert.ok(parsed.descendants(slider).includes(rod), 'Depth rod must be a child of the moving cursor');
     close(Number(rod.a.x) + Number(rod.a.width) + move.x, 796 + ticks / spec.denominator * expected.scale, 'Rod protrusion equals jaw opening');
-    const jaw = type === 'analog' ? parsed.first('ci-slider-body') : parsed.first('ci-moving-jaw');
-    assert.ok(parsed.descendants(slider).includes(jaw), 'Moving reading assembly travels with the slider');
+    const jaw = parsed.first('ci-moving-jaw'); assert.ok(parsed.descendants(slider).includes(jaw), 'External jaw moves with the slider');
     if (type === 'analog') {
       const drawing = parsed.first('ci-technical-drawing');
       assert.ok(drawing, 'Universal overview uses the same technical line-drawing style as the reading scale');

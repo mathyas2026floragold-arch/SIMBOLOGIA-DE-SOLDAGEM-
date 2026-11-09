@@ -124,17 +124,20 @@
     s += `<g ${hook('x',pp)} transform="translate(${p(g.sliderPx)} 0)">`;
     s += rect(796-g.sliderPx,112,c.value*pp,7,`class="ci-depth-rod" fill="${paper}" stroke="${ink}" stroke-width="1"`);
     if(c.value>0)s+=line(796-g.sliderPx,115.5,796-g.sliderPx+c.value*pp,115.5,'stroke="#777e70" stroke-width=".45"');
-    // Start the nônio plate after the mobile edge: no front guide column.
-    // The scale datum remains at x=0, so this is strictly a visual cleanup.
-    s += path(`M20 84 H${p(bodyWidth)} V99 H${p(bodyWidth)} V218 H20 Z`,`class="ci-slider-body" ${outline}`);
+    // A single, clean carriage integrates the lock, nônio and moving jaw.
+    // It uses the same technical silhouette as a universal analog caliper.
+    s += path(`M18 84 H${p(bodyWidth)} V99 H${p(bodyWidth)} V218 H18 Z`,`class="ci-slider-body" ${outline}`);
     s += line(20,88,bodyWidth-3,88,`stroke="${ink}" stroke-width=".55"`);
     s += line(22,194,bodyWidth-3,194,`class="ci-vernier-footer" stroke="#a0a49b" stroke-width=".45"`);
     s += line(20,214,bodyWidth-3,214,`stroke="${ink}" stroke-width=".45"`);
     s += text(23,96,'UNIVERSAL','font-size="8" letter-spacing="1.2"');
-    // The front support and its lower measuring blade are intentionally
-    // omitted. This invisible datum preserves the exact dimension anchor
-    // without adding a line back into the clean drawing.
-    s += line(0,164,0,164,`class="ci-external-moving-contact" stroke="none" aria-hidden="true"`);
+    // A slim, integrated moving jaw follows the reference instrument. Its
+    // profile stays behind the zero stroke so the reading remains uncluttered.
+    s += path('M0 148 H18 V218 H28 L26 234 L18 258 L10 282 L4 292 H0 Z',`class="ci-moving-jaw" ${outline}`);
+    s += rect(0,164,5,126,`fill="${face}"`);
+    s += path('M12 166 V213 L23 223 L21 239 L13 265 L5 287',`class="ci-jaw-bevel ci-moving-jaw-bevel" ${detail}`);
+    for(let y=169;y<286;y+=8)s+=line(0,y+4,5,y,'stroke="#7b8175" stroke-width=".5"');
+    s += line(0,164,0,288,`class="ci-external-moving-contact" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?2.5:1.6}"`);
     s += path('M-1 96 V54 L0 32 V18 L6 27 L12 39 L17 54 V96 Z',outline);
     s += path('M12 90 V55 L8 40 L3 30',`class="ci-jaw-bevel" ${detail}`);
     s += line(0,18,0,32,`class="ci-internal-moving-contact" stroke="${ink}" stroke-width="1.3"`);
