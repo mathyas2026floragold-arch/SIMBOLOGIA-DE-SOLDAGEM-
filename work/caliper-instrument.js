@@ -109,10 +109,10 @@
     s += line(74,102,794,102,`class="ci-beam-guide" stroke="${ink}" stroke-width=".45"`);
     s += rect(788,99,6,45,`fill="${face}" stroke="${ink}" stroke-width=".6"`);
     s += rect(g.zeroPx,100,c.r.cap*pp,43,'data-caliper-beam="" fill="transparent" pointer-events="none"');
-    // Keep the main rule in millimetres: 0, 10, 20… make the unit explicit
-    // while the vernier supplies the 0.05 mm fractional reading.
-    s += scaleTicks(c,g.zeroPx+readOffset,baseline,pp,{end:(790-g.zeroPx-readOffset)/pp,centimeters:false,labelEnd:c.r.cap});
-    s += text(758,119,c.r.unit==='mm'?'mm':'pol','font-size="11" text-anchor="middle"');
+    // The fixed rule is numbered by centimetres (1, 2, 3…), while the
+    // vernier supplies the millimetric and fractional reading.
+    s += scaleTicks(c,g.zeroPx+readOffset,baseline,pp,{end:(790-g.zeroPx-readOffset)/pp,centimeters:true,labelEnd:c.r.cap});
+    s += text(758,119,c.r.unit==='mm'?'cm':'pol','font-size="11" text-anchor="middle"');
 
     // Ground measuring edges and the inset bevel follow the jaw profiles.
     s += path('M75 95 H120 V292 H113 L105 282 L96 263 L88 238 L82 214 L78 190 L75 158 Z',`class="ci-fixed-jaw" fill="#fff" stroke="${ink}" stroke-width="1.1"`);
@@ -179,11 +179,6 @@
     }
     if(c.reveal)s+=line(at,132,at,168,'class="ci-coincidence" stroke="#087f57" stroke-width="1.5"');
     s += '</g>';
-    if(c.annotated){
-      s += text(18,323,'Bicos externos','font-size="15"')+line(114,312,113,286,`stroke="${ink}" stroke-width=".65"`);
-      s += text(18,15,'Bicos internos','font-size="14"')+line(105,21,110,30,`stroke="${ink}" stroke-width=".65"`);
-      s += text(793,88,'Haste de profundidade','font-size="14" text-anchor="end"');
-    }
     return s+'</g>';
   }
   function freeDimension(c,g){
