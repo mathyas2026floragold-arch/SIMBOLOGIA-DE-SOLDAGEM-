@@ -98,9 +98,9 @@
     // Both pairs share the same opening. Internal contacts are offset 45 px
     // behind their external contacts and meet at exactly zero travel.
     const fixedInternal='M75 12 C94 24 109 45 109 65 V95 H72 V83 H81 V74 H75 Z';
-    const movingInternal='M-45 12 C-64 24 -79 45 -79 65 V95 H18 V83 H-51 V74 H-45 Z';
-    const fixedOuter='M72 95 H120 V148 H108 V176 H120 V292 C104 292 96 286 92 274 L72 169 Z';
-    const movingOuter='M12 148 H18 V218 H44 L24 274 C20 286 12 292 0 292 V176 H12 Z';
+    const movingInternal='M-45 12 C-64 24 -79 45 -79 65 V95 H18 V83 H-45 Z';
+    const fixedOuter='M72 95 H120 V148 H115 V176 H120 V292 H109 C101 292 96 286 93 277 L72 169 Z';
+    const movingOuter='M5 148 H18 V218 H44 L24 274 C20 286 15 292 8 292 H0 V176 H5 Z';
     s+=`<defs><clipPath id="${c.prefix}-fixed-inner-clip">${path(fixedInternal)}</clipPath><clipPath id="${c.prefix}-moving-inner-clip">${path(movingInternal)}</clipPath><clipPath id="${c.prefix}-fixed-outer-clip">${path(fixedOuter)}</clipPath><clipPath id="${c.prefix}-moving-outer-clip">${path(movingOuter)}</clipPath></defs>`;
     if (c.objectValue !== null) {
       const width = c.objectValue * pp, end = g.zeroPx + width;
@@ -121,14 +121,16 @@
     s += text(758,119,c.r.unit==='mm'?'cm':'pol','font-size="11" text-anchor="middle"');
 
     // White machined faces with one contained edge shadow and a flat tip.
-    s += path(fixedOuter,`class="ci-fixed-jaw" ${outline}`);
+    s += path(fixedOuter,`class="ci-fixed-jaw" fill="#ededed" stroke="${ink}" stroke-width="1.1"`);
     s += `<g clip-path="url(#${c.prefix}-fixed-outer-clip)" pointer-events="none">`;
     s += path('M72 149 H78 L99 274 C102 283 110 287 120 287 V295 H88 L68 170 Z',`class="ci-jaw-bevel" fill="#d5d5d5"`);
-    s += rect(96,262,24,33,'class="ci-jaw-insert" fill="#777"');
+    s += rect(99,262,21,33,'class="ci-jaw-insert" fill="#929292"');
     s += '</g>';
     s += line(120,176,120,292,`class="ci-external-fixed-contact" stroke="${ink}" stroke-width="1.1"`);
-    s += path(fixedInternal,`class="ci-fixed-internal-jaw" ${outline}`);
-    s += `<g clip-path="url(#${c.prefix}-fixed-inner-clip)" pointer-events="none">${path('M75 12 C94 24 109 45 109 65 V95 H100 V64 C100 44 87 23 75 16 Z','class="ci-internal-shadow" fill="#999"')}</g>`;
+    // The knife jaws are solid metal faces. Their two different gray planes
+    // keep them identifiable at zero without introducing a false opening.
+    s += path(fixedInternal,`class="ci-fixed-internal-jaw" fill="#c9c9c9" stroke="${ink}" stroke-width="1.1"`);
+    s += `<g clip-path="url(#${c.prefix}-fixed-inner-clip)" pointer-events="none">${path('M75 12 C94 24 109 45 109 65 V95 H104 V64 C104 44 89 23 75 14 Z','class="ci-internal-shadow" fill="#a3a3a3"')}</g>`;
     s += line(75,12,75,74,`class="ci-internal-fixed-contact" stroke="${ink}" stroke-width=".9"`);
 
     s += `<g ${hook('x',pp)} transform="translate(${p(g.sliderPx)} 0)">`;
@@ -143,14 +145,14 @@
     s += line(22,194,bodyWidth-3,194,`class="ci-vernier-footer" stroke="#a0a49b" stroke-width=".45"`);
     s += line(20,214,bodyWidth-3,214,`stroke="${ink}" stroke-width=".45"`);
     s += text(23,96,'UNIVERSAL','font-size="8" letter-spacing="1.2"');
-    s += path(movingOuter,`class="ci-moving-jaw" ${outline}`);
+    s += path(movingOuter,`class="ci-moving-jaw" fill="#e7e7e7" stroke="${ink}" stroke-width="1.1"`);
     s += `<g clip-path="url(#${c.prefix}-moving-outer-clip)" pointer-events="none">`;
     s += path('M13 148 H18 V218 H44 L24 274 C20 286 12 292 0 292 V286 C9 286 15 281 18 271 L33 224 H13 Z',`class="ci-jaw-bevel ci-moving-jaw-bevel" fill="#d5d5d5"`);
-    s += rect(0,262,24,33,'class="ci-jaw-insert" fill="#777"');
+    s += rect(0,262,21,33,'class="ci-jaw-insert" fill="#747474"');
     s += '</g>';
     s += line(0,176,0,292,`class="ci-external-moving-contact" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?1.6:1.1}"`);
-    s += path(movingInternal,`class="ci-moving-internal-jaw" ${outline}`);
-    s += `<g clip-path="url(#${c.prefix}-moving-inner-clip)" pointer-events="none">${path('M-45 12 C-64 24 -79 45 -79 65 V95 H-70 V64 C-70 44 -57 23 -45 16 Z','class="ci-internal-shadow" fill="#999"')}</g>`;
+    s += path(movingInternal,`class="ci-moving-internal-jaw" fill="#999" stroke="${ink}" stroke-width="1.1"`);
+    s += `<g clip-path="url(#${c.prefix}-moving-inner-clip)" pointer-events="none">${path('M-45 12 C-64 24 -79 45 -79 65 V95 H-75 V64 C-75 44 -59 23 -45 14 Z','class="ci-internal-shadow" fill="#c4c4c4"')}</g>`;
     s += line(-45,12,-45,74,`class="ci-internal-moving-contact" stroke="${ink}" stroke-width=".9"`);
 
     s += '<g class="ci-locking-screw">';
