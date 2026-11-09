@@ -2200,9 +2200,10 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     s += `<g ${hook('x',pp)} transform="translate(${p(g.sliderPx)} 0)">`;
     s += rect(796-g.sliderPx,112,c.value*pp,7,`class="ci-depth-rod" fill="${paper}" stroke="${ink}" stroke-width="1"`);
     if(c.value>0)s+=line(796-g.sliderPx,115.5,796-g.sliderPx+c.value*pp,115.5,'stroke="#777e70" stroke-width=".45"');
-    // A single, clean carriage integrates the lock, nônio and moving jaw.
-    // It uses the same technical silhouette as a universal analog caliper.
-    s += path(`M18 84 H${p(bodyWidth)} V99 H${p(bodyWidth)} V218 H18 Z`,`class="ci-slider-body" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
+    // Separate the upper carriage from the vernier plate. The main rule stays
+    // completely visible; only the nônio sits below its reading edge.
+    s += rect(18,84,bodyWidth-18,15,`class="ci-slider-carriage" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
+    s += path(`M18 148 H${p(bodyWidth)} V218 H18 Z`,`class="ci-slider-body" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
     s += rect(20,195,bodyWidth-22,19,`fill="${shade}" opacity=".3" pointer-events="none"`);
     s += line(20,88,bodyWidth-3,88,`stroke="${ink}" stroke-width=".55"`);
     s += line(22,194,bodyWidth-3,194,`class="ci-vernier-footer" stroke="#a0a49b" stroke-width=".45"`);
