@@ -111,13 +111,12 @@
     s += scaleTicks(c,g.zeroPx+readOffset,baseline,pp,{end:(790-g.zeroPx-readOffset)/pp,centimeters:true,labelEnd:c.r.cap});
     s += text(758,119,c.r.unit==='mm'?'cm':'pol','font-size="11" text-anchor="middle"');
 
-    // Compact lower jaws: keep the measuring faces, but remove the oversized
-    // front base so the instrument stays clean around the reading area.
-    s += path('M75 95 H120 V252 H114 L106 239 L98 220 L90 196 L84 174 L80 158 L75 153 Z',`class="ci-fixed-jaw" ${outline}`);
-    s += rect(115,164,5,86,`fill="${face}"`);
-    s += path('M80 104 V174 L85 194 L92 216 L102 236 L115 248',`class="ci-jaw-bevel" ${detail}`);
-    for(let y=169;y<248;y+=8)s+=line(115,y+4,120,y,'stroke="#7b8175" stroke-width=".5"');
-    s += line(120,164,120,250,`class="ci-external-fixed-contact" stroke="${ink}" stroke-width="1.6"`);
+    // Ground measuring edges and the inset bevel follow the jaw profiles.
+    s += path('M75 95 H120 V292 H113 L105 282 L96 263 L88 238 L82 214 L78 190 L75 158 Z',`class="ci-fixed-jaw" ${outline}`);
+    s += rect(115,164,5,126,`fill="${face}"`);
+    s += path('M80 104 V183 L85 213 L92 241 L102 268 L115 288',`class="ci-jaw-bevel" ${detail}`);
+    for(let y=169;y<286;y+=8)s+=line(115,y+4,120,y,'stroke="#7b8175" stroke-width=".5"');
+    s += line(120,164,120,288,`class="ci-external-fixed-contact" stroke="${ink}" stroke-width="1.6"`);
     s += path('M94 96 V59 L98 44 L104 33 L112 24 L120 18 V32 L117 49 V96 Z',outline);
     s += path('M99 91 V59 L103 45 L110 33 L116 27',`class="ci-jaw-bevel" ${detail}`);
     s += line(120,18,120,32,`class="ci-internal-fixed-contact" stroke="${ink}" stroke-width="1.3"`);
@@ -125,18 +124,17 @@
     s += `<g ${hook('x',pp)} transform="translate(${p(g.sliderPx)} 0)">`;
     s += rect(796-g.sliderPx,112,c.value*pp,7,`class="ci-depth-rod" fill="${paper}" stroke="${ink}" stroke-width="1"`);
     if(c.value>0)s+=line(796-g.sliderPx,115.5,796-g.sliderPx+c.value*pp,115.5,'stroke="#777e70" stroke-width=".45"');
-    s += path(`M-10 84 H${p(bodyWidth)} V99 H17 V148 H${p(bodyWidth)} V218 H-10 Z`,`class="ci-slider-body" ${outline}`);
+    // Start the nônio plate after the mobile edge: no front guide column.
+    // The scale datum remains at x=0, so this is strictly a visual cleanup.
+    s += path(`M20 84 H${p(bodyWidth)} V99 H${p(bodyWidth)} V218 H20 Z`,`class="ci-slider-body" ${outline}`);
     s += line(20,88,bodyWidth-3,88,`stroke="${ink}" stroke-width=".55"`);
     s += line(22,194,bodyWidth-3,194,`class="ci-vernier-footer" stroke="#a0a49b" stroke-width=".45"`);
     s += line(20,214,bodyWidth-3,214,`stroke="${ink}" stroke-width=".45"`);
     s += text(23,96,'UNIVERSAL','font-size="8" letter-spacing="1.2"');
-    // The moving side uses the same compact profile, preserving its exact
-    // contact edge and travel while avoiding a heavy base below the nônio.
-    s += path('M0 148 H17 V218 H30 L27 233 L20 246 L12 254 H0 Z',`class="ci-moving-jaw" ${outline}`);
-    s += rect(0,164,5,88,`fill="${face}"`);
-    s += path('M12 166 V213 L25 223 L22 235 L14 249 L6 251',`class="ci-jaw-bevel ci-moving-jaw-bevel" ${detail}`);
-    for(let y=169;y<248;y+=8)s+=line(0,y+4,5,y,'stroke="#7b8175" stroke-width=".5"');
-    s += line(0,164,0,250,`class="ci-external-moving-contact" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?2.5:1.6}"`);
+    // The front support and its lower measuring blade are intentionally
+    // omitted. This invisible datum preserves the exact dimension anchor
+    // without adding a line back into the clean drawing.
+    s += line(0,164,0,164,`class="ci-external-moving-contact" stroke="none" aria-hidden="true"`);
     s += path('M-1 96 V54 L0 32 V18 L6 27 L12 39 L17 54 V96 Z',outline);
     s += path('M12 90 V55 L8 40 L3 30',`class="ci-jaw-bevel" ${detail}`);
     s += line(0,18,0,32,`class="ci-internal-moving-contact" stroke="${ink}" stroke-width="1.3"`);
@@ -147,7 +145,7 @@
     s += rect(36,55,34,12,`rx="2" ${outline}`)+line(39,58,67,58,`stroke="${ink}" stroke-width=".55"`);
     for(let x=40;x<68;x+=4)s+=line(x,59,x,65,`stroke="${ink}" stroke-width=".7"`);
     s += '</g><g class="ci-guide-screws">';
-    for(const [x,y] of [[8,110],[bodyWidth-10,207]]){
+    for(const [x,y] of [[bodyWidth-10,207]]){
       s += `<circle cx="${p(x)}" cy="${y}" r="3.2" ${outline}/>`;
       s += line(x-1.8,y+1.5,x+1.8,y-1.5,`stroke="${ink}" stroke-width=".75"`);
     }
@@ -177,9 +175,9 @@
     return s+'</g>';
   }
   function freeDimension(c,g){
-    const left=g.zeroPx,right=g.sliderPx,opening=right-left,y=292,ink='#1d211b';
+    const left=g.zeroPx,right=g.sliderPx,opening=right-left,y=330,ink='#1d211b';
     let s='<g class="ci-opening-dimension" stroke-linecap="round" stroke-linejoin="round">';
-    s+=line(left,254,left,300,`stroke="${ink}" stroke-width=".7"`)+line(right,254,right,300,`stroke="${ink}" stroke-width=".7"`);
+    s+=line(left,296,left,338,`stroke="${ink}" stroke-width=".7"`)+line(right,296,right,338,`stroke="${ink}" stroke-width=".7"`);
     s+=line(left,y,right,y,`class="ci-dimension-span" stroke="${ink}" stroke-width=".8"`);
     if(opening>=16){
       s+=path(`M${p(left)} ${y} L${p(left+8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
