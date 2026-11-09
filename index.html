@@ -2164,10 +2164,16 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
   function wholeUniversalDrawing(c, g) {
     const pp = g.pxPerUnit, readOffset = 30, baseline = 148;
     const bodyWidth = universalPlateWidth(c,g);
-    const ink = '#1d211b', paper = '#fff', face = '#ededed', steel = '#fff', shade = '#a9a9a9';
+    const ink = '#252525', paper = '#fff', face = '#ededed', steel = '#fff', shade = '#a9a9a9';
     const outline = `fill="${paper}" stroke="${ink}" stroke-width="1.1"`;
-    const detail = `fill="none" stroke="${ink}" stroke-width=".65"`;
     let s = '<g class="ci-technical-drawing" stroke-linecap="round" stroke-linejoin="round">';
+    // Both pairs share the same opening. Internal contacts are offset 45 px
+    // behind their external contacts and meet at exactly zero travel.
+    const fixedInternal='M75 12 C94 24 109 45 109 65 V95 H72 V83 H81 V74 H75 Z';
+    const movingInternal='M-45 12 C-64 24 -79 45 -79 65 V95 H18 V83 H-51 V74 H-45 Z';
+    const fixedOuter='M72 95 H120 V148 H108 V176 H120 V292 C104 292 96 286 92 274 L72 169 Z';
+    const movingOuter='M12 148 H18 V218 H44 L24 274 C20 286 12 292 0 292 V176 H12 Z';
+    s+=`<defs><clipPath id="${c.prefix}-fixed-inner-clip">${path(fixedInternal)}</clipPath><clipPath id="${c.prefix}-moving-inner-clip">${path(movingInternal)}</clipPath><clipPath id="${c.prefix}-fixed-outer-clip">${path(fixedOuter)}</clipPath><clipPath id="${c.prefix}-moving-outer-clip">${path(movingOuter)}</clipPath></defs>`;
     if (c.objectValue !== null) {
       const width = c.objectValue * pp, end = g.zeroPx + width;
       s += rect(g.zeroPx,210,width,31,`class="ci-workpiece" fill="#f9faf6" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?3:1.5}"`);
@@ -2186,20 +2192,16 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     s += scaleTicks(c,g.zeroPx+readOffset,baseline,pp,{end:(790-g.zeroPx-readOffset)/pp,centimeters:true,labelEnd:c.r.cap});
     s += text(758,119,c.r.unit==='mm'?'cm':'pol','font-size="11" text-anchor="middle"');
 
-    // Fixed outer jaw: stepped neck, straight measuring face and a rounded
-    // hardened insert make the silhouette read like a physical caliper.
-    s += path('M75 95 H120 V292 H111 Q101 291 96 280 L86 247 L79 211 L75 176 Z',`class="ci-fixed-jaw" fill="#fff" stroke="${ink}" stroke-width="1.1"`);
-    s += path('M75 158 H84 L88 231 L100 272 Q105 285 114 288 H104 Q94 274 88 247 L80 205 Z',`fill="${shade}" opacity=".38" pointer-events="none"`);
-    s += path('M96 260 H111 V287 Q105 291 99 281 Z',`class="ci-jaw-insert" fill="#707070" opacity=".9"`);
-    s += rect(115,164,5,126,`fill="${face}"`);
-    s += path('M80 104 V180 L85 211 L92 239 L102 268 L115 288',`class="ci-jaw-bevel" ${detail}`);
-    for(let y=169;y<286;y+=8)s+=line(115,y+4,120,y,'stroke="#7b8175" stroke-width=".5"');
-    s += line(120,164,120,288,`class="ci-external-fixed-contact" stroke="${ink}" stroke-width="1.6"`);
-    // Internal jaws are solid forged profiles rather than thin outlines.
-    s += path('M75 96 V57 Q76 40 91 22 Q99 14 105 10 V82 H96 V96 Z',`class="ci-fixed-internal-jaw" fill="#707070" stroke="${ink}" stroke-width="1.1"`);
-    s += path('M96 91 V60 Q98 44 106 30 V82 H100 V91 Z',`fill="#c7c7c7" opacity=".9"`);
-    s += path('M78 91 V58 Q79 41 92 24',`class="ci-jaw-bevel" ${detail}`);
-    s += line(105,18,105,32,`class="ci-internal-fixed-contact" stroke="${ink}" stroke-width="1.1"`);
+    // White machined faces with one contained edge shadow and a flat tip.
+    s += path(fixedOuter,`class="ci-fixed-jaw" ${outline}`);
+    s += `<g clip-path="url(#${c.prefix}-fixed-outer-clip)" pointer-events="none">`;
+    s += path('M72 149 H78 L99 274 C102 283 110 287 120 287 V295 H88 L68 170 Z',`class="ci-jaw-bevel" fill="#d5d5d5"`);
+    s += rect(96,262,24,33,'class="ci-jaw-insert" fill="#777"');
+    s += '</g>';
+    s += line(120,176,120,292,`class="ci-external-fixed-contact" stroke="${ink}" stroke-width="1.1"`);
+    s += path(fixedInternal,`class="ci-fixed-internal-jaw" ${outline}`);
+    s += `<g clip-path="url(#${c.prefix}-fixed-inner-clip)" pointer-events="none">${path('M75 12 C94 24 109 45 109 65 V95 H100 V64 C100 44 87 23 75 16 Z','class="ci-internal-shadow" fill="#999"')}</g>`;
+    s += line(75,12,75,74,`class="ci-internal-fixed-contact" stroke="${ink}" stroke-width=".9"`);
 
     s += `<g ${hook('x',pp)} transform="translate(${p(g.sliderPx)} 0)">`;
     s += rect(796-g.sliderPx,112,c.value*pp,7,`class="ci-depth-rod" fill="${paper}" stroke="${ink}" stroke-width="1"`);
@@ -2213,19 +2215,15 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     s += line(22,194,bodyWidth-3,194,`class="ci-vernier-footer" stroke="#a0a49b" stroke-width=".45"`);
     s += line(20,214,bodyWidth-3,214,`stroke="${ink}" stroke-width=".45"`);
     s += text(23,96,'UNIVERSAL','font-size="8" letter-spacing="1.2"');
-    // Moving outer jaw mirrors the same stepped, forged profile and keeps the
-    // contact face on the exact moving datum x=0.
-    s += path('M0 148 H18 V218 H30 L28 236 L20 267 Q14 286 5 292 H0 Z',`class="ci-moving-jaw" fill="#fff" stroke="${ink}" stroke-width="1.1"`);
-    s += path('M0 163 H8 V219 L19 260 Q15 279 6 290 H0 Z',`fill="${shade}" opacity=".38" pointer-events="none"`);
-    s += path('M4 261 H18 L13 282 Q10 289 5 290 Z',`class="ci-jaw-insert" fill="#707070" opacity=".9"`);
-    s += rect(0,164,5,126,`fill="${face}"`);
-    s += path('M12 166 V212 L24 223 L22 240 L14 267 L5 287',`class="ci-jaw-bevel ci-moving-jaw-bevel" ${detail}`);
-    for(let y=169;y<286;y+=8)s+=line(0,y+4,5,y,'stroke="#7b8175" stroke-width=".5"');
-    s += line(0,164,0,288,`class="ci-external-moving-contact" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?2.5:1.6}"`);
-    s += path('M-1 96 V56 Q0 36 8 17 L18 30 V80 L13 96 Z',`class="ci-moving-internal-jaw" fill="#707070" stroke="${ink}" stroke-width="1.1"`);
-    s += path('M11 91 V56 Q9 40 7 29 L13 36 V81 L9 91 Z',`fill="#c7c7c7" opacity=".9"`);
-    s += path('M1 91 V57 Q2 38 8 22',`class="ci-jaw-bevel" ${detail}`);
-    s += line(0,18,0,32,`class="ci-internal-moving-contact" stroke="${ink}" stroke-width="1.3"`);
+    s += path(movingOuter,`class="ci-moving-jaw" ${outline}`);
+    s += `<g clip-path="url(#${c.prefix}-moving-outer-clip)" pointer-events="none">`;
+    s += path('M13 148 H18 V218 H44 L24 274 C20 286 12 292 0 292 V286 C9 286 15 281 18 271 L33 224 H13 Z',`class="ci-jaw-bevel ci-moving-jaw-bevel" fill="#d5d5d5"`);
+    s += rect(0,262,24,33,'class="ci-jaw-insert" fill="#777"');
+    s += '</g>';
+    s += line(0,176,0,292,`class="ci-external-moving-contact" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?1.6:1.1}"`);
+    s += path(movingInternal,`class="ci-moving-internal-jaw" ${outline}`);
+    s += `<g clip-path="url(#${c.prefix}-moving-inner-clip)" pointer-events="none">${path('M-45 12 C-64 24 -79 45 -79 65 V95 H-70 V64 C-70 44 -57 23 -45 16 Z','class="ci-internal-shadow" fill="#999"')}</g>`;
+    s += line(-45,12,-45,74,`class="ci-internal-moving-contact" stroke="${ink}" stroke-width=".9"`);
 
     s += '<g class="ci-locking-screw">';
     s += rect(48,67,10,17,outline)+rect(44,79,18,4,outline);
@@ -2499,8 +2497,8 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     const body = section === 'free' ? instrument+freeDimension(c,g) : ['instrument','focus'].includes(section) ? instrument : section === 'detail' || section === 'game' ? detail.content : instrument + `<g transform="translate(0 ${instrumentHeight})">${detail.content}</g>`;
     // A fixed-size lens follows the moving reading plate. Only the camera's x
     // changes; strokes, origins and drag sensitivity remain physically identical.
-    const width=section==='focus'?focusWidth:section==='free'?840:1280;
-    const viewBox=section==='focus'?`${p(focusX)} 40 ${p(width)} ${focusHeight}`:section==='free'?'50 0 840 360':`0 0 1280 ${height}`;
+    const width=section==='focus'?focusWidth:section==='free'?858:1280;
+    const viewBox=section==='focus'?`${p(focusX)} 40 ${p(width)} ${focusHeight}`:section==='free'?'32 0 858 360':`0 0 1280 ${height}`;
     // Clip in drawing coordinates as well as at the SVG viewport. With `meet`,
     // the viewport can be wider than its viewBox and otherwise expose the beam
     // in the unused side margins of the fixed lens.

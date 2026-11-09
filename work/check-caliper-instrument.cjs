@@ -57,14 +57,30 @@ function point(node, xKey = 'x', yKey = 'y') {
   const t = translation(node); return { x: Number(node.a[xKey] || 0) + t.x, y: Number(node.a[yKey] || 0) + t.y };
 }
 function pathPoints(data) {
-  const tokens = data.match(/[MLHVZ]|[-+]?(?:\d*\.)?\d+(?:e[-+]?\d+)?/gi) || [];
+  const tokens = data.match(/[MLHVQCZ]|[-+]?(?:\d*\.)?\d+(?:e[-+]?\d+)?/gi) || [];
   let command = '', x = 0, y = 0, first, result = [];
   for (let i = 0; i < tokens.length;) {
-    if (/^[MLHVZ]$/i.test(tokens[i])) command = tokens[i++];
+    if (/^[MLHVQCZ]$/i.test(tokens[i])) command = tokens[i++];
     if (command === 'Z') { if (first) result.push(first); command = ''; continue; }
     if (command === 'M' || command === 'L') { x = Number(tokens[i++]); y = Number(tokens[i++]); if (!first) first = { x, y }; }
     else if (command === 'H') x = Number(tokens[i++]);
     else if (command === 'V') y = Number(tokens[i++]);
+    else if (command === 'Q' || command === 'C') {
+      const start = { x, y }, control1 = { x: Number(tokens[i++]), y: Number(tokens[i++]) };
+      const control2 = command === 'C' ? { x: Number(tokens[i++]), y: Number(tokens[i++]) } : null;
+      const end = { x: Number(tokens[i++]), y: Number(tokens[i++]) };
+      for (let step = 1; step <= 32; step++) {
+        const t = step / 32, u = 1 - t;
+        const sample = control2
+          ? { x: u*u*u*start.x + 3*u*u*t*control1.x + 3*u*t*t*control2.x + t*t*t*end.x,
+              y: u*u*u*start.y + 3*u*u*t*control1.y + 3*u*t*t*control2.y + t*t*t*end.y }
+          : { x: u*u*start.x + 2*u*t*control1.x + t*t*end.x,
+              y: u*u*start.y + 2*u*t*control1.y + t*t*end.y };
+        assert.ok(Number.isFinite(sample.x) && Number.isFinite(sample.y), 'Curve coordinates must be finite');
+        result.push(sample);
+      }
+      x = end.x; y = end.y; continue;
+    }
     else assert.fail(`Unexpected path command ${command}`);
     assert.ok(Number.isFinite(x) && Number.isFinite(y), 'Path coordinates must be finite'); result.push({ x, y });
   }
@@ -138,6 +154,9 @@ function assertHorizontalBounds(parsed, label) {
   const width = Number(parsed.root.a.viewBox.split(/\s+/)[2]); assert.equal(width, 1280);
   function inside(x) { assert.ok(x >= -.001 && x <= width + .001, `${label}: rendered x=${x} escaped viewBox`); }
   for (const node of parsed.all) {
+    let definition = false;
+    for (let parent = node.parent; parent; parent = parent.parent) if (parent.tag === 'defs') definition = true;
+    if (definition) continue; // Clip definitions use local coordinates and do not paint geometry.
     const t = translation(node), a = node.a;
     if (node.tag === 'rect') { inside(Number(a.x || 0) + t.x); inside(Number(a.x || 0) + Number(a.width) + t.x); }
     if (node.tag === 'line') { inside(Number(a.x1) + t.x); inside(Number(a.x2) + t.x); }
@@ -151,6 +170,46 @@ function expectedGeometry(type, spec, ticks) {
   if (type === 'depth') return { axis: 'y', zero: 130, scale: 90 / spec.cap, position: 130 + value * 90 / spec.cap };
   if (type === 'height') return { axis: 'y', zero: 270, scale: -150 / spec.cap, position: 270 - value * 150 / spec.cap };
   return { axis: 'x', zero: 120, scale: 480 / spec.cap, position: 120 + value * 480 / spec.cap };
+}
+function distanceToSegment(p, a, b) {
+  const dx = b.x-a.x, dy = b.y-a.y, length2 = dx*dx+dy*dy;
+  const t = length2 ? Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/length2)) : 0;
+  return Math.hypot(p.x-a.x-t*dx,p.y-a.y-t*dy);
+}
+function assertInternalJawCalibration(parsed, expectedOpening) {
+  const fixed = parsed.first('ci-internal-fixed-contact'), moving = parsed.first('ci-internal-moving-contact');
+  const fixedOuter = parsed.first('ci-external-fixed-contact'), movingOuter = parsed.first('ci-external-moving-contact');
+  assert.ok(fixed && moving && fixedOuter && movingOuter, 'Both pairs of jaws expose their real contact faces');
+  const f = point(fixed,'x1','y1'), m = point(moving,'x1','y1');
+  close(m.x-f.x, expectedOpening, 'Internal contact opening equals the measured opening, including fully closed');
+  close(point(movingOuter,'x1','y1').x-point(fixedOuter,'x1','y1').x, m.x-f.x,
+    'Internal and external jaws indicate the same physical measure');
+  close(f.y,m.y,'Internal measuring tips begin at the same height');
+  close(point(fixed,'x2','y2').y,point(moving,'x2','y2').y,'Internal measuring tips end at the same height');
+  for (const [contact,profileClass] of [[fixed,'ci-fixed-internal-jaw'],[moving,'ci-moving-internal-jaw']]) {
+    const profile=parsed.first(profileClass); assert.ok(profile,'Each internal contact has a solid jaw profile');
+    assert.ok(profile.a.fill && profile.a.fill!=='none','Internal jaw is a filled mechanical body');
+    const shift=translation(profile), perimeter=pathPoints(profile.a.d).map(p=>({x:p.x+shift.x,y:p.y+shift.y}));
+    const a=point(contact,'x1','y1'), b=point(contact,'x2','y2');
+    close(a.x,b.x,'Internal measuring face is straight and vertical');
+    assert.ok(Math.abs(b.y-a.y)>20,'The internal contact is a usable face, not a detached short tick');
+    for(const t of [0,.25,.5,.75,1]) {
+      const sample={x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t};
+      const distance=Math.min(...perimeter.slice(1).map((p,i)=>distanceToSegment(sample,perimeter[i],p)));
+      assert.ok(distance<.1,'No internal contact stroke floats outside its solid silhouette');
+    }
+  }
+  const shadows=parsed.all.filter(n=>hasClass(n,'ci-internal-shadow'));
+  assert.equal(shadows.length,2,'Each internal jaw has one contained edge shadow');
+  for(const shadow of shadows) {
+    const clipId=shadow.parent.a['clip-path']?.match(/^url\(#(.+)\)$/)?.[1];
+    const clip=parsed.all.find(n=>n.tag==='clipPath' && n.a.id===clipId);
+    assert.ok(clip,'Internal-jaw shading is clipped to a defined mechanical silhouette');
+    const clipShape=clip.children.find(n=>n.tag==='path');
+    const owner=parsed.all.find(n=>(hasClass(n,'ci-fixed-internal-jaw')||hasClass(n,'ci-moving-internal-jaw')) && n.a.d===clipShape?.a.d);
+    assert.ok(owner,'The shadow clip is exactly a visible internal jaw profile');
+    assert.deepEqual(translation(shadow),translation(owner),'Shadow and jaw travel in the same coordinate system');
+  }
 }
 function assertWhole(type, key, ticks, objectTicks = ticks) {
   const spec = specs[key], options = { type, resolutionKey: key, ticks, objectTicks, contact: ticks === objectTicks };
@@ -180,6 +239,7 @@ function assertWhole(type, key, ticks, objectTicks = ticks) {
     close(Number(rod.a.x) + Number(rod.a.width) + move.x, 796 + ticks / spec.denominator * expected.scale, 'Rod protrusion equals jaw opening');
     const jaw = parsed.first('ci-moving-jaw'); assert.ok(parsed.descendants(slider).includes(jaw), 'External jaw moves with the slider');
     if (type === 'analog') {
+      assertInternalJawCalibration(parsed,ticks/spec.denominator*expected.scale);
       const drawing = parsed.first('ci-technical-drawing');
       assert.ok(drawing, 'Universal overview uses the same technical line-drawing style as the reading scale');
       assert.ok(!/(?:linear|radial)-gradient\s*\(/i.test(parsed.root.a.style || ''), 'Technical overview has a plain background');
@@ -267,7 +327,7 @@ function assertFree(key, ticks) {
   const hidden = Instrument.render(options), shown = Instrument.render({ ...options, reveal: true });
   const parsed = parse(shown), span = parsed.first('ci-dimension-span');
   const fixed = parsed.first('ci-external-fixed-contact'), moving = parsed.first('ci-external-moving-contact');
-  assert.equal(parsed.root.a.viewBox, '50 0 840 360', 'Free viewport stays fixed during dragging');
+  assert.equal(parsed.root.a.viewBox, '32 0 858 360', 'Free viewport keeps both closed internal jaws visible and stays fixed during dragging');
   assert.ok(span && fixed && moving, 'The opening dimension is attached to the actual jaw faces');
   close(Number(span.a.x1), point(fixed, 'x1', 'y1').x, 'Dimension starts at the fixed measuring face');
   close(Number(span.a.x2), point(moving, 'x1', 'y1').x, 'Dimension ends at the moving measuring face');
@@ -304,7 +364,9 @@ function assertFocus(key, ticks) {
   assert.ok(!focused.first('ci-game-window') && !focused.first('ci-detail-window'), 'Magnifier uses the original physical instrument instead of a second reading drawing');
   const drawing = focused.first('ci-technical-drawing'), original = free.first('ci-technical-drawing');
   assert.ok(drawing && original, 'Focused and complete views retain the same detailed instrument');
-  const shapes = (parsed, group) => parsed.descendants(group).map(n => ({ tag: n.tag, attrs: n.a, text: n.text }));
+  const shapes = (parsed, group) => parsed.descendants(group).map(n => ({ tag: n.tag,
+    attrs:Object.fromEntries(Object.entries(n.a).map(([key,value])=>[key,
+      ['id','clip-path'].includes(key)?value.replace(/ci-analog-(?:free|focus)-/g,'ci-analog-lens-'):value])),text:n.text }));
   assert.deepEqual(shapes(focused, drawing), shapes(free, original), 'Camera magnification leaves every graduation, label, jaw and mechanical detail unchanged');
   const sliders = focused.all.filter(n => Object.hasOwn(n.a, 'data-caliper-slider'));
   assert.equal(sliders.length, 1, 'Focused view keeps one draggable cursor');
