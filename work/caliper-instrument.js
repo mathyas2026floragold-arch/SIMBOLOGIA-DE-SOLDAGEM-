@@ -60,10 +60,10 @@
       const labelStep = c.r.unit === 'mm' ? 10 * Math.max(1, Math.ceil((vertical ? 20 : 25) / (10 * pxPerUnit))) : 0.5 * Math.max(1, Math.ceil((vertical ? 20 : 25) / (0.5 * pxPerUnit)));
       const major = k % Math.round(labelStep / step) === 0;
       const middle = c.r.unit === 'mm' && k % 5 === 0;
-      const length = major ? 20 : middle ? 15 : 10, at = (vertical ? y : x0) + sign * v * pxPerUnit;
+      const length = major ? 25 : middle ? 18 : 12, at = (vertical ? y : x0) + sign * v * pxPerUnit;
       const data = `class="ci-main-tick" data-main-unit="${p(v)}"`;
       s += vertical ? line(x0, at, x0 + length, at, data + ' stroke="#262a26" stroke-width="1"') : line(at, y, at, y - length, data + ' stroke="#262a26" stroke-width=".9"');
-      if (major && v <= labelEnd + 1e-8) s += vertical ? text(x0 - 7, at + 5, num(v, c.r.unit === 'in' ? 2 : 0), 'font-size="16" text-anchor="end"') : text(at, y - 24, num(centimeters && c.r.unit === 'mm' ? v / 10 : v, c.r.unit === 'in' ? 2 : 0), 'font-size="14" text-anchor="middle"');
+      if (major && v <= labelEnd + 1e-8) s += vertical ? text(x0 - 7, at + 5, num(v, c.r.unit === 'in' ? 2 : 0), 'font-size="17" text-anchor="end"') : text(at, y - 29, num(centimeters && c.r.unit === 'mm' ? v / 10 : v, c.r.unit === 'in' ? 2 : 0), 'font-size="16" font-weight="650" text-anchor="middle"');
     }
     return s;
   }

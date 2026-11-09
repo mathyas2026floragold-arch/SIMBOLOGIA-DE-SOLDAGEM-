@@ -147,7 +147,7 @@ assert.equal(h.document.querySelector('.cp-movement'),null,'free exploration omi
 assert.equal(h.document.querySelector('[data-cp-step]'),null);assert.equal(h.document.querySelector('[data-cp="minimum"]'),null);assert.equal(h.document.querySelector('[data-cp="maximum"]'),null);
 assert.equal(h.document.querySelector('#cp-zoom'),null,'free exploration has a fixed proportional view rather than a variable zoom');
 assert.equal(h.document.querySelector('[data-cp="zoom-in"]'),null);assert.equal(h.document.querySelector('[data-cp="zoom-out"]'),null);
-assert.equal(h.$('[data-cp="view"]').getAttribute('aria-label'),'Ampliar nônio');
+assert.equal(h.$('[data-cp="view"]').getAttribute('aria-label'),'Leitura ampliada');
 assert.match(h.$('.ci-dimension-value').textContent,/56,10/,'the opening dimension and numeric readout share the calibrated measure');
 const jump=h.input('cp-jump','33,15');h.blur(jump);h.submit('cp-jump-form');
 assert.equal(h.state().session.ticks,663);assert.match(h.$('#cp-measure').textContent,/33,15/);
@@ -196,7 +196,7 @@ parked.key('ArrowRight',false);parked.key('ArrowRight',false);parked.key('ArrowR
 parked.click('[data-cp="configure"]');assert.equal(parked.$('#cp-config').open,true);assert.deepEqual(parked.state().suspendedSession.results,trainingBefore.results);
 parked.click('[data-cp="view"]');singleScene(parked,'parked assessment with magnified free scale');hidden(parked,'parked free scale');
 assert.equal(parked.$('[data-cp="view"]').getAttribute('aria-label'),'Ver instrumento');parked.click('[data-cp="view"]');
-assert.equal(parked.$('[data-cp="view"]').getAttribute('aria-label'),'Ampliar nônio');
+assert.equal(parked.$('[data-cp="view"]').getAttribute('aria-label'),'Leitura ampliada');
 parked.advance(9000);parked.click('[data-cp="resume-assessment"]');
 assert.equal(parked.state().session.targetTicks,trainingBefore.targetTicks);assert.equal(parked.$('#cp-answer').value,'12,');
 assert.equal(parked.state().session.startedAt,trainingBefore.startedAt+9000);assert.equal(parked.state().session.questionStartedAt,trainingBefore.questionStartedAt+9000);
