@@ -92,7 +92,7 @@
   function wholeUniversalDrawing(c, g) {
     const pp = g.pxPerUnit, readOffset = 30, baseline = 148;
     const bodyWidth = universalPlateWidth(c,g);
-    const ink = '#1d211b', paper = '#f8f8f8', face = '#d0d0d0', steel = '#ededed', shade = '#b9b9b9', darkShade = '#747474';
+    const ink = '#1d211b', paper = '#fff', face = '#ededed', steel = '#fff', shade = '#a9a9a9';
     const outline = `fill="${paper}" stroke="${ink}" stroke-width="1.3"`;
     const detail = `fill="none" stroke="${ink}" stroke-width=".65"`;
     let s = '<g class="ci-technical-drawing" stroke-linecap="round" stroke-linejoin="round">';
@@ -104,7 +104,7 @@
     // The beam's rated travel and auxiliary graduations use the exact same
     // physical datum as the enlarged reading face (30 px from the jaw face).
     s += rect(72,95,724,53,`class="ci-beam-body" fill="${steel}" stroke="${ink}" stroke-width="1.3"`);
-    s += rect(74,132,718,14,`fill="${shade}" opacity=".55" pointer-events="none"`);
+    s += rect(74,132,718,14,`fill="${shade}" opacity=".32" pointer-events="none"`);
     s += line(74,98,794,98,`class="ci-beam-guide" stroke="${ink}" stroke-width=".55"`);
     s += line(74,102,794,102,`class="ci-beam-guide" stroke="${ink}" stroke-width=".45"`);
     s += rect(788,99,6,45,`fill="${face}" stroke="${ink}" stroke-width=".6"`);
@@ -113,8 +113,8 @@
     s += text(758,119,c.r.unit==='mm'?'cm':'pol','font-size="11" text-anchor="middle"');
 
     // Ground measuring edges and the inset bevel follow the jaw profiles.
-    s += path('M75 95 H120 V292 H113 L105 282 L96 263 L88 238 L82 214 L78 190 L75 158 Z',`class="ci-fixed-jaw" fill="#d7d7d7" stroke="${ink}" stroke-width="1.3"`);
-    s += path('M75 158 H84 L88 238 L105 282 L113 292 H100 L89 264 L80 219 Z',`fill="${shade}" opacity=".62" pointer-events="none"`);
+    s += path('M75 95 H120 V292 H113 L105 282 L96 263 L88 238 L82 214 L78 190 L75 158 Z',`class="ci-fixed-jaw" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
+    s += path('M75 158 H84 L88 238 L105 282 L113 292 H100 L89 264 L80 219 Z',`fill="${shade}" opacity=".38" pointer-events="none"`);
     s += rect(115,164,5,126,`fill="${face}"`);
     s += path('M80 104 V183 L85 213 L92 241 L102 268 L115 288',`class="ci-jaw-bevel" ${detail}`);
     for(let y=169;y<286;y+=8)s+=line(115,y+4,120,y,'stroke="#7b8175" stroke-width=".5"');
@@ -128,16 +128,16 @@
     if(c.value>0)s+=line(796-g.sliderPx,115.5,796-g.sliderPx+c.value*pp,115.5,'stroke="#777e70" stroke-width=".45"');
     // A single, clean carriage integrates the lock, nônio and moving jaw.
     // It uses the same technical silhouette as a universal analog caliper.
-    s += path(`M18 84 H${p(bodyWidth)} V99 H${p(bodyWidth)} V218 H18 Z`,`class="ci-slider-body" fill="#fafafa" stroke="${ink}" stroke-width="1.3"`);
-    s += rect(20,195,bodyWidth-22,19,`fill="${shade}" opacity=".5" pointer-events="none"`);
+    s += path(`M18 84 H${p(bodyWidth)} V99 H${p(bodyWidth)} V218 H18 Z`,`class="ci-slider-body" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
+    s += rect(20,195,bodyWidth-22,19,`fill="${shade}" opacity=".3" pointer-events="none"`);
     s += line(20,88,bodyWidth-3,88,`stroke="${ink}" stroke-width=".55"`);
     s += line(22,194,bodyWidth-3,194,`class="ci-vernier-footer" stroke="#a0a49b" stroke-width=".45"`);
     s += line(20,214,bodyWidth-3,214,`stroke="${ink}" stroke-width=".45"`);
     s += text(23,96,'UNIVERSAL','font-size="8" letter-spacing="1.2"');
     // A slim, integrated moving jaw follows the reference instrument. Its
     // profile stays behind the zero stroke so the reading remains uncluttered.
-    s += path('M0 148 H18 V218 H28 L26 234 L18 258 L10 282 L4 292 H0 Z',`class="ci-moving-jaw" fill="#d7d7d7" stroke="${ink}" stroke-width="1.3"`);
-    s += path('M0 163 H8 V219 L18 258 L10 282 L4 292 H0 Z',`fill="${shade}" opacity=".62" pointer-events="none"`);
+    s += path('M0 148 H18 V218 H28 L26 234 L18 258 L10 282 L4 292 H0 Z',`class="ci-moving-jaw" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
+    s += path('M0 163 H8 V219 L18 258 L10 282 L4 292 H0 Z',`fill="${shade}" opacity=".38" pointer-events="none"`);
     s += rect(0,164,5,126,`fill="${face}"`);
     s += path('M12 166 V213 L23 223 L21 239 L13 265 L5 287',`class="ci-jaw-bevel ci-moving-jaw-bevel" ${detail}`);
     for(let y=169;y<286;y+=8)s+=line(0,y+4,5,y,'stroke="#7b8175" stroke-width=".5"');
@@ -157,7 +157,7 @@
       s += line(x-1.8,y+1.5,x+1.8,y-1.5,`stroke="${ink}" stroke-width=".75"`);
     }
     s += '</g><g class="ci-thumbwheel">';
-    s += rect(bodyWidth-35,218,12,4,outline)+rect(bodyWidth-47,222,36,14,`rx="3" fill="#d5d5d5" stroke="${ink}" stroke-width="1.3"`);
+    s += rect(bodyWidth-35,218,12,4,outline)+rect(bodyWidth-47,222,36,14,`rx="3" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
     s += line(bodyWidth-44,225,bodyWidth-14,225,`stroke="${ink}" stroke-width=".5"`);
     for(let x=bodyWidth-42;x<bodyWidth-14;x+=4)s+=line(x,227,x,234,`stroke="${ink}" stroke-width=".65"`);
     s += '</g>';
