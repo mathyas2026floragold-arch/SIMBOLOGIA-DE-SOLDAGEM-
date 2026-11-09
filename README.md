@@ -48,7 +48,7 @@ O **jogo 3 começa complexo**, com todas as famílias disponíveis. Seu primeiro
 
 ## Jogo 06 — Desafio do Paquímetro
 
-O novo jogo é aberto pelo cartão **JOGO 06** no menu principal e trabalha exclusivamente com o **paquímetro universal analógico**. Ele abre diretamente no instrumento manipulável da exploração livre. **Praticar leitura** inicia o simulado; se houver uma questão em andamento, **Voltar ao simulado** a recupera. A prática de leitura usa uma única tela: escala principal e nônio ampliados na parte superior; resposta, questão, acertos e erros logo abaixo. A configuração recolhida permite escolher a resolução, a dificuldade, a quantidade de questões e a forma de avaliação.
+O novo jogo é aberto pelo cartão **JOGO 06** no menu principal e trabalha exclusivamente com o **paquímetro universal analógico**. Ele abre diretamente no instrumento manipulável da exploração livre. Dentro de **Configurar**, **Praticar leitura** inicia o simulado ou **Retomar prática** recupera uma questão em andamento. A prática de leitura usa uma única tela: escala principal e nônio ampliados na parte superior; resposta, questão, acertos e erros logo abaixo. A configuração recolhida permite escolher a resolução, a dificuldade, a quantidade de questões e a forma de avaliação. **Modos**, com ícone de grade, volta à escolha dos jogos e fica disponível também em tela cheia.
 
 ### Modelo e resoluções
 
@@ -74,7 +74,7 @@ As opções da configuração correspondem ao universal analógico, com escala p
 
 **Modo livre:** entre pelo botão **Modo livre** no cabeçalho. O jogo abre em tela cheia, com o instrumento inteiro em traço técnico, bicos chanfrados, guias do cursor, parafusos e rolete de ajuste. Arraste o cursor para abrir e fechar os bicos; a cota entre as faces e o visor grande acompanham a medida. O olho esconde os valores. **Ampliar nônio** aproxima a região móvel do próprio instrumento, com enquadramento fixo e proporcional que acompanha o cursor. A lupa mantém visíveis a escala principal, o zero, os traços e os números do nônio; **Ver instrumento** devolve a vista completa na mesma área. Também há ajuste por teclado e posicionamento por valor digitado.
 
-A primeira exploração começa em **56,10 mm** (ou **2,25 pol** na escala imperial). A posição e a escolha de ocultar a leitura ficam salvas. **Voltar ao simulado** recupera a questão, a resposta digitada e a pontuação; o tempo de treinamento pausa durante a exploração, enquanto o cronômetro de uma prova continua. A atividade livre não acrescenta respostas nem pontos.
+A primeira exploração começa em **56,10 mm** (ou **2,25 pol** na escala imperial). A posição e a escolha de ocultar a leitura ficam salvas. **Configurar → Retomar prática** recupera a questão, a resposta digitada e a pontuação; o tempo de treinamento pausa durante a exploração, enquanto o cronômetro de uma prova continua. A atividade livre não acrescenta respostas nem pontos.
 
 **Medição por contato:** o sistema gera uma peça virtual de dimensão fixa. Movimente os bicos externos do universal até encostar no material e faça a leitura. O limite de contato impede atravessar a peça; movimentar o cursor não muda a dimensão que deve ser medida. O instrumento e a escala ampliada são alternados na mesma área de desenho.
 

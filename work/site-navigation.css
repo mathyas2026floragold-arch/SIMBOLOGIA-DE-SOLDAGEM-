@@ -1,0 +1,7 @@
+/* A single, consistent destination for choosing another game. */
+.modes-icon{display:block;width:18px;height:18px;flex:0 0 18px;color:inherit}
+#home.modes-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid #8babc5;border-radius:8px;background:#fff;color:#005ca9;font:650 14px/1.2 "Segoe UI",Arial,sans-serif;white-space:nowrap;box-shadow:none;transition:background-color .15s,border-color .15s}
+#home.modes-button:hover{background:#edf5fc;border-color:#005ca9;transform:none;box-shadow:none}
+#home.modes-button:focus-visible{outline:3px solid #2288d0;outline-offset:3px}
+#home.modes-button[hidden]{display:none!important}
+@media(max-width:650px){#home.modes-button{padding:10px 12px;font-size:12px}}

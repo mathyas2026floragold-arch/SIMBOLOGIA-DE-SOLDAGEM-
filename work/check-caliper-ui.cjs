@@ -96,7 +96,7 @@ assert.deepEqual(h.document.querySelectorAll('[data-mode]').map(e=>e.dataset.mod
 h.click('[data-mode="6"]');
 assert.ok(h.$('#stats').hidden&&h.$('#preview-notice').hidden&&h.$('main > details').hidden);
 assert.equal(h.state().session.config.activity,'free','the game opens directly at the physical caliper');
-assert.ok(h.$('.ci-free-instrument'));assert.ok(h.$('[data-cp="practice-reading"]'));assert.equal(h.document.querySelector('.cp-result'),null,'entry never shows an empty result screen');
+assert.ok(h.$('.ci-free-instrument'));assert.ok(h.$('[data-cp="practice-reading"]'));assert.match(h.$('.cp-modes-button').textContent,/Modos/);assert.equal(h.document.querySelectorAll('[data-cp="exit"]').length,1,'the header has one clear Modes exit, not a duplicate return control');assert.equal(h.$('#home').hidden,true,'the site-level Modes button stays hidden while the caliper has its own control');assert.equal(h.document.querySelector('.cp-result'),null,'entry never shows an empty result screen');
 assert.equal(h.state().suspendedSession,null);assert.equal(h.state().stats.total,0);enterReading(h);
 assert.equal(h.state().session.config.activity,'reading','assessment remains available through Praticar leitura');
 assert.equal(h.state().session.config.assessment,'training');
@@ -119,7 +119,7 @@ h.click('[data-cp="eye"]');assert.ok(h.$('#cp-feedback').textContent.includes(an
 h.click('[data-cp="next"]');reading(h,false);
 assert.equal(h.state().session.correct,1);assert.equal(h.state().session.wrong,1);assert.equal(h.state().stats.points,20);
 h.click('[data-cp="finish"]');const summary=JSON.stringify(h.state().stats),config=JSON.stringify(h.state().session.config);
-assert.match(h.$('[data-cp="restart"]').textContent,/Praticar novamente/);assert.match(h.$('[data-cp="exit"]').textContent,/Encerrar/);
+assert.match(h.$('[data-cp="restart"]').textContent,/Praticar novamente/);assert.match(h.$('.cp-result [data-cp="exit"]').textContent,/Encerrar/);assert.match(h.$('.cp-modes-button').textContent,/Modos/);
 h.run('menu();');h=harness(h.records);h.click('[data-mode="6"]');
 assert.equal(JSON.stringify(h.state().stats),summary,'reopening a completed result does not grade it again');
 assert.equal(h.state().session.config.activity,'free');assert.ok(h.$('.ci-free-instrument'));assert.equal(h.document.querySelector('.cp-result'),null);assert.equal(h.document.querySelector('[data-cp="resume-assessment"]'),null);

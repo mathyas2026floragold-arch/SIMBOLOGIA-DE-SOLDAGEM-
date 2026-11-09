@@ -73,6 +73,9 @@ replace("!correct||q.builder||(mode===4", "!correct||q.builder||q.anatomy||(mode
 replace('</style>',read('anatomy-training.css')+'\n.tail-process{font-weight:750}.tail-reference{font-size:13px}\n</style>');
 // The caliper is a sixth game in the existing menu. Welding generators stay intact.
 replace('</style>',read('caliper-ui.css')+'\n</style>');
+replace('</style>',read('site-navigation.css')+'\n</style>');
+const modesIcon='<svg class="modes-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1.3"/><rect x="14" y="3" width="7" height="7" rx="1.3"/><rect x="3" y="14" width="7" height="7" rx="1.3"/><rect x="14" y="14" width="7" height="7" rx="1.3"/></svg>';
+replace('<button id="home" type="button">⌂ Modos</button>',`<button id="home" class="modes-button" type="button" aria-label="Modos de jogo" title="Escolher outro jogo">${modesIcon}<span>Modos de jogo</span></button>`);
 replace('window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();','window.CaliperGame.close();window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();');
 replace('<span>5 jogos interativos</span>','<span>6 jogos interativos</span>');
 replace('05 BANCADAS DE TREINO','06 BANCADAS DE TREINO');
