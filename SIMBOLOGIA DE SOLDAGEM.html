@@ -2167,10 +2167,10 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     const ink = '#252525', paper = '#fff', face = '#ededed', steel = '#fff', shade = '#a9a9a9';
     const outline = `fill="${paper}" stroke="${ink}" stroke-width="1.1"`;
     let s = '<g class="ci-technical-drawing" stroke-linecap="round" stroke-linejoin="round">';
-    // Both pairs share the same opening. Internal contacts are offset 45 px
-    // behind their external contacts and meet at exactly zero travel.
-    const fixedInternal='M75 12 C94 24 109 45 109 65 V95 H72 V83 H81 V74 H75 Z';
-    const movingInternal='M-45 12 C-64 24 -79 45 -79 65 V95 H18 V83 H-45 Z';
+    // Narrow knife jaws rise almost vertically from their shoulders. Both
+    // internal contacts share a 24 px setback from the external datum.
+    const fixedInternal='M96 14 C105 25 113 45 114 64 V95 H72 V83 H101 V74 H96 Z';
+    const movingInternal='M-24 14 C-33 25 -41 45 -42 64 V95 H18 V83 H-24 Z';
     const fixedOuter='M72 95 H120 V148 H115 V176 H120 V292 H109 C101 292 96 286 93 277 L72 169 Z';
     const movingOuter='M5 148 H18 V218 H44 L24 274 C20 286 15 292 8 292 H0 V176 H5 Z';
     s+=`<defs><clipPath id="${c.prefix}-fixed-inner-clip">${path(fixedInternal)}</clipPath><clipPath id="${c.prefix}-moving-inner-clip">${path(movingInternal)}</clipPath><clipPath id="${c.prefix}-fixed-outer-clip">${path(fixedOuter)}</clipPath><clipPath id="${c.prefix}-moving-outer-clip">${path(movingOuter)}</clipPath></defs>`;
@@ -2202,8 +2202,8 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     // The knife jaws are solid metal faces. Their two different gray planes
     // keep them identifiable at zero without introducing a false opening.
     s += path(fixedInternal,`class="ci-fixed-internal-jaw" fill="#c9c9c9" stroke="${ink}" stroke-width="1.1"`);
-    s += `<g clip-path="url(#${c.prefix}-fixed-inner-clip)" pointer-events="none">${path('M75 12 C94 24 109 45 109 65 V95 H104 V64 C104 44 89 23 75 14 Z','class="ci-internal-shadow" fill="#a3a3a3"')}</g>`;
-    s += line(75,12,75,74,`class="ci-internal-fixed-contact" stroke="${ink}" stroke-width=".9"`);
+    s += `<g clip-path="url(#${c.prefix}-fixed-inner-clip)" pointer-events="none">${path('M96 14 C105 25 113 45 114 64 V95 H111 V64 C110 45 103 26 96 16 Z','class="ci-internal-shadow" fill="#a3a3a3"')}</g>`;
+    s += line(96,14,96,74,`class="ci-internal-fixed-contact" stroke="${ink}" stroke-width=".9"`);
 
     s += `<g ${hook('x',pp)} transform="translate(${p(g.sliderPx)} 0)">`;
     s += rect(796-g.sliderPx,112,c.value*pp,7,`class="ci-depth-rod" fill="${paper}" stroke="${ink}" stroke-width="1"`);
@@ -2224,8 +2224,8 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     s += '</g>';
     s += line(0,176,0,292,`class="ci-external-moving-contact" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?1.6:1.1}"`);
     s += path(movingInternal,`class="ci-moving-internal-jaw" fill="#999" stroke="${ink}" stroke-width="1.1"`);
-    s += `<g clip-path="url(#${c.prefix}-moving-inner-clip)" pointer-events="none">${path('M-45 12 C-64 24 -79 45 -79 65 V95 H-75 V64 C-75 44 -59 23 -45 14 Z','class="ci-internal-shadow" fill="#c4c4c4"')}</g>`;
-    s += line(-45,12,-45,74,`class="ci-internal-moving-contact" stroke="${ink}" stroke-width=".9"`);
+    s += `<g clip-path="url(#${c.prefix}-moving-inner-clip)" pointer-events="none">${path('M-24 14 C-33 25 -41 45 -42 64 V95 H-39 V64 C-38 45 -31 26 -24 16 Z','class="ci-internal-shadow" fill="#c4c4c4"')}</g>`;
+    s += line(-24,14,-24,74,`class="ci-internal-moving-contact" stroke="${ink}" stroke-width=".9"`);
 
     s += '<g class="ci-locking-screw">';
     s += rect(48,67,10,17,outline)+rect(44,79,18,4,outline);
