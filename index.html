@@ -2135,7 +2135,7 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
       const length = major ? 25 : middle ? 18 : 12, at = (vertical ? y : x0) + sign * v * pxPerUnit;
       const data = `class="ci-main-tick" data-main-unit="${p(v)}"`;
       s += vertical ? line(x0, at, x0 + length, at, data + ' stroke="#262a26" stroke-width="1"') : line(at, y, at, y - length, data + ' stroke="#262a26" stroke-width=".9"');
-      if (major && v <= labelEnd + 1e-8) s += vertical ? text(x0 - 7, at + 5, num(v, c.r.unit === 'in' ? 2 : 0), 'font-size="17" text-anchor="end"') : text(at, y - 29, num(centimeters && c.r.unit === 'mm' ? v / 10 : v, c.r.unit === 'in' ? 2 : 0), 'font-size="16" font-weight="650" text-anchor="middle"');
+      if (major && v <= labelEnd + 1e-8) s += vertical ? text(x0 - 7, at + 5, num(v, c.r.unit === 'in' ? 2 : 0), 'font-size="15" text-anchor="end"') : text(at, y - 27, num(centimeters && c.r.unit === 'mm' ? v / 10 : v, c.r.unit === 'in' ? 2 : 0), 'font-size="14" font-weight="600" text-anchor="middle"');
     }
     return s;
   }
@@ -2269,7 +2269,7 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
       s+=path(`M${p(left)} ${y} L${p(left-8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
       s+=path(`M${p(right)} ${y} L${p(right+8)} ${y-3} V${y+3} Z`,`fill="${ink}"`);
     }
-    if(c.reveal)s+=text(Math.max(160,(left+right)/2),352,formatReading(c),'class="ci-dimension-value" font-size="26" text-anchor="middle"');
+    if(c.reveal)s+=text(Math.max(160,(left+right)/2),352,formatReading(c),'class="ci-dimension-value" font-size="22" text-anchor="middle"');
     return s+'</g>';
   }
   function wholeHorizontal(c, g) {
