@@ -172,10 +172,12 @@
       if(k%stride===0||k===c.r.divisions)s+=text(at,184,c.key==='mm-005'?k/2:k,`class="ci-vernier-label" font-size="${c.key==='in-1000'?7:c.r.unit==='in'?8:9}" text-anchor="middle"`);
     }
     s += text(24,207,c.r.unit==='mm'?'mm':'pol','class="ci-vernier-unit" font-size="8"')+text(bodyWidth-24,207,c.r.label,'class="ci-resolution-label" font-size="9" text-anchor="end"');
-    if(c.reveal){
-      const index=c.ticks%c.r.mainTicks,at=readOffset+index*c.r.vernierPitch*pp;
-      s+=line(at,132,at,168,'class="ci-coincidence" stroke="#087f57" stroke-width="1.5"');
+    const index=c.ticks%c.r.mainTicks,at=readOffset+index*c.r.vernierPitch*pp;
+    if(['free','focus'].includes(c.section)){
+      s+=line(at,128,at,170,'class="ci-alignment-line" stroke="#d12626" stroke-width="1.35"');
+      s+=`<circle cx="${p(at)}" cy="148" r="3.7" class="ci-alignment-marker" fill="#fff" stroke="#d12626" stroke-width="1.5"/>`;
     }
+    if(c.reveal)s+=line(at,132,at,168,'class="ci-coincidence" stroke="#087f57" stroke-width="1.5"');
     s += '</g>';
     if(c.annotated){
       s += text(18,323,'Bicos externos','font-size="15"')+line(114,312,113,286,`stroke="${ink}" stroke-width=".65"`);
@@ -404,6 +406,7 @@
       const stride = c.key === 'mm-005' ? 2 : r.divisions === 50 ? 5 : 1;
       content += line(at, mainY, at, mainY + (k % stride ? 49 : 77), `class="ci-game-vernier" data-vernier-index="${k}" stroke="${selected ? '#087f57' : '#1d211b'}" stroke-width="${selected ? 2.8 : 1.4}"`);
       if (k % stride === 0 || k === r.divisions) content += text(at, mainY + 119, c.key === 'mm-005' ? k / 2 : k, 'font-size="39" text-anchor="middle"');
+      if (k === index) content += line(at, mainY - 45, at, mainY + 78, 'class="ci-alignment-line" stroke="#d12626" stroke-width="2"') + `<circle cx="${p(at)}" cy="${mainY}" r="6" class="ci-alignment-marker" fill="#fff" stroke="#d12626" stroke-width="2.2"/>`;
       if (selected) content += line(at, mainY - 45, at, mainY + 78, 'class="ci-coincidence" stroke="#087f57" stroke-width="2.8"');
     }
     content += '</g></g>';
@@ -418,16 +421,17 @@
     const instrument = section === 'detail' || section === 'game' ? '' : c.type === 'depth' ? wholeDepth(c, g) : c.type === 'height' ? wholeHeight(c, g) : wholeHorizontal(c, g);
     const detail = ['instrument','free','focus'].includes(section) ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c) : vernierDetail(c);
     const instrumentHeight=technical?330:300;
-    const height = section === 'focus' ? 184 : section === 'free' ? 360 : section === 'instrument' ? instrumentHeight : section === 'detail' || section === 'game' ? detail.height : instrumentHeight + detail.height;
+    const focusWidth=Math.max(universalPlateWidth(c,g)+220,360),focusHeight=220,focusX=clean(g.sliderPx-(focusWidth-universalPlateWidth(c,g))/2);
+    const height = section === 'focus' ? focusHeight : section === 'free' ? 360 : section === 'instrument' ? instrumentHeight : section === 'detail' || section === 'game' ? detail.height : instrumentHeight + detail.height;
     const body = section === 'free' ? instrument+freeDimension(c,g) : ['instrument','focus'].includes(section) ? instrument : section === 'detail' || section === 'game' ? detail.content : instrument + `<g transform="translate(0 ${instrumentHeight})">${detail.content}</g>`;
     // A fixed-size lens follows the moving reading plate. Only the camera's x
     // changes; strokes, origins and drag sensitivity remain physically identical.
-    const width=section==='focus'?universalPlateWidth(c,g)+48:section==='free'?840:1280;
-    const viewBox=section==='focus'?`${p(g.sliderPx-24)} 60 ${p(width)} 184`:section==='free'?'50 0 840 360':`0 0 1280 ${height}`;
+    const width=section==='focus'?focusWidth:section==='free'?840:1280;
+    const viewBox=section==='focus'?`${p(focusX)} 40 ${p(width)} ${focusHeight}`:section==='free'?'50 0 840 360':`0 0 1280 ${height}`;
     // Clip in drawing coordinates as well as at the SVG viewport. With `meet`,
     // the viewport can be wider than its viewBox and otherwise expose the beam
     // in the unused side margins of the fixed lens.
-    const drawing=section==='focus'?`<defs><clipPath id="${c.prefix}-clip">${rect(g.sliderPx-24,60,width,184,'class="ci-focus-clip"')}</clipPath></defs><g class="ci-focus-drawing" clip-path="url(#${c.prefix}-clip)">${body}</g>`:body;
+    const drawing=section==='focus'?`<defs><clipPath id="${c.prefix}-clip">${rect(focusX,40,width,focusHeight,'class="ci-focus-clip"')}</clipPath></defs><g class="ci-focus-drawing" clip-path="url(#${c.prefix}-clip)">${body}</g>`:body;
     const label = TYPES[c.type].name + (c.reveal ? '. Leitura: ' + formatReading(c) : '. Instrumento com partes móveis e escalas para leitura.');
     return `<svg xmlns="http://www.w3.org/2000/svg" class="caliper-instrument ci-${c.type}${section === 'game' ? ' ci-game-scale' : section==='free'?' ci-free-instrument':section==='focus'?' ci-focus-instrument':''}" viewBox="${viewBox}" width="${p(width)}" height="${height}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${esc(label)}"${c.reveal ? ` data-reading="${p(c.value)}"` : ''} style="display:block;width:100%;height:auto;overflow:${section==='focus'?'hidden':'visible'};font-family:Segoe UI,Arial,sans-serif;background:${technical || section === 'game' ? '#fff' : 'linear-gradient(180deg,#f5f6f2,#e5e8df)'};border-radius:${technical || section === 'game' ? 0 : 10}px"><g font-size="16" fill="#1c3c55">${technical ? '' : finishes(c)}${drawing}</g></svg>`;
   }
