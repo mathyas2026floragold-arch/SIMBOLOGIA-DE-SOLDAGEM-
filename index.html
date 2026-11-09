@@ -2195,10 +2195,11 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     s += path('M80 104 V180 L85 211 L92 239 L102 268 L115 288',`class="ci-jaw-bevel" ${detail}`);
     for(let y=169;y<286;y+=8)s+=line(115,y+4,120,y,'stroke="#7b8175" stroke-width=".5"');
     s += line(120,164,120,288,`class="ci-external-fixed-contact" stroke="${ink}" stroke-width="1.6"`);
-    s += path('M94 96 V58 Q96 43 104 30 Q111 18 120 11 V29 Q115 45 115 80 V96 Z',outline);
-    s += path('M97 91 V60 Q99 44 108 30 Q113 23 117 20 V48',`class="ci-jaw-bevel" ${detail}`);
-    s += path('M95 91 V61 Q97 44 105 31 V84 L101 91 Z',`fill="#707070" opacity=".82"`);
-    s += line(120,18,120,32,`class="ci-internal-fixed-contact" stroke="${ink}" stroke-width="1.3"`);
+    // Internal jaws are solid forged profiles rather than thin outlines.
+    s += path('M75 96 V57 Q76 40 91 22 Q99 14 105 10 V82 H96 V96 Z',`class="ci-fixed-internal-jaw" fill="#707070" stroke="${ink}" stroke-width="1.1"`);
+    s += path('M96 91 V60 Q98 44 106 30 V82 H100 V91 Z',`fill="#c7c7c7" opacity=".9"`);
+    s += path('M78 91 V58 Q79 41 92 24',`class="ci-jaw-bevel" ${detail}`);
+    s += line(105,18,105,32,`class="ci-internal-fixed-contact" stroke="${ink}" stroke-width="1.1"`);
 
     s += `<g ${hook('x',pp)} transform="translate(${p(g.sliderPx)} 0)">`;
     s += rect(796-g.sliderPx,112,c.value*pp,7,`class="ci-depth-rod" fill="${paper}" stroke="${ink}" stroke-width="1"`);
@@ -2221,9 +2222,9 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     s += path('M12 166 V212 L24 223 L22 240 L14 267 L5 287',`class="ci-jaw-bevel ci-moving-jaw-bevel" ${detail}`);
     for(let y=169;y<286;y+=8)s+=line(0,y+4,5,y,'stroke="#7b8175" stroke-width=".5"');
     s += line(0,164,0,288,`class="ci-external-moving-contact" stroke="${c.contact?'#087f57':ink}" stroke-width="${c.contact?2.5:1.6}"`);
-    s += path('M-1 96 V55 Q0 34 6 17 L17 30 V79 L13 96 Z',outline);
-    s += path('M12 90 V56 Q9 39 5 27',`class="ci-jaw-bevel" ${detail}`);
-    s += path('M0 91 V57 Q1 37 6 22 L10 33 V82 L6 91 Z',`fill="#707070" opacity=".82"`);
+    s += path('M-1 96 V56 Q0 36 8 17 L18 30 V80 L13 96 Z',`class="ci-moving-internal-jaw" fill="#707070" stroke="${ink}" stroke-width="1.1"`);
+    s += path('M11 91 V56 Q9 40 7 29 L13 36 V81 L9 91 Z',`fill="#c7c7c7" opacity=".9"`);
+    s += path('M1 91 V57 Q2 38 8 22',`class="ci-jaw-bevel" ${detail}`);
     s += line(0,18,0,32,`class="ci-internal-moving-contact" stroke="${ink}" stroke-width="1.3"`);
 
     s += '<g class="ci-locking-screw">';
