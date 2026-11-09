@@ -63,7 +63,7 @@
       const length = major ? 25 : middle ? 18 : 12, at = (vertical ? y : x0) + sign * v * pxPerUnit;
       const data = `class="ci-main-tick" data-main-unit="${p(v)}"`;
       s += vertical ? line(x0, at, x0 + length, at, data + ' stroke="#262a26" stroke-width="1"') : line(at, y, at, y - length, data + ' stroke="#262a26" stroke-width=".9"');
-      if (major && v <= labelEnd + 1e-8) s += vertical ? text(x0 - 7, at + 5, num(v, c.r.unit === 'in' ? 2 : 0), 'font-size="14" text-anchor="end"') : text(at, y - 25, num(centimeters && c.r.unit === 'mm' ? v / 10 : v, c.r.unit === 'in' ? 2 : 0), 'font-size="12" font-weight="600" text-anchor="middle"');
+      if (major && v <= labelEnd + 1e-8) s += vertical ? text(x0 - 7, at + 5, num(v, c.r.unit === 'in' ? 2 : 0), 'font-size="14" text-anchor="end"') : text(at, y - 25, num(centimeters && c.r.unit === 'mm' ? v / 10 : v, c.r.unit === 'in' ? 2 : 0), 'font-size="12" font-weight="400" text-anchor="middle"');
     }
     return s;
   }
@@ -93,7 +93,7 @@
     const pp = g.pxPerUnit, readOffset = 30, baseline = 148;
     const bodyWidth = universalPlateWidth(c,g);
     const ink = '#1d211b', paper = '#fff', face = '#ededed', steel = '#fff', shade = '#a9a9a9';
-    const outline = `fill="${paper}" stroke="${ink}" stroke-width="1.3"`;
+    const outline = `fill="${paper}" stroke="${ink}" stroke-width="1.1"`;
     const detail = `fill="none" stroke="${ink}" stroke-width=".65"`;
     let s = '<g class="ci-technical-drawing" stroke-linecap="round" stroke-linejoin="round">';
     if (c.objectValue !== null) {
@@ -103,7 +103,7 @@
     }
     // The beam's rated travel and auxiliary graduations use the exact same
     // physical datum as the enlarged reading face (30 px from the jaw face).
-    s += rect(72,95,724,53,`class="ci-beam-body" fill="${steel}" stroke="${ink}" stroke-width="1.3"`);
+    s += rect(72,95,724,53,`class="ci-beam-body" fill="${steel}" stroke="${ink}" stroke-width="1.1"`);
     s += rect(74,132,718,14,`fill="${shade}" opacity=".32" pointer-events="none"`);
     s += line(74,98,794,98,`class="ci-beam-guide" stroke="${ink}" stroke-width=".55"`);
     s += line(74,102,794,102,`class="ci-beam-guide" stroke="${ink}" stroke-width=".45"`);
@@ -115,7 +115,7 @@
     s += text(758,119,c.r.unit==='mm'?'mm':'pol','font-size="11" text-anchor="middle"');
 
     // Ground measuring edges and the inset bevel follow the jaw profiles.
-    s += path('M75 95 H120 V292 H113 L105 282 L96 263 L88 238 L82 214 L78 190 L75 158 Z',`class="ci-fixed-jaw" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
+    s += path('M75 95 H120 V292 H113 L105 282 L96 263 L88 238 L82 214 L78 190 L75 158 Z',`class="ci-fixed-jaw" fill="#fff" stroke="${ink}" stroke-width="1.1"`);
     s += path('M75 158 H84 L88 238 L105 282 L113 292 H100 L89 264 L80 219 Z',`fill="${shade}" opacity=".38" pointer-events="none"`);
     s += rect(115,164,5,126,`fill="${face}"`);
     s += path('M80 104 V183 L85 213 L92 241 L102 268 L115 288',`class="ci-jaw-bevel" ${detail}`);
@@ -130,8 +130,8 @@
     if(c.value>0)s+=line(796-g.sliderPx,115.5,796-g.sliderPx+c.value*pp,115.5,'stroke="#777e70" stroke-width=".45"');
     // Separate the upper carriage from the vernier plate. The main rule stays
     // completely visible; only the nônio sits below its reading edge.
-    s += rect(18,84,bodyWidth-18,15,`class="ci-slider-carriage" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
-    s += path(`M18 148 H${p(bodyWidth)} V218 H18 Z`,`class="ci-slider-body" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
+    s += rect(18,84,bodyWidth-18,15,`class="ci-slider-carriage" fill="#fff" stroke="${ink}" stroke-width="1.1"`);
+    s += path(`M18 148 H${p(bodyWidth)} V218 H18 Z`,`class="ci-slider-body" fill="#fff" stroke="${ink}" stroke-width="1.1"`);
     s += rect(20,195,bodyWidth-22,19,`fill="${shade}" opacity=".3" pointer-events="none"`);
     s += line(20,88,bodyWidth-3,88,`stroke="${ink}" stroke-width=".55"`);
     s += line(22,194,bodyWidth-3,194,`class="ci-vernier-footer" stroke="#a0a49b" stroke-width=".45"`);
@@ -139,7 +139,7 @@
     s += text(23,96,'UNIVERSAL','font-size="8" letter-spacing="1.2"');
     // A slim, integrated moving jaw follows the reference instrument. Its
     // profile stays behind the zero stroke so the reading remains uncluttered.
-    s += path('M0 148 H18 V218 H28 L26 234 L18 258 L10 282 L4 292 H0 Z',`class="ci-moving-jaw" fill="#fff" stroke="${ink}" stroke-width="1.3"`);
+    s += path('M0 148 H18 V218 H28 L26 234 L18 258 L10 282 L4 292 H0 Z',`class="ci-moving-jaw" fill="#fff" stroke="${ink}" stroke-width="1.1"`);
     s += path('M0 163 H8 V219 L18 258 L10 282 L4 292 H0 Z',`fill="${shade}" opacity=".38" pointer-events="none"`);
     s += rect(0,164,5,126,`fill="${face}"`);
     s += path('M12 166 V213 L23 223 L21 239 L13 265 L5 287',`class="ci-jaw-bevel ci-moving-jaw-bevel" ${detail}`);
@@ -174,8 +174,8 @@
     s += text(24,207,c.r.unit==='mm'?'mm':'pol','class="ci-vernier-unit" font-size="8"')+text(bodyWidth-24,207,c.r.label,'class="ci-resolution-label" font-size="9" text-anchor="end"');
     const index=c.ticks%c.r.mainTicks,at=readOffset+index*c.r.vernierPitch*pp;
     if(['free','focus'].includes(c.section)){
-      s+=line(at,128,at,170,'class="ci-alignment-line" stroke="#d12626" stroke-width="1.35"');
-      s+=`<circle cx="${p(at)}" cy="148" r="3.7" class="ci-alignment-marker" fill="#fff" stroke="#d12626" stroke-width="1.5"/>`;
+      s+=line(at,128,at,170,'class="ci-alignment-line" stroke="#d12626" stroke-width="1"');
+      s+=`<circle cx="${p(at)}" cy="148" r="2.2" class="ci-alignment-marker" fill="#fff" stroke="#d12626" stroke-width="1.1"/>`;
     }
     if(c.reveal)s+=line(at,132,at,168,'class="ci-coincidence" stroke="#087f57" stroke-width="1.5"');
     s += '</g>';
@@ -406,7 +406,7 @@
       const stride = c.key === 'mm-005' ? 2 : r.divisions === 50 ? 5 : 1;
       content += line(at, mainY, at, mainY + (k % stride ? 49 : 77), `class="ci-game-vernier" data-vernier-index="${k}" stroke="${selected ? '#087f57' : '#1d211b'}" stroke-width="${selected ? 2.8 : 1.4}"`);
       if (k % stride === 0 || k === r.divisions) content += text(at, mainY + 119, c.key === 'mm-005' ? k / 2 : k, 'font-size="39" text-anchor="middle"');
-      if (k === index) content += line(at, mainY - 45, at, mainY + 78, 'class="ci-alignment-line" stroke="#d12626" stroke-width="2"') + `<circle cx="${p(at)}" cy="${mainY}" r="6" class="ci-alignment-marker" fill="#fff" stroke="#d12626" stroke-width="2.2"/>`;
+      if (k === index) content += line(at, mainY - 45, at, mainY + 78, 'class="ci-alignment-line" stroke="#d12626" stroke-width="1.3"') + `<circle cx="${p(at)}" cy="${mainY}" r="3.4" class="ci-alignment-marker" fill="#fff" stroke="#d12626" stroke-width="1.4"/>`;
       if (selected) content += line(at, mainY - 45, at, mainY + 78, 'class="ci-coincidence" stroke="#087f57" stroke-width="2.8"');
     }
     content += '</g></g>';
