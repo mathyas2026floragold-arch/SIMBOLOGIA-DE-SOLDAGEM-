@@ -59,7 +59,7 @@ O sétimo cartão abre a escolha de assunto no mesmo visual azul e branco do sit
 | Polegada fracionária · 1/128″ | 10 |
 | Situações de oficina | 10 |
 
-Cada questão tem quatro alternativas e o botão **Aprenda**, que abre uma explicação com o método, um exemplo ou orientações sobre o instrumento. As questões de paquímetro mostram escalas calculadas pelo mesmo motor do simulador. A explicação de leitura métrica inclui uma aula em vídeo do Prof. Eduardo Stefanelli, aberta no YouTube.
+Cada questão tem quatro alternativas e o botão **Aprenda**, que abre uma explicação com o método, um exemplo ou orientações sobre o instrumento. As questões são somente em texto: os exercícios de paquímetro informam a leitura da escala principal e a divisão coincidente do nônio no próprio enunciado. A explicação de leitura métrica inclui uma aula em vídeo do Prof. Eduardo Stefanelli, aberta no YouTube.
 
 As alternativas e as questões são embaralhadas no início de cada sessão. A correção aparece após responder, e o jogador avança quando quiser. O resultado informa acertos, erros e respostas com apoio teórico; também é possível revisar somente os erros, repetir o tópico ou fazer o simulado completo de 60 questões.
 
@@ -187,7 +187,7 @@ node work/check-caliper-precision.cjs
 node work/check-metrology.cjs
 ```
 
-Elas cobrem níveis, progresso salvo, prévia do máximo, integração dos cinco modos de soldagem, respostas únicas, reforço, montagem e correção por campo, progressão, parâmetros técnicos, processos e anatomia. As verificações do paquímetro acrescentam quantização e limites, leitura métrica e imperial, formatos de resposta, sincronização entre cursor e elementos de medição, alvo fixo, alinhamento real das escalas SVG, ocultação da leitura e ponteiros do relógio. O teste de metrologia verifica os cinco tópicos, as 60 questões, as leituras desenhadas, a consulta à teoria, a correção, a retomada e a preservação do progresso dos outros jogos.
+Elas cobrem níveis, progresso salvo, prévia do máximo, integração dos cinco modos de soldagem, respostas únicas, reforço, montagem e correção por campo, progressão, parâmetros técnicos, processos e anatomia. As verificações do paquímetro acrescentam quantização e limites, leitura métrica e imperial, formatos de resposta, sincronização entre cursor e elementos de medição, alvo fixo, alinhamento real das escalas SVG, ocultação da leitura e ponteiros do relógio. O teste de metrologia verifica os cinco tópicos, as 60 questões, os enunciados sem imagens e os cálculos de leitura, a consulta à teoria, a correção, a retomada e a preservação do progresso dos outros jogos.
 
 ## Convenções de estudo
 

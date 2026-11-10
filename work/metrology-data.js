@@ -423,7 +423,7 @@
   },
   {
     "id": 31,
-    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 14 mm antes do zero do nônio. A 7ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
     "options": [
       "14,40 mm",
       "14,30 mm",
@@ -434,14 +434,15 @@
     "section": 3,
     "answer": 2,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 287
+      "main": "14",
+      "vernierIndex": 7
     }
   },
   {
     "id": 32,
-    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 8 mm antes do zero do nônio. A 11ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
     "options": [
       "8,60 mm",
       "8,50 mm",
@@ -452,14 +453,15 @@
     "section": 3,
     "answer": 2,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 171
+      "main": "8",
+      "vernierIndex": 11
     }
   },
   {
     "id": 33,
-    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 26 mm antes do zero do nônio. A 4ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
     "options": [
       "26,20 mm",
       "26,25 mm",
@@ -470,14 +472,15 @@
     "section": 3,
     "answer": 0,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 524
+      "main": "26",
+      "vernierIndex": 4
     }
   },
   {
     "id": 34,
-    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 37 mm antes do zero do nônio. A 15ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
     "options": [
       "37,80 mm",
       "37,70 mm",
@@ -488,14 +491,15 @@
     "section": 3,
     "answer": 3,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 755
+      "main": "37",
+      "vernierIndex": 15
     }
   },
   {
     "id": 35,
-    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 3 mm antes do zero do nônio. A 19ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
     "options": [
       "4,00 mm",
       "3,95 mm",
@@ -506,14 +510,15 @@
     "section": 3,
     "answer": 1,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 79
+      "main": "3",
+      "vernierIndex": 19
     }
   },
   {
     "id": 36,
-    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 52 mm antes do zero do nônio. A 2ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
     "options": [
       "52,15 mm",
       "52,10 mm",
@@ -524,14 +529,15 @@
     "section": 3,
     "answer": 1,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 1042
+      "main": "52",
+      "vernierIndex": 2
     }
   },
   {
     "id": 37,
-    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 18 mm antes do zero do nônio. A 9ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
     "options": [
       "18,50 mm",
       "18,40 mm",
@@ -542,14 +548,15 @@
     "section": 3,
     "answer": 3,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 369
+      "main": "18",
+      "vernierIndex": 9
     }
   },
   {
     "id": 38,
-    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 61 mm antes do zero do nônio. A 12ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
     "options": [
       "61,60 mm",
       "61,65 mm",
@@ -560,14 +567,15 @@
     "section": 3,
     "answer": 0,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 1232
+      "main": "61",
+      "vernierIndex": 12
     }
   },
   {
     "id": 39,
-    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 44 mm antes do zero do nônio. A 6ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
     "options": [
       "44,35 mm",
       "44,25 mm",
@@ -578,14 +586,15 @@
     "section": 3,
     "answer": 2,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 886
+      "main": "44",
+      "vernierIndex": 6
     }
   },
   {
     "id": 40,
-    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 9 mm antes do zero do nônio. A 18ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
     "options": [
       "9,95 mm",
       "9,85 mm",
@@ -596,14 +605,15 @@
     "section": 3,
     "answer": 2,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 198
+      "main": "9",
+      "vernierIndex": 18
     }
   },
   {
     "id": 41,
-    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "question": "Em um paquímetro fracionário, a escala principal indica 1/16″ antes do zero do nônio. A 3ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
     "options": [
       "11/128\"",
       "3/32\"",
@@ -614,14 +624,15 @@
     "section": 4,
     "answer": 0,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 11
+      "main": "1/16",
+      "vernierIndex": 3
     }
   },
   {
     "id": 42,
-    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "question": "Em um paquímetro fracionário, a escala principal indica 3/16″ antes do zero do nônio. A 5ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
     "options": [
       "15/64\"",
       "7/32\"",
@@ -632,14 +643,15 @@
     "section": 4,
     "answer": 3,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 29
+      "main": "3/16",
+      "vernierIndex": 5
     }
   },
   {
     "id": 43,
-    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "question": "Em um paquímetro fracionário, a escala principal indica 7/16″ antes do zero do nônio. A 2ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
     "options": [
       "59/128\"",
       "29/64\"",
@@ -650,14 +662,15 @@
     "section": 4,
     "answer": 1,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 58
+      "main": "7/16",
+      "vernierIndex": 2
     }
   },
   {
     "id": 44,
-    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "question": "Em um paquímetro fracionário, a escala principal indica 1/2″ antes do zero do nônio. A 7ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
     "options": [
       "9/16\"",
       "71/128\"",
@@ -668,14 +681,15 @@
     "section": 4,
     "answer": 1,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 71
+      "main": "1/2",
+      "vernierIndex": 7
     }
   },
   {
     "id": 45,
-    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "question": "Em um paquímetro fracionário, a escala principal indica 5/8″ antes do zero do nônio. A 4ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
     "options": [
       "85/128\"",
       "83/128\"",
@@ -686,14 +700,15 @@
     "section": 4,
     "answer": 3,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 84
+      "main": "5/8",
+      "vernierIndex": 4
     }
   },
   {
     "id": 46,
-    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "question": "Em um paquímetro fracionário, a escala principal indica 11/16″ antes do zero do nônio. A 1ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
     "options": [
       "89/128\"",
       "45/64\"",
@@ -704,14 +719,15 @@
     "section": 4,
     "answer": 0,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 89
+      "main": "11/16",
+      "vernierIndex": 1
     }
   },
   {
     "id": 47,
-    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "question": "Em um paquímetro fracionário, a escala principal indica 1 1/16″ antes do zero do nônio. A 6ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
     "options": [
       "1 15/128\"",
       "1 13/128\"",
@@ -722,14 +738,15 @@
     "section": 4,
     "answer": 2,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 142
+      "main": "1 1/16",
+      "vernierIndex": 6
     }
   },
   {
     "id": 48,
-    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "question": "Em um paquímetro fracionário, a escala principal indica 1 3/8″ antes do zero do nônio. A 5ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
     "options": [
       "1 27/64\"",
       "1 13/32\"",
@@ -740,14 +757,15 @@
     "section": 4,
     "answer": 2,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 181
+      "main": "1 3/8",
+      "vernierIndex": 5
     }
   },
   {
     "id": 49,
-    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "question": "Em um paquímetro fracionário, a escala principal indica 2 1/8″ antes do zero do nônio. A 3ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
     "options": [
       "2 19/128\"",
       "2 5/32\"",
@@ -758,14 +776,15 @@
     "section": 4,
     "answer": 0,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 275
+      "main": "2 1/8",
+      "vernierIndex": 3
     }
   },
   {
     "id": 50,
-    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "question": "Em um paquímetro fracionário, a escala principal indica 2 3/4″ antes do zero do nônio. A 7ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
     "options": [
       "2 13/16\"",
       "2 51/64\"",
@@ -776,9 +795,10 @@
     "section": 4,
     "answer": 3,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 359
+      "main": "2 3/4",
+      "vernierIndex": 7
     }
   },
   {
@@ -892,9 +912,10 @@
     "section": 5,
     "answer": 3,
     "lesson": "metric",
-    "visual": {
+    "reading": {
       "key": "mm-005",
-      "ticks": 473
+      "main": "23",
+      "vernierIndex": 13
     }
   },
   {
@@ -910,9 +931,10 @@
     "section": 5,
     "answer": 1,
     "lesson": "fraction",
-    "visual": {
+    "reading": {
       "key": "in-128",
-      "ticks": 172
+      "main": "1 5/16",
+      "vernierIndex": 4
     }
   },
   {
