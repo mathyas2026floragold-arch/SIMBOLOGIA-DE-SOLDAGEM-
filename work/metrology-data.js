@@ -423,7 +423,7 @@
   },
   {
     "id": 31,
-    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 14 mm antes do zero do nônio. A 7ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
+    "question": "Escala principal: 14 mm | nônio: 7ª divisão coincide. Determine a medida final.",
     "options": [
       "14,40 mm",
       "14,30 mm",
@@ -442,7 +442,7 @@
   },
   {
     "id": 32,
-    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 8 mm antes do zero do nônio. A 11ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
+    "question": "Escala principal: 8 mm | nônio: 11ª divisão coincide. Determine a medida final.",
     "options": [
       "8,60 mm",
       "8,50 mm",
@@ -461,7 +461,7 @@
   },
   {
     "id": 33,
-    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 26 mm antes do zero do nônio. A 4ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
+    "question": "Escala principal: 26 mm | nônio: 4ª divisão coincide. Determine a medida final.",
     "options": [
       "26,20 mm",
       "26,25 mm",
@@ -480,7 +480,7 @@
   },
   {
     "id": 34,
-    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 37 mm antes do zero do nônio. A 15ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
+    "question": "Escala principal: 37 mm | nônio: 15ª divisão coincide. Determine a medida final.",
     "options": [
       "37,80 mm",
       "37,70 mm",
@@ -499,7 +499,7 @@
   },
   {
     "id": 35,
-    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 3 mm antes do zero do nônio. A 19ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
+    "question": "Escala principal: 3 mm | nônio: 19ª divisão coincide. Determine a medida final.",
     "options": [
       "4,00 mm",
       "3,95 mm",
@@ -518,7 +518,7 @@
   },
   {
     "id": 36,
-    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 52 mm antes do zero do nônio. A 2ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
+    "question": "Escala principal: 52 mm | nônio: 2ª divisão coincide. Determine a medida final.",
     "options": [
       "52,15 mm",
       "52,10 mm",
@@ -537,7 +537,7 @@
   },
   {
     "id": 37,
-    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 18 mm antes do zero do nônio. A 9ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
+    "question": "Escala principal: 18 mm | nônio: 9ª divisão coincide. Determine a medida final.",
     "options": [
       "18,50 mm",
       "18,40 mm",
@@ -556,7 +556,7 @@
   },
   {
     "id": 38,
-    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 61 mm antes do zero do nônio. A 12ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
+    "question": "Escala principal: 61 mm | nônio: 12ª divisão coincide. Determine a medida final.",
     "options": [
       "61,60 mm",
       "61,65 mm",
@@ -575,7 +575,7 @@
   },
   {
     "id": 39,
-    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 44 mm antes do zero do nônio. A 6ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
+    "question": "Escala principal: 44 mm | nônio: 6ª divisão coincide. Determine a medida final.",
     "options": [
       "44,35 mm",
       "44,25 mm",
@@ -594,7 +594,7 @@
   },
   {
     "id": 40,
-    "question": "Em um paquímetro de resolução 0,05 mm, a escala principal indica 9 mm antes do zero do nônio. A 18ª divisão do nônio coincide com um traço da escala principal. Qual é a leitura?",
+    "question": "Escala principal: 9 mm | nônio: 18ª divisão coincide. Determine a medida final.",
     "options": [
       "9,95 mm",
       "9,85 mm",
@@ -613,7 +613,7 @@
   },
   {
     "id": 41,
-    "question": "Em um paquímetro fracionário, a escala principal indica 1/16″ antes do zero do nônio. A 3ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
+    "question": "Escala principal: 1/16\" | nônio: 3ª divisão coincide. Determine a leitura final.",
     "options": [
       "11/128\"",
       "3/32\"",
@@ -632,7 +632,7 @@
   },
   {
     "id": 42,
-    "question": "Em um paquímetro fracionário, a escala principal indica 3/16″ antes do zero do nônio. A 5ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
+    "question": "Escala principal: 3/16\" | nônio: 5ª divisão coincide. Determine a leitura final.",
     "options": [
       "15/64\"",
       "7/32\"",
@@ -651,7 +651,7 @@
   },
   {
     "id": 43,
-    "question": "Em um paquímetro fracionário, a escala principal indica 7/16″ antes do zero do nônio. A 2ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
+    "question": "Escala principal: 7/16\" | nônio: 2ª divisão coincide. Determine a leitura final.",
     "options": [
       "59/128\"",
       "29/64\"",
@@ -670,7 +670,7 @@
   },
   {
     "id": 44,
-    "question": "Em um paquímetro fracionário, a escala principal indica 1/2″ antes do zero do nônio. A 7ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
+    "question": "Escala principal: 1/2\" | nônio: 7ª divisão coincide. Determine a leitura final.",
     "options": [
       "9/16\"",
       "71/128\"",
@@ -689,7 +689,7 @@
   },
   {
     "id": 45,
-    "question": "Em um paquímetro fracionário, a escala principal indica 5/8″ antes do zero do nônio. A 4ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
+    "question": "Escala principal: 5/8\" | nônio: 4ª divisão coincide. Determine a leitura final.",
     "options": [
       "85/128\"",
       "83/128\"",
@@ -708,7 +708,7 @@
   },
   {
     "id": 46,
-    "question": "Em um paquímetro fracionário, a escala principal indica 11/16″ antes do zero do nônio. A 1ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
+    "question": "Escala principal: 11/16\" | nônio: 1ª divisão coincide. Determine a leitura final.",
     "options": [
       "89/128\"",
       "45/64\"",
@@ -727,7 +727,7 @@
   },
   {
     "id": 47,
-    "question": "Em um paquímetro fracionário, a escala principal indica 1 1/16″ antes do zero do nônio. A 6ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
+    "question": "Escala principal: 1 1/16\" | nônio: 6ª divisão coincide. Determine a leitura final.",
     "options": [
       "1 15/128\"",
       "1 13/128\"",
@@ -746,7 +746,7 @@
   },
   {
     "id": 48,
-    "question": "Em um paquímetro fracionário, a escala principal indica 1 3/8″ antes do zero do nônio. A 5ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
+    "question": "Escala principal: 1 3/8\" | nônio: 5ª divisão coincide. Determine a leitura final.",
     "options": [
       "1 27/64\"",
       "1 13/32\"",
@@ -765,7 +765,7 @@
   },
   {
     "id": 49,
-    "question": "Em um paquímetro fracionário, a escala principal indica 2 1/8″ antes do zero do nônio. A 3ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
+    "question": "Escala principal: 2 1/8\" | nônio: 3ª divisão coincide. Determine a leitura final.",
     "options": [
       "2 19/128\"",
       "2 5/32\"",
@@ -784,7 +784,7 @@
   },
   {
     "id": 50,
-    "question": "Em um paquímetro fracionário, a escala principal indica 2 3/4″ antes do zero do nônio. A 7ª divisão do nônio de resolução 1/128″ coincide com um traço da escala principal. Qual é a leitura simplificada?",
+    "question": "Escala principal: 2 3/4\" | nônio: 7ª divisão coincide. Determine a leitura final.",
     "options": [
       "2 13/16\"",
       "2 51/64\"",
