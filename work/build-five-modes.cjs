@@ -71,19 +71,20 @@ replace('function detective() {',`function detective() {
   if(!detect&&!retry&&shouldAnatomyDetective())return anatomyDetective();`);
 replace("!correct||q.builder||(mode===4", "!correct||q.builder||q.anatomy||(mode===4");
 replace('</style>',read('anatomy-training.css')+'\n.tail-process{font-weight:750}.tail-reference{font-size:13px}\n</style>');
-// The caliper is a sixth game in the existing menu. Welding generators stay intact.
+// Games 06 and 07 extend the existing menu without replacing welding modes.
 replace('</style>',read('caliper-ui.css')+'\n</style>');
+replace('</style>',read('metrology-game.css')+'\n</style>');
 replace('</style>',read('site-navigation.css')+'\n</style>');
 const modesIcon='<svg class="modes-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" focusable="false"><rect x="3" y="3" width="7" height="7" rx="1.3"/><rect x="14" y="3" width="7" height="7" rx="1.3"/><rect x="3" y="14" width="7" height="7" rx="1.3"/><rect x="14" y="14" width="7" height="7" rx="1.3"/></svg>';
 replace('<button id="home" type="button">⌂ Modos</button>',`<button id="home" class="modes-button" type="button" aria-label="Modos de jogo" title="Escolher outro jogo">${modesIcon}<span>Modos de jogo</span></button>`);
-replace('window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();','window.CaliperGame.close();window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();');
-replace('<span>5 jogos interativos</span>','<span>6 jogos interativos</span>');
-replace('05 BANCADAS DE TREINO','06 BANCADAS DE TREINO');
+replace('window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();','window.CaliperGame.close();window.MetrologyGame.close();window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();');
+replace('<span>5 jogos interativos</span>','<span>7 jogos interativos</span>');
+replace('05 BANCADAS DE TREINO','07 BANCADAS DE TREINO');
 replace('Escolha um jogo. Seu progresso vale em todos eles.','Escolha um jogo. Seu progresso fica salvo neste navegador.');
-replace("  app.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(+b.dataset.mode));","  app.querySelector('.menu').insertAdjacentHTML('beforeend',window.CaliperGame.card());\n  app.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(+b.dataset.mode));");
-replace('function start(m){mode=m;detect=null;retry=null;next();}',"function start(m){if(m===6){if(previewActive)exitMaxPreview();mode=6;detect=null;retry=null;window.CaliperGame.open(app);return;}window.CaliperGame.close();mode=m;detect=null;retry=null;next();}");
-replace("installAddedWeldCases();\n$('#home')",read('caliper-engine.js')+'\n'+read('caliper-instrument.js')+'\n'+read('caliper-ui.js')+"\ninstallAddedWeldCases();\n$('#home')");
+replace("  app.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(+b.dataset.mode));","  app.querySelector('.menu').insertAdjacentHTML('beforeend',window.CaliperGame.card()+window.MetrologyGame.card());\n  app.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(+b.dataset.mode));");
+replace('function start(m){mode=m;detect=null;retry=null;next();}',"function start(m){if(m===7){window.CaliperGame.close();if(previewActive)exitMaxPreview();mode=7;detect=null;retry=null;window.MetrologyGame.open(app);return;}window.MetrologyGame.close();if(m===6){if(previewActive)exitMaxPreview();mode=6;detect=null;retry=null;window.CaliperGame.open(app);return;}window.CaliperGame.close();mode=m;detect=null;retry=null;next();}");
+replace("installAddedWeldCases();\n$('#home')",read('caliper-engine.js')+'\n'+read('caliper-instrument.js')+'\n'+read('caliper-ui.js')+'\n'+read('metrology-data.js')+'\n'+read('metrology-game.js')+"\ninstallAddedWeldCases();\n$('#home')");
 html=html.trimEnd()+'\n';
 fs.writeFileSync(path.join(__dirname,'../SIMBOLOGIA DE SOLDAGEM.html'),html,'utf8');
 fs.writeFileSync(path.join(__dirname,'../index.html'),html,'utf8');
-console.log('Built single-file HTML and index.html: five welding modes plus the caliper simulator.');
+console.log('Built single-file HTML and index.html: five welding modes, caliper simulator and metrology training.');

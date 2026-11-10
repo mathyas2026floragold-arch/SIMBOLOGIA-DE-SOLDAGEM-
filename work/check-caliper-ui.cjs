@@ -92,7 +92,7 @@ function reading(h,correct=true){
 }
 
 let h=harness();
-assert.deepEqual(h.document.querySelectorAll('[data-mode]').map(e=>e.dataset.mode),['1','2','3','4','5','6']);
+assert.deepEqual(h.document.querySelectorAll('[data-mode]').map(e=>e.dataset.mode),['1','2','3','4','5','6','7']);
 h.click('[data-mode="6"]');
 assert.ok(h.$('#stats').hidden&&h.$('#preview-notice').hidden&&h.$('main > details').hidden);
 assert.equal(h.state().session.config.activity,'free','the game opens directly at the physical caliper');
@@ -125,7 +125,7 @@ assert.equal(JSON.stringify(h.state().stats),summary,'reopening a completed resu
 assert.equal(h.state().session.config.activity,'free');assert.ok(h.$('.ci-free-instrument'));assert.equal(h.document.querySelector('.cp-result'),null);assert.equal(h.document.querySelector('[data-cp="resume-assessment"]'),null);
 h.click('[data-cp="practice-reading"]');assert.equal(JSON.stringify(h.state().session.config),config);assert.equal(h.state().session.answered,0,'new practice keeps configuration and resets session counters');
 h.click('[data-cp="finish"]');assert.ok(h.$('.ci-free-instrument'));assert.equal(h.document.querySelector('.cp-result'),null,'ending an unanswered assessment returns directly to the caliper');assert.equal(JSON.stringify(h.state().stats),summary);h.click('[data-cp="finish"]');
-assert.equal(h.$('#stats').hidden,false);assert.equal(h.$('main > details').hidden,false);assert.equal(h.document.querySelectorAll('[data-mode]').length,6);
+assert.equal(h.$('#stats').hidden,false);assert.equal(h.$('main > details').hidden,false);assert.equal(h.document.querySelectorAll('[data-mode]').length,7);
 
 // Old unanswered result screens are bypassed on entry. Their preferred exam
 // configuration remains available for a new reading session without scoring.

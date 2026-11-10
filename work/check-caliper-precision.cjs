@@ -139,7 +139,10 @@ for (const [type, key] of COMBINATIONS) {
     if (['analog', 'digital', 'dial'].includes(type)) {
       near(coordinate(mainZero, 'x'), 150, 'Fixed scale zero includes the 30 px offset');
       const fixed = whole.one('ci-internal-fixed-contact'), moving = whole.one('ci-internal-moving-contact'); assert.ok(fixed && moving, 'Internal measuring faces need explicit calibrated references');
-      near(coordinate(fixed, 'x'), 120, 'Fixed internal measuring face'); near(coordinate(moving, 'x'), expected.position, 'Moving internal measuring face');
+      // The current universal knife jaws sit 24 px left of the external faces.
+      // Both share that offset, so their opening must still equal the measure.
+      const internalOffset = type === 'analog' ? -24 : 0;
+      near(coordinate(fixed, 'x'), 120 + internalOffset, 'Fixed internal measuring face'); near(coordinate(moving, 'x'), expected.position + internalOffset, 'Moving internal measuring face');
       near(coordinate(moving, 'x') - coordinate(fixed, 'x'), value * expected.scale, 'Internal jaw opening equals external jaw opening');
       near(coordinate(fixed, 'y'), coordinate(moving, 'y'), 'Internal measuring faces share the same height');
       const rod = whole.one('ci-depth-rod'); assert.ok(rod); const d = offset(rod);

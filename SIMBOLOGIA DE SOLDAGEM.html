@@ -230,6 +230,37 @@ svg .travel-indicator path{fill:none;stroke:var(--good);stroke-width:3;stroke-li
 .caliper-game .cp-modes-button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:9px 13px;border:1px solid #8bb2d3;border-radius:6px;background:#fff;color:#005ca9;font-size:12px}.caliper-game .cp-modes-button:hover{background:#eef6fc;border-color:#337eb8}.caliper-game .cp-modes-button:focus-visible{outline:3px solid #2987d0;outline-offset:2px}.cp-modes-button .modes-icon{display:block;flex:0 0 18px;width:18px;height:18px}.cp-config .cp-config-session-action{grid-column:1/-1;justify-self:start}
 @media(max-width:650px) and (orientation:portrait){.caliper-game .cp-free-focus .cp-scale-stage{flex:0 0 auto;height:clamp(220px,45dvh,420px);min-height:0}}
 
+.metrology-game{margin-top:26px;min-width:0}
+.mt-game{color:var(--ink);animation:mt-appear .2s ease-out}
+.mt-game button{font-size:14px;min-height:44px;letter-spacing:0}
+.mt-game button:hover{transform:none}
+.mt-intro{background:linear-gradient(110deg,#e4f2fe,#f8fcff);border:1px solid #bfd9ed;border-radius:18px;padding:28px 32px}
+.mt-intro h2{color:var(--blue-deep);font-size:36px;margin:8px 0 12px;letter-spacing:-.6px}
+.mt-intro p{max-width:740px;font-size:15px;color:#466680;margin-bottom:20px}
+.mt-intro-meta{display:flex;gap:8px;flex-wrap:wrap}.mt-intro-meta>span{background:#fff;border:1px solid #cce0f0;border-radius:6px;padding:5px 10px;font-size:12px;color:var(--blue-deep)}
+.mt-section-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:28px 0 14px}.mt-section-heading h3{font-size:20px;color:var(--blue-deep)}.mt-section-heading small{font-size:12px}
+.mt-topics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.mt-game .mt-topic{display:flex;align-items:flex-start;text-align:left;gap:14px;padding:22px;background:#fff;border:1px solid #c8dceb;border-radius:14px;box-shadow:0 4px 14px #174c7806}
+.mt-topic:last-child{grid-column:1/-1}.mt-topic:hover{border-color:#4b99d3;background:#f9fcff}
+.mt-topic-number{display:grid;place-items:center;width:38px;height:38px;flex:0 0 38px;border-radius:9px;background:#e8f3fd;color:var(--blue);font-size:13px;font-weight:700;letter-spacing:.5px}
+.mt-topic-content{display:flex;flex:1;min-width:0;flex-direction:column;gap:8px}.mt-topic-content>strong{font-size:16px;font-weight:650;color:var(--blue-deep)}.mt-topic-content>span{font-size:13px;line-height:1.5;color:var(--muted)}
+.mt-topic-arrow{color:var(--blue);font-size:19px;padding-top:3px}.mt-topic-progress{display:flex;justify-content:space-between;gap:8px;margin-top:8px}.mt-topic-progress span{font-size:11px}
+.mt-progress-track{display:block;height:5px;border-radius:4px;background:#dfebf5;overflow:hidden}.mt-progress-track i{display:block;background:#137abc;height:100%;border-radius:4px;transition:width .2s}
+.mt-resume,.mt-all{display:flex;justify-content:space-between;align-items:center;gap:20px;border:1px solid #c8dceb;border-radius:12px;background:#fff;padding:18px 22px;margin-top:18px}.mt-resume strong,.mt-all strong{font-size:14px;color:var(--blue-deep)}.mt-resume small{display:block;font-size:12px;margin-top:4px}.mt-resume button,.mt-all button{flex-shrink:0}.mt-all{background:#f7fbff;margin-top:20px}.mt-all p{margin:5px 0 0;font-size:13px;color:var(--muted)}
+.mt-question-head{display:flex;align-items:center;gap:18px;margin-bottom:14px;font-size:13px;color:var(--muted)}.mt-question-head>span:nth-child(2){flex:1}.mt-question-count{color:var(--blue-deep);white-space:nowrap;font-weight:600}.mt-game .mt-back{background:#fff;padding:8px 13px;border-radius:8px;min-height:38px;color:var(--blue)}
+.mt-scoreline{display:flex;gap:20px;font-size:12px;color:var(--muted);margin:12px 0 20px}.mt-scoreline>span:last-child{margin-left:auto}.mt-score-correct{color:var(--good)}
+.mt-question{padding:28px 30px;background:#fff;border:1px solid #c8dceb;border-radius:17px;box-shadow:var(--shadow)}
+.mt-question h2{font-size:24px;line-height:1.45;font-weight:650;letter-spacing:-.3px;margin:12px 0 24px;max-width:960px}.mt-question h2:focus{outline:none}
+.mt-help-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:20px 0 16px}.mt-help-row small{font-size:12px}.mt-game .mt-learn-button{display:inline-flex;align-items:center;gap:10px;padding:8px 13px;border:1px solid #9dc8e9;background:#edf7ff;color:var(--blue-deep);border-radius:9px;font-weight:600}.mt-learn-button>span:first-child{border:1px solid #72acd3;width:19px;height:19px;border-radius:50%;font-size:12px;display:grid;place-items:center}
+.mt-learn-panel{background:#f2f8fe;border:1px solid #c5def0;border-left:3px solid #157cbf;border-radius:9px;padding:22px 24px;margin-bottom:20px;font-size:14px;line-height:1.7}.mt-learn-panel h3{font-size:18px;color:var(--blue-deep);margin:7px 0 12px}.mt-learn-panel p{margin-bottom:12px}.mt-learn-panel ol{padding-left:22px;margin:0 0 14px}.mt-learn-panel li+li{margin-top:7px}.mt-learn-panel a{display:block;font-size:13px;margin-top:10px}.mt-learn-panel>small{display:block;font-size:11px;margin-top:16px}.mt-video{font-weight:600}
+.mt-options{display:grid;gap:10px}.mt-game .mt-option{display:flex;align-items:center;gap:14px;text-align:left;padding:14px 17px;border:1px solid #c9dce9;border-radius:10px;background:#fff;min-height:58px;font-weight:400;line-height:1.5}.mt-game .mt-option:hover:not(:disabled){border-color:#187ec2;background:#f4f9ff;box-shadow:0 2px 8px #005ca90b}.mt-option>span:nth-child(2){flex:1;min-width:0}.mt-letter{display:grid;place-items:center;width:29px;height:29px;flex:0 0 29px;border-radius:6px;background:#edf4fa;color:#386b93;font-size:12px;font-weight:600}.mt-game .mt-option-correct{background:#f0fbf5;border-color:#63ac88;color:#185d40}.mt-game .mt-option-wrong{background:#fff5f6;border-color:#d58c97;color:#8c2c3c}.mt-option-label{font-size:11px;white-space:nowrap}.mt-answer-note{color:var(--muted);font-size:12px;margin:15px 0 0}
+.mt-feedback{border:1px solid #b8ddc9;border-left:4px solid var(--good);border-radius:10px;background:#f4fbf7;padding:20px 23px;margin-top:22px}.mt-feedback>strong{color:var(--good);font-size:17px}.mt-feedback p{font-size:14px;margin:10px 0 16px}.mt-feedback>small{display:block;margin-bottom:15px;font-size:12px}.mt-feedback-error{border-color:#e5bac3;border-left-color:var(--bad);background:#fff7f8}.mt-feedback-error>strong{color:var(--bad)}
+.mt-diagram{margin:0 0 22px;border:1px solid #d6e3ee;border-radius:10px;padding:15px 18px;overflow:hidden}.mt-diagram figcaption{font-size:12px;color:var(--muted);margin-bottom:8px}.mt-scale-scroll{overflow-x:auto;overscroll-behavior-x:contain;padding:8px 0;outline-offset:-3px}.mt-scale-scroll>svg.caliper-instrument{display:block;width:100%;min-width:700px;height:auto;max-height:none}.mt-diagram>small{font-size:11px;display:none}
+.mt-result{background:#fff;border:1px solid #c8dceb;border-radius:18px;text-align:center;padding:40px 30px}.mt-result h2{color:var(--blue-deep);font-size:29px;margin:12px 0 6px}.mt-result>p{font-size:14px;color:var(--muted);max-width:650px;margin:12px auto 22px}.mt-result-percent{font-size:70px;color:var(--blue);font-weight:700;line-height:1.3;margin:24px 0 12px}.mt-result-percent>span{font-size:28px;font-weight:500}.mt-result-stats{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-bottom:24px}.mt-result-stats>span{background:#f0f7fc;border:1px solid #d7e6f1;border-radius:9px;padding:10px 18px;font-size:13px;color:var(--muted)}.mt-result-stats strong{color:var(--blue-deep);font-size:17px;margin-right:4px}.mt-result-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.mt-storage-notice{font-size:12px;color:#9a4b10;padding:12px}
+@keyframes mt-appear{from{opacity:.5;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.mt-game{animation:none}.mt-progress-track i{transition:none}}
+@media(max-width:720px){.mt-topics{grid-template-columns:1fr}.mt-intro{padding:22px}.mt-intro h2{font-size:30px}.mt-section-heading{align-items:flex-start;flex-direction:column;gap:4px}.mt-game .mt-topic{padding:18px;gap:12px}.mt-topic-content>strong{font-size:15px}.mt-resume,.mt-all{align-items:flex-start;flex-direction:column;gap:14px}.mt-question-head{flex-wrap:wrap;gap:10px}.mt-question-head>span:nth-child(2){order:3;flex-basis:100%}.mt-question-count{margin-left:auto}.mt-question{padding:21px 18px}.mt-question h2{font-size:20px}.mt-learn-panel{padding:18px}.mt-option-label{white-space:normal;max-width:60px}.mt-diagram{padding:12px}.mt-diagram>small{display:block}.mt-result{padding:30px 20px}.mt-result-actions{flex-direction:column}.mt-topic-progress{flex-wrap:wrap;gap:2px 10px}}
+
 /* A single, consistent destination for choosing another game. */
 .modes-icon{display:block;width:18px;height:18px;flex:0 0 18px;color:inherit}
 #home.modes-button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 16px;border:1px solid #8babc5;border-radius:8px;background:#fff;color:#005ca9;font:650 14px/1.2 "Segoe UI",Arial,sans-serif;white-space:nowrap;box-shadow:none;transition:background-color .15s,border-color .15s}
@@ -1022,7 +1053,7 @@ function match(){
 }
 
 function menu(){
-  window.CaliperGame.close();window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();
+  window.CaliperGame.close();window.MetrologyGame.close();window.scrollTo(0,0);mode=0;locked=false;retry=null;detect=null;stats();
   const heroDrawing=svg(
     '<path class="metal" d="M55 155 L246 155 L334 109 L143 109 Z"/>'+
     '<path class="metal" d="M146 112 L234 66 L234 12 L146 58 Z"/>'+
@@ -1038,13 +1069,13 @@ function menu(){
     'Desenho original de junta em T com filete e indicação de soldagem','0 0 420 240');
   const previews=[symbol({type:'V',size:8,angle:60}),symbol({type:'Filete',side:'ambos',size:6,length:40,pitch:100}),symbol({type:'Filete',field:true,all:true,contour:'Convexo'}),symbol({type:'Filete',size:6})+cut({type:'Filete',size:6}),position('1F',.05)];
   const descriptions=['Encontre a solda certa para cada símbolo — e faça o caminho inverso.','Interprete o desenho anexo a uma ordem de serviço de manutenção.','Treino técnico completo: interprete a descrição e construa a peça e sua indicação.','Confira se a execução atende ao desenho de manutenção e identifique divergências.','Relacione peça, código e significado: 1F–4F e 1G–4G, com referência ISO/EN.'];
-  app.innerHTML=`<div class="hero"><div><span class="eyebrow">Seu laboratório de soldagem</span><h2>Olhe o símbolo.<br>Visualize a solda.</h2><p>Treine a leitura de desenhos e ordens de serviço de manutenção com desafios rápidos e correção na hora.</p><div class="hero-tags"><span>6 jogos interativos</span><span>Desenhos originais</span><span>Uma questão por vez</span></div></div><div class="hero-art">${heroDrawing}</div></div><div class="menu-heading"><div><h2>Qual desafio você vai encarar?</h2><p>Escolha um jogo. Seu progresso fica salvo neste navegador.</p></div><span class="menu-counter">06 BANCADAS DE TREINO</span></div><div class="menu">${names.slice(1).map((name,i)=>`<button class="mode" data-mode="${i+1}" type="button"><span class="mode-head"><span class="num">JOGO 0${i+1}</span><span class="mode-arrow" aria-hidden="true">↗</span></span><span class="game-preview ${i===3?'double':''}" aria-hidden="true">${previews[i]}</span><span class="mode-body"><h3>${name}</h3><small>${descriptions[i]}</small><span class="mode-cta"><span>Começar desafio</span><span aria-hidden="true">→</span></span></span></button>`).join('')}</div>`;
-  app.querySelector('.menu').insertAdjacentHTML('beforeend',window.CaliperGame.card());
+  app.innerHTML=`<div class="hero"><div><span class="eyebrow">Seu laboratório de soldagem</span><h2>Olhe o símbolo.<br>Visualize a solda.</h2><p>Treine a leitura de desenhos e ordens de serviço de manutenção com desafios rápidos e correção na hora.</p><div class="hero-tags"><span>7 jogos interativos</span><span>Desenhos originais</span><span>Uma questão por vez</span></div></div><div class="hero-art">${heroDrawing}</div></div><div class="menu-heading"><div><h2>Qual desafio você vai encarar?</h2><p>Escolha um jogo. Seu progresso fica salvo neste navegador.</p></div><span class="menu-counter">07 BANCADAS DE TREINO</span></div><div class="menu">${names.slice(1).map((name,i)=>`<button class="mode" data-mode="${i+1}" type="button"><span class="mode-head"><span class="num">JOGO 0${i+1}</span><span class="mode-arrow" aria-hidden="true">↗</span></span><span class="game-preview ${i===3?'double':''}" aria-hidden="true">${previews[i]}</span><span class="mode-body"><h3>${name}</h3><small>${descriptions[i]}</small><span class="mode-cta"><span>Começar desafio</span><span aria-hidden="true">→</span></span></span></button>`).join('')}</div>`;
+  app.querySelector('.menu').insertAdjacentHTML('beforeend',window.CaliperGame.card()+window.MetrologyGame.card());
   app.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>start(+b.dataset.mode));
 
 }
 
-function start(m){if(m===6){if(previewActive)exitMaxPreview();mode=6;detect=null;retry=null;window.CaliperGame.open(app);return;}window.CaliperGame.close();mode=m;detect=null;retry=null;next();}
+function start(m){if(m===7){window.CaliperGame.close();if(previewActive)exitMaxPreview();mode=7;detect=null;retry=null;window.MetrologyGame.open(app);return;}window.MetrologyGame.close();if(m===6){if(previewActive)exitMaxPreview();mode=6;detect=null;retry=null;window.CaliperGame.open(app);return;}window.CaliperGame.close();mode=m;detect=null;retry=null;next();}
 function shell(prompt,visual){app.innerHTML=`<div class="toolbar"><span class="eyebrow">${names[mode]} ${retry?'· REFORÇO':''}</span><small>${trainingProgressText()}</small></div><h2>${prompt}</h2>${visual?`<div class="scene">${visual}</div>`:''}<div id="work"></div><div id="feedback" aria-live="polite"></div>`;}
 function answerLabel(x){return ({T:'T / ângulo',Borda:'Aresta / borda'})[x]||x;}
 function options(items,answer,render=answerLabel){q.answer=answer;$('#work').innerHTML=`<div class="${q.image?'choices':'pills'}">${items.map((x,i)=>`<button class="choice" data-index="${i}"><span class="letter">${String.fromCharCode(65+i)}</span> ${render(x)}</button>`).join('')}</div>`;app.querySelectorAll('[data-index]').forEach(b=>b.onclick=()=>grade(items[+b.dataset.index],b,items));}
@@ -2440,19 +2471,19 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
   }
   // One enlarged caliper face for the assessment game. This is the instrument's
   // principal scale and sliding vernier sharing one edge, not a second diagram.
-  function gameScale(c) {
+  function gameScale(c, showHeader = true) {
     const r = c.r;
     const scale = r.unit === 'mm' ? r.divisions === 10 ? 50 : r.divisions === 20 ? 20 : 16 : r.divisions === 8 ? 1400 : 1200;
     const bucketTicks = r.unit === 'mm' ? 10 * r.denominator : r.denominator / 4;
     const marginTicks = r.unit === 'mm' ? (r.divisions === 10 ? 4 : 8) * r.denominator : r.denominator / 10;
     const originTicks = Math.max(0, Math.floor((c.ticks - marginTicks) / bucketTicks) * bucketTicks);
     const x = ticks => 60 + (ticks - originTicks) * scale / r.denominator;
-    const mainY = 250, height = 410, zero = x(c.ticks), end = x(c.ticks + r.divisions * r.vernierPitchTicks);
+    const mainY = 250, height = showHeader ? 410 : 330, zero = x(c.ticks), end = x(c.ticks + r.divisions * r.vernierPitchTicks);
     const index = c.ticks % r.mainTicks, coincidenceTicks = c.ticks + index * r.vernierPitchTicks;
     const first = Math.max(0, Math.ceil((originTicks - 60 * r.denominator / scale) / r.mainTicks));
     const last = Math.floor((originTicks + 1220 * r.denominator / scale) / r.mainTicks);
     let content = rect(0, 0, 1280, height, 'fill="#fff"');
-    content += '<g class="ci-game-window" data-px-per-unit="' + scale + '">';
+    content += '<g class="ci-game-window" data-px-per-unit="' + scale + '"' + (showHeader ? '' : ' transform="translate(0 -80)"') + '>';
     // Read the metric main numbers in centimetres; every small interval is 1 mm.
     for (let k = first; k <= last; k++) {
       const ticks = k * r.mainTicks, value = ticks / r.denominator, at = x(ticks);
@@ -2468,9 +2499,11 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     content += line(0, mainY, 1280, mainY, 'stroke="#262b22" stroke-width="1.3"');
     content += text(1255, 111, r.unit === 'mm' ? 'cm' : 'pol', 'font-size="24" text-anchor="end"');
     content += '<g ' + hook('x',scale) + '>';
-    content += rect(zero - 36, 8, end - zero + 72, 57, 'class="ci-game-cursor-top" fill="#f9faf6" stroke="#333b2e" stroke-width="1.5"');
-    content += text(zero - 14, 44, TYPES[c.type].name, 'font-size="21"');
-    content += text(end + 14, 44, r.label, 'font-size="21" text-anchor="end"');
+    if (showHeader) {
+      content += rect(zero - 36, 8, end - zero + 72, 57, 'class="ci-game-cursor-top" fill="#f9faf6" stroke="#333b2e" stroke-width="1.5"');
+      content += text(zero - 14, 44, TYPES[c.type].name, 'font-size="21"');
+      content += text(end + 14, 44, r.label, 'font-size="21" text-anchor="end"');
+    }
     content += rect(zero - 36, mainY, end - zero + 72, 140, 'class="ci-game-cursor" fill="#f9faf6" stroke="#333b2e" stroke-width="1.5"');
     for (let k = 0; k <= r.divisions; k++) {
       const ticks = c.ticks + k * r.vernierPitchTicks, at = x(ticks), selected = c.reveal && k === index;
@@ -2490,7 +2523,7 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
     if (!['full', 'instrument', 'detail', 'game', 'free', 'focus'].includes(section)) throw new RangeError('Seção do instrumento desconhecida.');
     if(['free','focus'].includes(section)&&!technical)throw new RangeError('A vista livre usa o paquímetro universal analógico.');
     const instrument = section === 'detail' || section === 'game' ? '' : c.type === 'depth' ? wholeDepth(c, g) : c.type === 'height' ? wholeHeight(c, g) : wholeHorizontal(c, g);
-    const detail = ['instrument','free','focus'].includes(section) ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c) : vernierDetail(c);
+    const detail = ['instrument','free','focus'].includes(section) ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c,options.scaleHeader!==false) : vernierDetail(c);
     const instrumentHeight=technical?330:300;
     const focusWidth=Math.max(universalPlateWidth(c,g)+220,360),focusHeight=220,focusX=clean(g.sliderPx-(focusWidth-universalPlateWidth(c,g))/2);
     const height = section === 'focus' ? focusHeight : section === 'free' ? 360 : section === 'instrument' ? instrumentHeight : section === 'detail' || section === 'game' ? detail.height : instrumentHeight + detail.height;
@@ -2655,6 +2688,1029 @@ function grade(answer,button,items,override){if(locked)return;const previousLeve
   }
   load();if(typeof root.addEventListener==='function'){root.addEventListener('pagehide',()=>{if(active)pause();});root.addEventListener('keydown',event=>{if(event.key==='Escape'&&isFullscreen()){event.preventDefault();exitFullscreen();}},true);}if(typeof document.addEventListener==='function')document.addEventListener('fullscreenchange',fullscreenChanged);
   root.CaliperGame={open,close,card};
+})(typeof window!=='undefined'?window:globalThis);
+
+(function(root){
+  'use strict';
+  const questions=[
+  {
+    "id": 1,
+    "question": "O que a metrologia estuda e realiza?",
+    "options": [
+      "Somente a soldagem de metais.",
+      "Medições e comparações baseadas em padrões.",
+      "Somente a pressão dos gases.",
+      "A composição dos eletrodos."
+    ],
+    "explanation": "Metrologia é a ciência da medição e de suas aplicações. Inclui métodos, instrumentos, unidades e a avaliação dos resultados.",
+    "section": 1,
+    "answer": 1,
+    "lesson": "metrology"
+  },
+  {
+    "id": 2,
+    "question": "Na preparação de uma junta para soldar, uma aplicação da metrologia é:",
+    "options": [
+      "Escolher a cor da chapa.",
+      "Ajustar a marca da máquina.",
+      "Conferir ângulo de chanfro e abertura da junta.",
+      "Identificar a composição química do gás."
+    ],
+    "explanation": "Medidas de ângulo de chanfro e abertura da junta fazem parte do controle dimensional.",
+    "section": 1,
+    "answer": 2,
+    "lesson": "dimensional"
+  },
+  {
+    "id": 3,
+    "question": "Qual instrumento tem fita flexível e graduada?",
+    "options": [
+      "Régua graduada.",
+      "Manômetro.",
+      "Calibre de solda.",
+      "Trena."
+    ],
+    "explanation": "A trena é uma fita flexível graduada, indicada para medir distâncias e comprimentos.",
+    "section": 1,
+    "answer": 3,
+    "lesson": "rulers"
+  },
+  {
+    "id": 4,
+    "question": "Para verificar rapidamente uma medida curta sem exigir alta precisão, a melhor escolha é:",
+    "options": [
+      "Escala graduada.",
+      "Manômetro.",
+      "Gabarito de chanfro.",
+      "Calibre de solda."
+    ],
+    "explanation": "A escala graduada (régua) é usada para medições lineares rápidas e de menor extensão.",
+    "section": 1,
+    "answer": 0,
+    "lesson": "rulers"
+  },
+  {
+    "id": 5,
+    "question": "Qual instrumento é mais adequado para medir com maior precisão a espessura de uma chapa?",
+    "options": [
+      "Trena.",
+      "Paquímetro.",
+      "Manômetro.",
+      "Gabarito de solda."
+    ],
+    "explanation": "O paquímetro realiza medições lineares mais precisas, inclusive espessuras externas.",
+    "section": 1,
+    "answer": 1,
+    "lesson": "caliper"
+  },
+  {
+    "id": 6,
+    "question": "Quais são os componentes básicos de leitura de um paquímetro com nônio?",
+    "options": [
+      "Ponteiro e mola.",
+      "Fita e gancho.",
+      "Escala fixa e cursor móvel com nônio.",
+      "Mangueira e regulador."
+    ],
+    "explanation": "O paquímetro é composto pela escala fixa e pelo cursor móvel que traz o nônio.",
+    "section": 1,
+    "answer": 2,
+    "lesson": "caliper"
+  },
+  {
+    "id": 7,
+    "question": "Para medir o diâmetro externo de uma barra, qual tipo de medição do paquímetro é usado?",
+    "options": [
+      "Externa.",
+      "Interna.",
+      "Profundidade.",
+      "Ressalto."
+    ],
+    "explanation": "Diâmetros externos e espessuras são medidas externas.",
+    "section": 1,
+    "answer": 0,
+    "lesson": "external"
+  },
+  {
+    "id": 8,
+    "question": "Para medir o diâmetro interno de um furo, qual tipo de medição do paquímetro é usado?",
+    "options": [
+      "Externa.",
+      "Profundidade.",
+      "Ressalto.",
+      "Interna."
+    ],
+    "explanation": "As medições internas permitem conferir furos e rasgos internos.",
+    "section": 1,
+    "answer": 3,
+    "lesson": "internal"
+  },
+  {
+    "id": 9,
+    "question": "Qual recurso do paquímetro é utilizado para medir a profundidade de um furo cego?",
+    "options": [
+      "Gancho da trena.",
+      "Haste de profundidade.",
+      "Corpo do manômetro.",
+      "Face do gabarito."
+    ],
+    "explanation": "A haste do paquímetro permite aferir profundidades e rebaixos.",
+    "section": 1,
+    "answer": 1,
+    "lesson": "depth"
+  },
+  {
+    "id": 10,
+    "question": "Ao medir uma diferença de nível entre duas superfícies com o paquímetro, realiza-se uma medição de:",
+    "options": [
+      "Pressão.",
+      "Comprimento de fita.",
+      "Ressalto.",
+      "Ângulo."
+    ],
+    "explanation": "Ressaltos são diferenças de nível ou degraus na peça.",
+    "section": 1,
+    "answer": 2,
+    "lesson": "step"
+  },
+  {
+    "id": 11,
+    "question": "Qual instrumento mede a pressão de gases ou fluidos?",
+    "options": [
+      "Manômetro.",
+      "Paquímetro.",
+      "Trena.",
+      "Régua graduada."
+    ],
+    "explanation": "O manômetro mensura a pressão de líquidos e gases.",
+    "section": 1,
+    "answer": 0,
+    "lesson": "pressure"
+  },
+  {
+    "id": 12,
+    "question": "Na soldagem TIG e MIG/MAG, o manômetro ajuda a acompanhar:",
+    "options": [
+      "A espessura da chapa.",
+      "O ângulo da tocha.",
+      "A largura do cordão.",
+      "A pressão do gás de proteção."
+    ],
+    "explanation": "O manômetro indica pressão. A vazão do gás de proteção é uma grandeza diferente, acompanhada com fluxômetro ou medidor de vazão.",
+    "section": 1,
+    "answer": 3,
+    "lesson": "pressure"
+  },
+  {
+    "id": 13,
+    "question": "Uma proteção gasosa inadequada pode favorecer:",
+    "options": [
+      "Melhor alinhamento da junta.",
+      "Porosidades e falhas no cordão.",
+      "Redução garantida da deformação.",
+      "Melhor leitura do nônio."
+    ],
+    "explanation": "A proteção gasosa inadequada pode permitir contaminação do banho e favorecer porosidade; por isso é importante verificar o sistema e a vazão especificada.",
+    "section": 1,
+    "answer": 1,
+    "lesson": "gas"
+  },
+  {
+    "id": 14,
+    "question": "Qual instrumento verifica a altura da coroa ou sobre-espessura do cordão?",
+    "options": [
+      "Trena.",
+      "Manômetro.",
+      "Calibre de solda.",
+      "Régua de aço."
+    ],
+    "explanation": "O calibre de solda mede características geométricas do cordão, incluindo a altura da coroa.",
+    "section": 1,
+    "answer": 2,
+    "lesson": "weld"
+  },
+  {
+    "id": 15,
+    "question": "Além da altura da coroa, o calibre de solda pode conferir:",
+    "options": [
+      "Ângulos e largura do perfil soldado.",
+      "Pressão de saída do cilindro.",
+      "Corrente elétrica da máquina.",
+      "Composição do metal de base."
+    ],
+    "explanation": "O calibre de solda permite verificar ângulos e dimensões do perfil executado.",
+    "section": 1,
+    "answer": 0,
+    "lesson": "weld"
+  },
+  {
+    "id": 16,
+    "question": "Antes da soldagem, um gabarito pode ser utilizado para:",
+    "options": [
+      "Ajustar a vazão elétrica.",
+      "Medir pressão de fluido.",
+      "Medir exclusivamente comprimentos longos.",
+      "Comparar formas e conferir posicionamento."
+    ],
+    "explanation": "Gabaritos comparam formas, ângulos e ajudam no alinhamento antes de soldar.",
+    "section": 1,
+    "answer": 3,
+    "lesson": "templates"
+  },
+  {
+    "id": 17,
+    "question": "Após soldar, o uso de um gabarito pode auxiliar a conferir:",
+    "options": [
+      "A tensão da rede elétrica.",
+      "Deformações em relação ao limite estabelecido.",
+      "A pureza do gás.",
+      "A temperatura do ambiente."
+    ],
+    "explanation": "Gabaritos podem verificar se as deformações resultantes não ultrapassaram limites.",
+    "section": 1,
+    "answer": 1,
+    "lesson": "templates"
+  },
+  {
+    "id": 18,
+    "question": "Qual alternativa diferencia corretamente a trena da escala graduada?",
+    "options": [
+      "Ambas medem apenas pressão.",
+      "A trena usa nônio e a régua usa cursor.",
+      "A trena é fita flexível; a escala graduada é régua rígida.",
+      "A escala graduada mede gás e a trena mede solda."
+    ],
+    "explanation": "A trena tem fita flexível; a escala graduada normalmente é uma régua metálica rígida.",
+    "section": 1,
+    "answer": 2,
+    "lesson": "rulers"
+  },
+  {
+    "id": 19,
+    "question": "Converta 3,175 mm em polegada fracionária.",
+    "options": [
+      "1/4\"",
+      "1/8\"",
+      "3/8\"",
+      "3/16\""
+    ],
+    "explanation": "3,175 ÷ 25,4 = 0,125\" = 1/8\".",
+    "section": 2,
+    "answer": 1,
+    "lesson": "conversion"
+  },
+  {
+    "id": 20,
+    "question": "Converta 6,35 mm em polegada fracionária.",
+    "options": [
+      "1/8\"",
+      "1/4\"",
+      "3/8\"",
+      "1/2\""
+    ],
+    "explanation": "6,35 ÷ 25,4 = 0,25\" = 1/4\".",
+    "section": 2,
+    "answer": 1,
+    "lesson": "conversion"
+  },
+  {
+    "id": 21,
+    "question": "Converta 9,525 mm em polegada fracionária.",
+    "options": [
+      "1/4\"",
+      "1/2\"",
+      "5/8\"",
+      "3/8\""
+    ],
+    "explanation": "9,525 ÷ 25,4 = 0,375\" = 3/8\".",
+    "section": 2,
+    "answer": 3,
+    "lesson": "conversion"
+  },
+  {
+    "id": 22,
+    "question": "Converta 12,7 mm em polegada fracionária.",
+    "options": [
+      "1/2\"",
+      "3/8\"",
+      "5/8\"",
+      "3/4\""
+    ],
+    "explanation": "12,7 ÷ 25,4 = 0,5\" = 1/2\".",
+    "section": 2,
+    "answer": 0,
+    "lesson": "conversion"
+  },
+  {
+    "id": 23,
+    "question": "Converta 15,875 mm em polegada fracionária.",
+    "options": [
+      "1/2\"",
+      "3/4\"",
+      "5/8\"",
+      "7/8\""
+    ],
+    "explanation": "15,875 ÷ 25,4 = 0,625\" = 5/8\".",
+    "section": 2,
+    "answer": 2,
+    "lesson": "conversion"
+  },
+  {
+    "id": 24,
+    "question": "Converta 19,05 mm em polegada fracionária.",
+    "options": [
+      "5/8\"",
+      "7/8\"",
+      "3/4\"",
+      "1\""
+    ],
+    "explanation": "19,05 ÷ 25,4 = 0,75\" = 3/4\".",
+    "section": 2,
+    "answer": 2,
+    "lesson": "conversion"
+  },
+  {
+    "id": 25,
+    "question": "Converta 22,225 mm em polegada fracionária.",
+    "options": [
+      "7/8\"",
+      "3/4\"",
+      "1\"",
+      "9/8\""
+    ],
+    "explanation": "22,225 ÷ 25,4 = 0,875\" = 7/8\".",
+    "section": 2,
+    "answer": 0,
+    "lesson": "conversion"
+  },
+  {
+    "id": 26,
+    "question": "Converta 25,4 mm em polegadas.",
+    "options": [
+      "7/8\"",
+      "9/8\"",
+      "5/4\"",
+      "1\""
+    ],
+    "explanation": "25,4 ÷ 25,4 = 1\" = 1\".",
+    "section": 2,
+    "answer": 3,
+    "lesson": "conversion"
+  },
+  {
+    "id": 27,
+    "question": "Converta 1/16\" em milímetros.",
+    "options": [
+      "3,1750 mm",
+      "1,5875 mm",
+      "1,9050 mm",
+      "4,7625 mm"
+    ],
+    "explanation": "(1 ÷ 16) × 25,4 = 1,5875 mm.",
+    "section": 2,
+    "answer": 1,
+    "lesson": "conversion"
+  },
+  {
+    "id": 28,
+    "question": "Converta 5/16\" em milímetros.",
+    "options": [
+      "9,5250 mm",
+      "7,9375 mm",
+      "8,2550 mm",
+      "11,1125 mm"
+    ],
+    "explanation": "(5 ÷ 16) × 25,4 = 7,9375 mm.",
+    "section": 2,
+    "answer": 1,
+    "lesson": "conversion"
+  },
+  {
+    "id": 29,
+    "question": "Converta 11/16\" em milímetros.",
+    "options": [
+      "19,0500 mm",
+      "17,7800 mm",
+      "20,6375 mm",
+      "17,4625 mm"
+    ],
+    "explanation": "(11 ÷ 16) × 25,4 = 17,4625 mm.",
+    "section": 2,
+    "answer": 3,
+    "lesson": "conversion"
+  },
+  {
+    "id": 30,
+    "question": "Converta 1 1/4\" em milímetros.",
+    "options": [
+      "31,75 mm",
+      "33,3375 mm",
+      "32,0675 mm",
+      "34,9250 mm"
+    ],
+    "explanation": "(5 ÷ 4) × 25,4 = 31,75 mm.",
+    "section": 2,
+    "answer": 0,
+    "lesson": "conversion"
+  },
+  {
+    "id": 31,
+    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "options": [
+      "14,40 mm",
+      "14,30 mm",
+      "14,35 mm",
+      "14,85 mm"
+    ],
+    "explanation": "14 + (7 × 0,05) = 14 + 0,35 = 14,35 mm.",
+    "section": 3,
+    "answer": 2,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 287
+    }
+  },
+  {
+    "id": 32,
+    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "options": [
+      "8,60 mm",
+      "8,50 mm",
+      "8,55 mm",
+      "9,05 mm"
+    ],
+    "explanation": "8 + (11 × 0,05) = 8 + 0,55 = 8,55 mm.",
+    "section": 3,
+    "answer": 2,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 171
+    }
+  },
+  {
+    "id": 33,
+    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "options": [
+      "26,20 mm",
+      "26,25 mm",
+      "26,15 mm",
+      "26,70 mm"
+    ],
+    "explanation": "26 + (4 × 0,05) = 26 + 0,20 = 26,20 mm.",
+    "section": 3,
+    "answer": 0,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 524
+    }
+  },
+  {
+    "id": 34,
+    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "options": [
+      "37,80 mm",
+      "37,70 mm",
+      "38,25 mm",
+      "37,75 mm"
+    ],
+    "explanation": "37 + (15 × 0,05) = 37 + 0,75 = 37,75 mm.",
+    "section": 3,
+    "answer": 3,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 755
+    }
+  },
+  {
+    "id": 35,
+    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "options": [
+      "4,00 mm",
+      "3,95 mm",
+      "3,90 mm",
+      "4,45 mm"
+    ],
+    "explanation": "3 + (19 × 0,05) = 3 + 0,95 = 3,95 mm.",
+    "section": 3,
+    "answer": 1,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 79
+    }
+  },
+  {
+    "id": 36,
+    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "options": [
+      "52,15 mm",
+      "52,10 mm",
+      "52,05 mm",
+      "52,60 mm"
+    ],
+    "explanation": "52 + (2 × 0,05) = 52 + 0,10 = 52,10 mm.",
+    "section": 3,
+    "answer": 1,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 1042
+    }
+  },
+  {
+    "id": 37,
+    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "options": [
+      "18,50 mm",
+      "18,40 mm",
+      "18,95 mm",
+      "18,45 mm"
+    ],
+    "explanation": "18 + (9 × 0,05) = 18 + 0,45 = 18,45 mm.",
+    "section": 3,
+    "answer": 3,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 369
+    }
+  },
+  {
+    "id": 38,
+    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "options": [
+      "61,60 mm",
+      "61,65 mm",
+      "61,55 mm",
+      "62,10 mm"
+    ],
+    "explanation": "61 + (12 × 0,05) = 61 + 0,60 = 61,60 mm.",
+    "section": 3,
+    "answer": 0,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 1232
+    }
+  },
+  {
+    "id": 39,
+    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "options": [
+      "44,35 mm",
+      "44,25 mm",
+      "44,30 mm",
+      "44,80 mm"
+    ],
+    "explanation": "44 + (6 × 0,05) = 44 + 0,30 = 44,30 mm.",
+    "section": 3,
+    "answer": 2,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 886
+    }
+  },
+  {
+    "id": 40,
+    "question": "Qual medida está indicada no paquímetro métrico de resolução 0,05 mm?",
+    "options": [
+      "9,95 mm",
+      "9,85 mm",
+      "9,90 mm",
+      "10,40 mm"
+    ],
+    "explanation": "9 + (18 × 0,05) = 9 + 0,90 = 9,90 mm.",
+    "section": 3,
+    "answer": 2,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 198
+    }
+  },
+  {
+    "id": 41,
+    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "options": [
+      "11/128\"",
+      "3/32\"",
+      "5/64\"",
+      "19/128\""
+    ],
+    "explanation": "8/128\" + 3/128\" = 11/128\" = 11/128\".",
+    "section": 4,
+    "answer": 0,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 11
+    }
+  },
+  {
+    "id": 42,
+    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "options": [
+      "15/64\"",
+      "7/32\"",
+      "37/128\"",
+      "29/128\""
+    ],
+    "explanation": "24/128\" + 5/128\" = 29/128\" = 29/128\".",
+    "section": 4,
+    "answer": 3,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 29
+    }
+  },
+  {
+    "id": 43,
+    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "options": [
+      "59/128\"",
+      "29/64\"",
+      "57/128\"",
+      "33/64\""
+    ],
+    "explanation": "56/128\" + 2/128\" = 58/128\" = 29/64\".",
+    "section": 4,
+    "answer": 1,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 58
+    }
+  },
+  {
+    "id": 44,
+    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "options": [
+      "9/16\"",
+      "71/128\"",
+      "35/64\"",
+      "79/128\""
+    ],
+    "explanation": "64/128\" + 7/128\" = 71/128\" = 71/128\".",
+    "section": 4,
+    "answer": 1,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 71
+    }
+  },
+  {
+    "id": 45,
+    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "options": [
+      "85/128\"",
+      "83/128\"",
+      "23/32\"",
+      "21/32\""
+    ],
+    "explanation": "80/128\" + 4/128\" = 84/128\" = 21/32\".",
+    "section": 4,
+    "answer": 3,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 84
+    }
+  },
+  {
+    "id": 46,
+    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "options": [
+      "89/128\"",
+      "45/64\"",
+      "11/16\"",
+      "97/128\""
+    ],
+    "explanation": "88/128\" + 1/128\" = 89/128\" = 89/128\".",
+    "section": 4,
+    "answer": 0,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 89
+    }
+  },
+  {
+    "id": 47,
+    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "options": [
+      "1 15/128\"",
+      "1 13/128\"",
+      "1 7/64\"",
+      "1 11/64\""
+    ],
+    "explanation": "136/128\" + 6/128\" = 142/128\" = 1 7/64\".",
+    "section": 4,
+    "answer": 2,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 142
+    }
+  },
+  {
+    "id": 48,
+    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "options": [
+      "1 27/64\"",
+      "1 13/32\"",
+      "1 53/128\"",
+      "1 61/128\""
+    ],
+    "explanation": "176/128\" + 5/128\" = 181/128\" = 1 53/128\".",
+    "section": 4,
+    "answer": 2,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 181
+    }
+  },
+  {
+    "id": 49,
+    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "options": [
+      "2 19/128\"",
+      "2 5/32\"",
+      "2 9/64\"",
+      "2 27/128\""
+    ],
+    "explanation": "272/128\" + 3/128\" = 275/128\" = 2 19/128\".",
+    "section": 4,
+    "answer": 0,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 275
+    }
+  },
+  {
+    "id": 50,
+    "question": "Qual é a leitura simplificada deste paquímetro em polegada fracionária, com nônio de 1/128\"?",
+    "options": [
+      "2 13/16\"",
+      "2 51/64\"",
+      "2 111/128\"",
+      "2 103/128\""
+    ],
+    "explanation": "352/128\" + 7/128\" = 359/128\" = 2 103/128\".",
+    "section": 4,
+    "answer": 3,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 359
+    }
+  },
+  {
+    "id": 51,
+    "question": "Você precisa medir rapidamente o comprimento de uma estrutura metálica de 4 metros. Qual instrumento deve escolher?",
+    "options": [
+      "Calibre de solda.",
+      "Trena.",
+      "Manômetro.",
+      "Gabarito de chanfro."
+    ],
+    "explanation": "A trena é apropriada para comprimentos maiores e distâncias.",
+    "section": 5,
+    "answer": 1,
+    "lesson": "rulers"
+  },
+  {
+    "id": 52,
+    "question": "Na montagem, é preciso conferir com precisão o diâmetro interno de um tubo. Qual instrumento usar?",
+    "options": [
+      "Paquímetro.",
+      "Manômetro.",
+      "Trena.",
+      "Calibre de solda."
+    ],
+    "explanation": "O paquímetro permite medidas internas com mais precisão.",
+    "section": 5,
+    "answer": 0,
+    "lesson": "internal"
+  },
+  {
+    "id": 53,
+    "question": "Antes de unir duas chapas, você quer comparar o ângulo de chanfro com o perfil especificado. Qual recurso é indicado?",
+    "options": [
+      "Manômetro.",
+      "Trena.",
+      "Haste de profundidade.",
+      "Gabarito."
+    ],
+    "explanation": "O gabarito é empregado na comparação de ângulos, perfis e formas.",
+    "section": 5,
+    "answer": 3,
+    "lesson": "templates"
+  },
+  {
+    "id": 54,
+    "question": "Após executar um cordão, você precisa verificar sua altura de reforço. Qual instrumento utilizar?",
+    "options": [
+      "Escala graduada.",
+      "Manômetro.",
+      "Calibre de solda.",
+      "Trena."
+    ],
+    "explanation": "O calibre de solda é projetado para medir altura de coroa e dimensões do cordão.",
+    "section": 5,
+    "answer": 2,
+    "lesson": "weld"
+  },
+  {
+    "id": 55,
+    "question": "Durante a soldagem TIG, qual grandeza é acompanhada pelo manômetro?",
+    "options": [
+      "Abertura da raiz da junta.",
+      "Pressão do gás no sistema.",
+      "Altura da coroa.",
+      "Comprimento da chapa."
+    ],
+    "explanation": "O manômetro acompanha pressão, não comprimento ou geometria da solda.",
+    "section": 5,
+    "answer": 1,
+    "lesson": "pressure"
+  },
+  {
+    "id": 56,
+    "question": "Converta 3/8\" para milímetros.",
+    "options": [
+      "6,350 mm",
+      "12,700 mm",
+      "9,525 mm",
+      "9,250 mm"
+    ],
+    "explanation": "(3 ÷ 8) × 25,4 = 9,525 mm.",
+    "section": 5,
+    "answer": 2,
+    "lesson": "conversion"
+  },
+  {
+    "id": 57,
+    "question": "Converta 17,4625 mm em polegada fracionária (múltiplos de 1/16\").",
+    "options": [
+      "11/16\"",
+      "9/16\"",
+      "5/8\"",
+      "13/16\""
+    ],
+    "explanation": "17,4625 ÷ 25,4 = 0,6875; 0,6875 × 16 = 11; portanto 11/16\".",
+    "section": 5,
+    "answer": 0,
+    "lesson": "conversion"
+  },
+  {
+    "id": 58,
+    "question": "Paquímetro métrico (0,05 mm): escala principal = 23 mm; coincide a 13ª divisão do nônio. Qual a leitura?",
+    "options": [
+      "23,70 mm",
+      "23,60 mm",
+      "24,15 mm",
+      "23,65 mm"
+    ],
+    "explanation": "23 + (13 × 0,05) = 23 + 0,65 = 23,65 mm.",
+    "section": 5,
+    "answer": 3,
+    "lesson": "metric",
+    "visual": {
+      "key": "mm-005",
+      "ticks": 473
+    }
+  },
+  {
+    "id": 59,
+    "question": "Paquímetro fracionário: escala principal = 1 5/16\"; coincide a 4ª divisão do nônio de 1/128\". Determine a leitura simplificada.",
+    "options": [
+      "1 45/128\"",
+      "1 11/32\"",
+      "1 43/128\"",
+      "1 13/32\""
+    ],
+    "explanation": "1 5/16 = 1 40/128; acrescente 4/128 = 1 44/128 = 1 11/32\".",
+    "section": 5,
+    "answer": 1,
+    "lesson": "fraction",
+    "visual": {
+      "key": "in-128",
+      "ticks": 172
+    }
+  },
+  {
+    "id": 60,
+    "question": "Uma leitura métrica é 12 mm + (10 × 0,05 mm). Compare-a com 1/2\" em milímetros: qual é maior e qual a diferença?",
+    "options": [
+      "Leitura métrica é maior por 0,20 mm.",
+      "1/2\" é maior por 0,20 mm.",
+      "São iguais.",
+      "1/2\" é maior por 0,50 mm."
+    ],
+    "explanation": "A leitura é 12,50 mm; 1/2\" = 12,70 mm; diferença = 12,70 − 12,50 = 0,20 mm.",
+    "section": 5,
+    "answer": 1,
+    "lesson": "comparison"
+  }
+];
+  const api=Object.freeze(questions.map(q=>Object.freeze({...q,options:Object.freeze(q.options)})));
+  root.MetrologyQuestions=api;
+  if(typeof module==='object'&&module.exports)module.exports=api;
+})(typeof window!=='undefined'?window:globalThis);
+
+
+(function(root){
+  'use strict';
+  const BANK=root.MetrologyQuestions,KEY='metrologia-prova1-v1';
+  const TOPICS=[
+    {id:1,title:'Conceitos e instrumentos',description:'Escolha o instrumento e entenda o que cada medida representa.',icon:'01'},
+    {id:2,title:'Conversão de unidades',description:'Pratique milímetros, polegadas e frações com o fator 25,4.',icon:'02'},
+    {id:3,title:'Paquímetro métrico · 0,05 mm',description:'Leia a escala principal e encontre a coincidência do nônio.',icon:'03'},
+    {id:4,title:'Polegada fracionária · 1/128″',description:'Some a leitura fixa à fração indicada pelo nônio.',icon:'04'},
+    {id:5,title:'Situações de oficina',description:'Aplique a metrologia em problemas de fabricação e inspeção.',icon:'05'}
+  ];
+  const INMETRO='https://www.gov.br/inmetro/pt-br/centrais-de-conteudo/publicacoes/dicionario-linguagem-simples/de-a-a-z/m/metrologia';
+  const MITUTOYO='https://www.mitutoyo.com/webfoo/wp-content/uploads/D_section.pdf';
+  const NIST='https://www.nist.gov/pml/owm/si-units-length';
+  const LESSONS={
+    metrology:{title:'Medir é comparar com uma referência',text:'A metrologia é a ciência da medição e de suas aplicações. Uma leitura precisa ser expressa com valor e unidade, usando um método e um instrumento adequados.',steps:['Identifique a grandeza: comprimento, ângulo, pressão ou outra.','Escolha a unidade e um instrumento compatível com a tarefa.','Confira o zero, as condições de uso e a qualidade da leitura.'],source:INMETRO,sourceName:'Inmetro · Metrologia'},
+    dimensional:{title:'Controle dimensional da junta',text:'Antes de soldar, verifique se as dimensões da preparação correspondem ao desenho. Comprimentos e ângulos exigem instrumentos diferentes.',steps:['Confira espessura, folga e abertura da raiz com o instrumento adequado.','Use um gabarito ou instrumento angular para verificar o chanfro.','Compare as medidas com os limites especificados no desenho.']},
+    rulers:{title:'Régua graduada e trena',text:'A régua rígida facilita a leitura de comprimentos curtos. A trena tem fita flexível e alcança distâncias maiores. A escolha depende do acesso e da tolerância exigida.',steps:['Alinhe o início da escala ao início da peça.','Observe a menor divisão gravada no instrumento.','Leia perpendicularmente à escala para reduzir o erro de paralaxe.']},
+    caliper:{title:'O paquímetro universal',text:'O cursor leva o nônio e se desloca sobre a escala principal. No modelo universal, as diferentes faces permitem medir dimensões externas, internas, profundidades e ressaltos.',steps:['Confira limpeza e zero antes de medir.','Escolha as faces adequadas à dimensão.','Aproxime sem forçar e mantenha o instrumento alinhado à peça.'],source:MITUTOYO,sourceName:'Mitutoyo · Guia de paquímetros'},
+    external:{title:'Medição externa',text:'Os bicos maiores do paquímetro são usados para espessuras, larguras e diâmetros externos.',steps:['Apoie a peça entre as faces internas dos bicos maiores.','Encoste com pressão suave, sem inclinar o instrumento.','Leia com o cursor parado.'],source:MITUTOYO,sourceName:'Mitutoyo · Guia de paquímetros'},
+    internal:{title:'Medição interna',text:'As orelhas superiores usam suas faces externas para tocar as paredes de um furo ou de uma abertura.',steps:['Insira as orelhas com o instrumento parcialmente fechado.','Abra até encostar nas paredes internas.','Em um furo circular, busque o diâmetro mantendo o alinhamento.'],source:MITUTOYO,sourceName:'Mitutoyo · Guia de paquímetros'},
+    depth:{title:'Medição de profundidade',text:'A haste que sai pela extremidade da régua acompanha o cursor e permite medir a profundidade de furos e rebaixos.',steps:['Apoie a extremidade da régua na superfície de referência.','Desloque a haste até tocar o fundo.','Mantenha a base apoiada e o instrumento perpendicular.'],source:MITUTOYO,sourceName:'Mitutoyo · Guia de paquímetros'},
+    step:{title:'Medição de ressalto',text:'As faces de ressalto ficam na parte posterior do paquímetro. Elas comparam dois planos em alturas diferentes.',steps:['Apoie uma face no plano de referência.','Desloque o cursor até a outra face tocar o segundo plano.','Leia a diferença de altura indicada.'],source:MITUTOYO,sourceName:'Mitutoyo · Guia de paquímetros'},
+    pressure:{title:'Pressão e vazão são grandezas diferentes',text:'O manômetro indica pressão. O regulador controla a pressão de saída, e um fluxômetro indica a vazão do gás. Não confunda a função de cada componente.',steps:['Verifique qual grandeza o problema pede.','Pressão pode ser indicada em bar, psi ou pascal.','Vazão de gás pode ser indicada em litros por minuto.']},
+    gas:{title:'Gás de proteção na soldagem',text:'A proteção gasosa ajuda a evitar o contato da região de soldagem com a atmosfera. Pressão disponível e vazão de trabalho precisam ser verificadas com instrumentos apropriados.',steps:['Confira a pressão disponível no conjunto de alimentação.','Use o dispositivo de vazão para ajustar o fluxo especificado no procedimento.','Proteção insuficiente ou perturbada pode favorecer porosidade.']},
+    weld:{title:'Calibre de solda',text:'O calibre de solda permite verificar características geométricas do cordão. O modelo utilizado determina quais dimensões podem ser medidas.',steps:['Identifique a dimensão pedida: perna, reforço, garganta ou outra.','Escolha a parte do calibre destinada a essa verificação.','Compare com o desenho e o procedimento de inspeção.']},
+    templates:{title:'Gabaritos e verificação de ângulos',text:'Um gabarito compara uma forma ou dimensão com um perfil de referência. Gabaritos de chanfro ajudam a verificar o ângulo de preparação da junta.',steps:['Selecione o perfil ou ângulo de referência correto.','Encoste o gabarito na preparação sem forçar.','Observe a concordância entre as superfícies.']},
+    conversion:{title:'Uma polegada corresponde a 25,4 mm',text:'A equivalência é exata. Converta a fração em número ou mantenha numerador e denominador durante o cálculo.',steps:['Polegadas → milímetros: multiplique por 25,4.','Milímetros → polegadas: divida por 25,4.','Exemplo: 3/16″ = (3 ÷ 16) × 25,4 = 4,7625 mm. Para voltar à fração, simplifique numerador e denominador.'],source:NIST,sourceName:'NIST · Unidades de comprimento'},
+    metric:{title:'Como ler o nônio de 0,05 mm',text:'A leitura tem duas parcelas: milímetros inteiros na escala fixa e a parte adicional indicada pelo nônio. Os números 1, 2, 3… da régua representam centímetros; cada centímetro tem 10 mm.',steps:['Localize o zero do nônio e leia o último milímetro inteiro à esquerda dele.','Encontre o traço do nônio que coincide com um traço da régua. Conte as divisões a partir do zero: cada uma vale 0,05 mm.','Some as parcelas. Exemplo: 12 mm + 6 × 0,05 mm = 12,30 mm. No nônio numerado de 0 a 10, cada intervalo numerado contém duas divisões.'],source:MITUTOYO,sourceName:'Mitutoyo · Guia de paquímetros',video:true},
+    fraction:{title:'Como ler 1/128 de polegada',text:'Neste paquímetro, a escala principal avança em 1/16″ e o nônio acrescenta divisões de 1/128″. Uma divisão da escala principal equivale a 8/128″.',steps:['Leia o último 1/16″ da escala fixa à esquerda do zero móvel.','Conte o traço coincidente do nônio: cada divisão acrescenta 1/128″.','Use denominador comum e simplifique. Exemplo: 1/4″ + 2/128″ = 32/128″ + 2/128″ = 17/64″.'],source:MITUTOYO,sourceName:'Mitutoyo · Guia de paquímetros'},
+    comparison:{title:'Compare medidas na mesma unidade',text:'Antes de comparar duas dimensões, transforme ambas para a mesma unidade. Depois subtraia o menor valor do maior.',steps:['Leia o paquímetro somando a escala fixa e a parcela do nônio.','Converta polegadas em milímetros multiplicando por 25,4.','Calcule a diferença e indique qual dimensão é maior.'],source:NIST,sourceName:'NIST · Unidades de comprimento'}
+  };
+  const esc=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const byId=new Map(BANK.map(q=>[q.id,q]));
+  const fresh=()=>({version:1,progress:{},session:null});
+  let store=fresh(),host=null,active=false,refs=[],screen='topics',helpOpen=false,storage=true;
+  const shuffle=items=>{const result=[...items];for(let i=result.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}return result;};
+  const count=topic=>BANK.filter(q=>q.section===topic).length;
+  function load(){try{
+    const data=JSON.parse(localStorage.getItem(KEY)||'null');if(data?.version!==1)return;
+    for(const q of BANK){const p=data.progress?.[q.id];if(p&&Number.isInteger(p.attempts)&&p.attempts>0&&Number.isInteger(p.correct)&&p.correct>=0&&p.correct<=p.attempts)store.progress[q.id]={attempts:p.attempts,correct:p.correct};}
+    const s=data.session;
+    if(!s||![0,1,2,3,4,5].includes(s.topic)||!Array.isArray(s.ids)||!s.ids.length||new Set(s.ids).size!==s.ids.length||!s.ids.every(id=>byId.has(id)&&(!s.topic||byId.get(id).section===s.topic)))return;
+    if(!s.ids.every(id=>Array.isArray(s.orders?.[id])&&s.orders[id].length===4&&new Set(s.orders[id]).size===4&&s.orders[id].every(n=>Number.isInteger(n)&&n>=0&&n<4)))return;
+    const answers={};let gap=false;
+    for(const id of s.ids){const a=s.answers?.[id];if(a&&Number.isInteger(a.choice)&&a.choice>=0&&a.choice<4&&!gap)answers[id]={choice:a.choice,assisted:a.assisted===true};else gap=true;}
+    const answered=Object.keys(answers).length,index=Math.min(answered,s.ids.length-1);
+    store.session={topic:s.topic,ids:s.ids,orders:s.orders,answers,helpUsed:{},index,completed:answered===s.ids.length};
+    for(const id of s.ids)if(s.helpUsed?.[id]===true)store.session.helpUsed[id]=true;
+    // Keep a just-answered question visible when reopening it; never grade it again.
+    if(Number.isInteger(s.index)&&s.index>=0&&s.index<s.ids.length&&(s.index===index||s.index===index-1&&answers[s.ids[s.index]]))store.session.index=s.index;
+  }catch(error){storage=false;}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(store));storage=true;}catch(error){storage=false;}}
+  const title=s=>s.topic?TOPICS.find(t=>t.id===s.topic).title:'Simulado completo';
+  const current=()=>byId.get(store.session.ids[store.session.index]);
+  const result=s=>{const answers=Object.entries(s.answers);return {total:answers.length,correct:answers.filter(([id,a])=>byId.get(+id).answer===a.choice).length,assisted:answers.filter(([,a])=>a.assisted).length};};
+  function card(){return `<button class="mode" data-mode="7" type="button"><span class="mode-head"><span class="num">JOGO 07</span><span class="mode-arrow" aria-hidden="true">↗</span></span><span class="game-preview mt-menu-preview" aria-hidden="true"><svg viewBox="0 0 300 125" fill="none"><rect x="37" y="27" width="226" height="46" rx="3" fill="#f0f7fd" stroke="#005ca9"/><path d="M52 73V48m12 25V57m12 16V57m12 16V48m12 25V57m12 16V57m12 16V48m12 25V57m12 16V57m12 16V48m12 25V57m12 16V57m12 16V48m12 25V57m12 16V57m12 16V48m12 25V57m12 16V57" stroke="#005ca9"/><rect x="93" y="81" width="114" height="29" rx="6" fill="#e6f2fd"/><path d="m106 95 5 5 11-12" stroke="#087e55" stroke-width="2"/><text x="135" y="100" style="font-size:14px;fill:#003e7a">25,4 mm</text></svg></span><span class="mode-body"><h3>METROLOGIA · PROVA 1</h3><small>Cinco tópicos, 60 questões e explicações para aprender enquanto pratica.</small><span class="mode-cta"><span>Escolher um tópico</span><span aria-hidden="true">→</span></span></span></button>`;}
+  function open(element){close();host=element;active=true;host.classList.add('metrology-game');refs=['#stats','#preview-notice','main > details'].map(s=>document.querySelector(s)).filter(Boolean).map(el=>[el,el.hidden]);for(const [el]of refs)el.hidden=true;screen='topics';helpOpen=false;host.onclick=handle;render();root.scrollTo(0,0);}
+  function close(){if(!active)return;save();host.onclick=null;host.classList.remove('metrology-game');for(const [el,hidden]of refs)el.hidden=hidden;refs=[];active=false;}
+  function start(topic,ids){const questions=ids||BANK.filter(q=>!topic||q.section===topic).map(q=>q.id),orders={};for(const id of questions)orders[id]=shuffle([0,1,2,3]);store.session={topic,ids:shuffle(questions),orders,answers:{},helpUsed:{},index:0,completed:false};screen='question';helpOpen=false;save();render();focusQuestion();}
+  function focusQuestion(){host.querySelector('#mt-question-title')?.focus({preventScroll:true});root.scrollTo(0,0);}
+  function topics(){
+    const s=store.session,done=BANK.filter(q=>store.progress[q.id]?.correct>0).length;
+    return `<div class="mt-intro"><span class="eyebrow">JOGO 07 · TREINAMENTO DE METROLOGIA</span><h2>Prova 1</h2><p>Escolha o que você quer estudar. Leia, responda e use <strong>Aprenda</strong> para consultar a teoria durante a questão.</p><div class="mt-intro-meta"><span>5 tópicos</span><span>60 questões</span><span>${done}/60 resolvidas corretamente</span></div></div>${s?`<div class="mt-resume"><div><strong>${s.completed?'Último treino concluído':'Continue de onde parou'}</strong><small>${esc(title(s))} · ${result(s).total} de ${s.ids.length} respondidas</small></div><button class="primary" data-mt="resume" type="button">${s.completed?'Ver resultado':'Continuar treino'} →</button></div>`:''}<div class="mt-section-heading"><h3>O que vamos praticar?</h3><small>Seu progresso fica salvo neste navegador.</small></div><div class="mt-topics">${TOPICS.map(t=>{const answered=BANK.filter(q=>q.section===t.id&&store.progress[q.id]?.correct>0).length,total=count(t.id);return `<button type="button" class="mt-topic" data-mt="topic" data-topic="${t.id}"><span class="mt-topic-number">${t.icon}</span><span class="mt-topic-content"><strong>${t.title}</strong><span>${t.description}</span><span class="mt-topic-progress"><span>${answered}/${total} resolvidas corretamente</span><span>${total} questões</span></span><span class="mt-progress-track" aria-hidden="true"><i style="width:${answered/total*100}%"></i></span></span><span class="mt-topic-arrow" aria-hidden="true">→</span></button>`;}).join('')}</div><div class="mt-all"><div><strong>Quer revisar os cinco tópicos?</strong><p>Faça o simulado completo, com as 60 questões e o mesmo apoio teórico.</p></div><button type="button" data-mt="all">Iniciar simulado completo →</button></div>`;
+  }
+  function learning(q){const l=LESSONS[q.lesson];return `<section class="mt-learn-panel" id="mt-learn-panel" aria-label="Aprenda: ${esc(l.title)}"><span class="eyebrow">APRENDA · APOIO TEÓRICO</span><h3>${esc(l.title)}</h3><p>${esc(l.text)}</p><ol>${l.steps.map(t=>`<li>${esc(t)}</li>`).join('')}</ol>${l.source?`<a href="${l.source}" target="_blank" rel="noopener noreferrer">Consultar ${esc(l.sourceName)} ↗</a>`:''}${l.video?'<a class="mt-video" href="https://www.youtube.com/watch?v=H7bZLRDzmho" target="_blank" rel="noopener noreferrer">▷ Aula no YouTube · Prof. Eduardo Stefanelli ↗</a>':''}<small>A consulta é livre. O resultado da sessão informa quantas respostas tiveram apoio.</small></section>`;}
+  function question(){const s=store.session,q=current(),a=s.answers[q.id],r=result(s),last=s.index===s.ids.length-1;
+    const diagram=q.visual?`<figure class="mt-diagram"><figcaption>Observe as duas escalas e leia a medida em ${q.visual.key==='in-128'?'polegadas':'milímetros'}.</figcaption><div class="mt-scale-scroll" tabindex="0" aria-label="Escalas do paquímetro. No celular, deslize horizontalmente para ver os detalhes.">${root.CaliperInstrument.render({type:'analog',resolutionKey:q.visual.key,ticks:q.visual.ticks,reveal:false,section:'game',scaleHeader:false})}</div><small>No celular, deslize a escala para os lados se necessário.</small></figure>`:'';
+    return `<div class="mt-question-head"><button type="button" class="mt-back" data-mt="topics">← Tópicos</button><span>${esc(title(s))}</span><span class="mt-question-count">Questão ${s.index+1} de ${s.ids.length}</span></div><div class="mt-progress-track" role="progressbar" aria-label="Questões respondidas" aria-valuemin="0" aria-valuemax="${s.ids.length}" aria-valuenow="${r.total}"><i style="width:${r.total/s.ids.length*100}%"></i></div><div class="mt-scoreline"><span class="mt-score-correct">✓ ${r.correct} acertos</span><span>✕ ${r.total-r.correct} erros</span><span>Prova 1</span></div><article class="mt-question"><span class="eyebrow">${TOPICS.find(t=>t.id===q.section).title}</span><h2 id="mt-question-title" tabindex="-1">${esc(q.question)}</h2>${diagram}<div class="mt-help-row"><button type="button" data-mt="learn" class="mt-learn-button" aria-expanded="${helpOpen}" aria-controls="mt-learn-panel"><span aria-hidden="true">?</span> Aprenda <span aria-hidden="true">${helpOpen?'−':'+'}</span></button><small>Uma explicação para ajudar no raciocínio.</small></div>${helpOpen?learning(q):'<div id="mt-learn-panel" hidden></div>'}<div class="mt-options" role="group" aria-label="Escolha uma resposta">${s.orders[q.id].map((index,i)=>`<button type="button" class="mt-option${a?(index===q.answer?' mt-option-correct':index===a.choice?' mt-option-wrong':''):''}" data-mt="answer" data-choice="${index}" ${a?'disabled':''}><span class="mt-letter">${'ABCD'[i]}</span><span>${esc(q.options[index])}</span>${a&&index===q.answer?'<span class="mt-option-label">✓ Correta</span>':a&&index===a.choice?'<span class="mt-option-label">✕ Sua resposta</span>':''}</button>`).join('')}</div>${a?`<div class="mt-feedback${a.choice===q.answer?'':' mt-feedback-error'}" role="status" id="mt-feedback"><strong>${a.choice===q.answer?'✓ Resposta correta!':'Vamos revisar a leitura.'}</strong><p>${esc(q.explanation)}</p>${a.assisted?'<small>Resposta com consulta ao Aprenda.</small>':''}<button type="button" class="primary" data-mt="next">${last?'Ver resultado':'Próxima questão'} →</button></div>`:'<p class="mt-answer-note">Selecione uma alternativa para confirmar sua resposta.</p>'}</article>`;
+  }
+  function summary(){const s=store.session,r=result(s),wrong=r.total-r.correct,percent=Math.round(r.correct/s.ids.length*100);return `<div class="mt-result"><span class="eyebrow">TREINAMENTO DE METROLOGIA · PROVA 1</span><h2>Treino concluído</h2><p>${esc(title(s))}</p><div class="mt-result-percent">${percent}<span>%</span></div><div class="mt-result-stats"><span><strong>${r.correct}</strong> acertos</span><span><strong>${wrong}</strong> erros</span><span><strong>${r.assisted}</strong> com apoio</span></div><p>Você respondeu às ${s.ids.length} questões desta sessão. Continue praticando para consolidar as leituras e os conceitos.</p><div class="mt-result-actions">${wrong?'<button type="button" class="primary" data-mt="retry">Revisar questões erradas</button>':''}<button type="button" ${wrong?'':'class="primary"'} data-mt="restart">Praticar novamente</button><button type="button" data-mt="topics">Escolher outro tópico</button></div></div>`;}
+  function render(){if(!active)return;host.innerHTML=`<section class="mt-game" aria-label="Treinamento de metrologia — Prova 1">${screen==='topics'?topics():screen==='summary'?summary():question()}${storage?'':'<p class="mt-storage-notice" role="status">O navegador não permitiu salvar o progresso. Você pode continuar treinando nesta página.</p>'}</section>`;}
+  function handle(event){const button=event.target.closest?.('[data-mt]');if(!button||button.disabled)return;const action=button.dataset.mt;
+    if(action==='topics'){screen='topics';helpOpen=false;render();root.scrollTo(0,0);return;}
+    if(action==='topic'||action==='all'){start(action==='all'?0:+button.dataset.topic);return;}
+    if(action==='resume'){screen=store.session.completed?'summary':'question';helpOpen=false;render();focusQuestion();return;}
+    const s=store.session;if(!s)return;const q=current();
+    if(action==='learn'){helpOpen=!helpOpen;if(helpOpen){s.helpUsed[q.id]=true;save();}render();host.querySelector('[data-mt="learn"]')?.focus();return;}
+    if(action==='answer'){if(s.answers[q.id]||s.completed)return;const choice=+button.dataset.choice;if(!Number.isInteger(choice)||choice<0||choice>3)return;s.answers[q.id]={choice,assisted:s.helpUsed[q.id]===true};const p=store.progress[q.id]||(store.progress[q.id]={attempts:0,correct:0});p.attempts++;if(choice===q.answer)p.correct++;if(Object.keys(s.answers).length===s.ids.length)s.completed=true;save();render();host.querySelector('[data-mt="next"]')?.focus();return;}
+    if(action==='next'&&s.answers[q.id]){if(s.index===s.ids.length-1){screen='summary';}else{s.index++;helpOpen=false;}save();render();focusQuestion();return;}
+    if(action==='restart'){start(s.topic);return;}
+    if(action==='retry'){const ids=s.ids.filter(id=>s.answers[id]&&s.answers[id].choice!==byId.get(id).answer);if(ids.length)start(s.topic,ids);}
+  }
+  load();root.MetrologyGame={card,open,close};
 })(typeof window!=='undefined'?window:globalThis);
 
 installAddedWeldCases();

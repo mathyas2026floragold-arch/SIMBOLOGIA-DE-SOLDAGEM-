@@ -4,9 +4,9 @@
 
 Plataforma online de treinamento para interpretar simbologia de soldagem, reconhecer juntas e identificar posições em chapas. O aprendizado acontece por desenhos técnicos, comparação visual, ordens de serviço simuladas e correção imediata.
 
-A aplicação é estática e reúne **seis jogos no mesmo menu e no mesmo arquivo HTML**: cinco de soldagem e o novo simulador de paquímetro. Também funciona offline, sem instalação, com progresso salvo no navegador.
+A aplicação é estática e reúne **sete jogos no mesmo menu e no mesmo arquivo HTML**: cinco de soldagem, o simulador de paquímetro e o treinamento de metrologia. Também funciona offline, sem instalação, com progresso salvo no navegador. As aulas e referências externas precisam de internet.
 
-## Os seis jogos
+## Os sete jogos
 
 | Modo | Atividade |
 | --- | --- |
@@ -15,7 +15,8 @@ A aplicação é estática e reúne **seis jogos no mesmo menu e no mesmo arquiv
 | **MONTE O SÍMBOLO** | Interpretar uma descrição técnica e construir a peça e sua indicação de soldagem pelas escolhas de junta, símbolo, medidas e complementos. |
 | **FISCAL DE FABRICAÇÃO** | Comparar projeto e execução e identificar a divergência exata quando houver. |
 | **DESAFIO 3D DE POSIÇÕES** | Reconhecer posições, orientação, acesso e geometria da união em relação à gravidade. |
-| **JOGO 06 — DESAFIO DO PAQUÍMETRO** | Manipular o instrumento, medir uma peça virtual e interpretar a escala, o nônio, o relógio ou o visor do modelo escolhido. |
+| **JOGO 06 — DESAFIO DO PAQUÍMETRO** | Manipular o paquímetro universal analógico, interpretar suas escalas e posicionar o cursor na medida solicitada. |
+| **JOGO 07 — METROLOGIA · PROVA 1** | Escolher entre cinco tópicos, resolver questões e consultar a explicação teórica pelo botão Aprenda. |
 
 ## Recursos
 
@@ -45,6 +46,24 @@ Os modos **1, 2, 4 e 5** avançam conforme os acertos em cada jogo. O XP geral n
 No Detetive, as investigações de anatomia entram a cada quarta investigação elegível, a partir de oito acertos no modo. Os focos básicos aparecem primeiro; os demais são liberados com a progressão.
 
 O **jogo 3 começa complexo**, com todas as famílias disponíveis. Seu primeiro caso tem **18 escolhas**: junta de topo em V, S = 8 mm, E = 10 mm, espessura de 10 mm, raiz de 3 mm, face da raiz de 2 mm, ângulo de 60°, lado da seta, distribuição contínua, contorno plano, acabamento G, campo, apoio removível, processo GTAW e referência DET. A. A referência correta só aparece após a conferência.
+
+## Jogo 07 — Treinamento de Metrologia: Prova 1
+
+O sétimo cartão abre a escolha de assunto no mesmo visual azul e branco do site. O demonstrativo fornecido serviu de referência de conteúdo; os jogos anteriores continuam disponíveis.
+
+| Tópico | Questões |
+| --- | ---: |
+| Conceitos e instrumentos | 18 |
+| Conversão de unidades | 12 |
+| Paquímetro métrico · 0,05 mm | 10 |
+| Polegada fracionária · 1/128″ | 10 |
+| Situações de oficina | 10 |
+
+Cada questão tem quatro alternativas e o botão **Aprenda**, que abre uma explicação com o método, um exemplo ou orientações sobre o instrumento. As questões de paquímetro mostram escalas calculadas pelo mesmo motor do simulador. A explicação de leitura métrica inclui uma aula em vídeo do Prof. Eduardo Stefanelli, aberta no YouTube.
+
+As alternativas e as questões são embaralhadas no início de cada sessão. A correção aparece após responder, e o jogador avança quando quiser. O resultado informa acertos, erros e respostas com apoio teórico; também é possível revisar somente os erros, repetir o tópico ou fazer o simulado completo de 60 questões.
+
+O progresso fica salvo na chave `metrologia-prova1-v1`, separado do paquímetro e da soldagem. Ao sair durante um treino, o botão **Continuar treino** recupera a sessão. Nenhum resultado do demonstrativo é importado como progresso pessoal.
 
 ## Jogo 06 — Desafio do Paquímetro
 
@@ -151,7 +170,7 @@ Consulte a [documentação oficial do GitHub Pages](https://docs.github.com/en/p
 
 ## Verificar
 
-Execute as onze verificações na raiz do projeto:
+Execute as doze verificações na raiz do projeto:
 
 ```sh
 node work/check-levels-v3.cjs
@@ -165,9 +184,10 @@ node work/check-caliper-engine.cjs
 node work/check-caliper-instrument.cjs
 node work/check-caliper-ui.cjs
 node work/check-caliper-precision.cjs
+node work/check-metrology.cjs
 ```
 
-Elas cobrem níveis, progresso salvo, prévia do máximo, integração dos cinco modos de soldagem, respostas únicas, reforço, montagem e correção por campo, progressão, parâmetros técnicos, processos e anatomia. As verificações do paquímetro acrescentam quantização e limites, leitura métrica e imperial, formatos de resposta, sincronização entre cursor e elementos de medição, alvo fixo, alinhamento real das escalas SVG, ocultação da leitura e ponteiros do relógio.
+Elas cobrem níveis, progresso salvo, prévia do máximo, integração dos cinco modos de soldagem, respostas únicas, reforço, montagem e correção por campo, progressão, parâmetros técnicos, processos e anatomia. As verificações do paquímetro acrescentam quantização e limites, leitura métrica e imperial, formatos de resposta, sincronização entre cursor e elementos de medição, alvo fixo, alinhamento real das escalas SVG, ocultação da leitura e ponteiros do relógio. O teste de metrologia verifica os cinco tópicos, as 60 questões, as leituras desenhadas, a consulta à teoria, a correção, a retomada e a preservação do progresso dos outros jogos.
 
 ## Convenções de estudo
 

@@ -367,19 +367,19 @@
   }
   // One enlarged caliper face for the assessment game. This is the instrument's
   // principal scale and sliding vernier sharing one edge, not a second diagram.
-  function gameScale(c) {
+  function gameScale(c, showHeader = true) {
     const r = c.r;
     const scale = r.unit === 'mm' ? r.divisions === 10 ? 50 : r.divisions === 20 ? 20 : 16 : r.divisions === 8 ? 1400 : 1200;
     const bucketTicks = r.unit === 'mm' ? 10 * r.denominator : r.denominator / 4;
     const marginTicks = r.unit === 'mm' ? (r.divisions === 10 ? 4 : 8) * r.denominator : r.denominator / 10;
     const originTicks = Math.max(0, Math.floor((c.ticks - marginTicks) / bucketTicks) * bucketTicks);
     const x = ticks => 60 + (ticks - originTicks) * scale / r.denominator;
-    const mainY = 250, height = 410, zero = x(c.ticks), end = x(c.ticks + r.divisions * r.vernierPitchTicks);
+    const mainY = 250, height = showHeader ? 410 : 330, zero = x(c.ticks), end = x(c.ticks + r.divisions * r.vernierPitchTicks);
     const index = c.ticks % r.mainTicks, coincidenceTicks = c.ticks + index * r.vernierPitchTicks;
     const first = Math.max(0, Math.ceil((originTicks - 60 * r.denominator / scale) / r.mainTicks));
     const last = Math.floor((originTicks + 1220 * r.denominator / scale) / r.mainTicks);
     let content = rect(0, 0, 1280, height, 'fill="#fff"');
-    content += '<g class="ci-game-window" data-px-per-unit="' + scale + '">';
+    content += '<g class="ci-game-window" data-px-per-unit="' + scale + '"' + (showHeader ? '' : ' transform="translate(0 -80)"') + '>';
     // Read the metric main numbers in centimetres; every small interval is 1 mm.
     for (let k = first; k <= last; k++) {
       const ticks = k * r.mainTicks, value = ticks / r.denominator, at = x(ticks);
@@ -395,9 +395,11 @@
     content += line(0, mainY, 1280, mainY, 'stroke="#262b22" stroke-width="1.3"');
     content += text(1255, 111, r.unit === 'mm' ? 'cm' : 'pol', 'font-size="24" text-anchor="end"');
     content += '<g ' + hook('x',scale) + '>';
-    content += rect(zero - 36, 8, end - zero + 72, 57, 'class="ci-game-cursor-top" fill="#f9faf6" stroke="#333b2e" stroke-width="1.5"');
-    content += text(zero - 14, 44, TYPES[c.type].name, 'font-size="21"');
-    content += text(end + 14, 44, r.label, 'font-size="21" text-anchor="end"');
+    if (showHeader) {
+      content += rect(zero - 36, 8, end - zero + 72, 57, 'class="ci-game-cursor-top" fill="#f9faf6" stroke="#333b2e" stroke-width="1.5"');
+      content += text(zero - 14, 44, TYPES[c.type].name, 'font-size="21"');
+      content += text(end + 14, 44, r.label, 'font-size="21" text-anchor="end"');
+    }
     content += rect(zero - 36, mainY, end - zero + 72, 140, 'class="ci-game-cursor" fill="#f9faf6" stroke="#333b2e" stroke-width="1.5"');
     for (let k = 0; k <= r.divisions; k++) {
       const ticks = c.ticks + k * r.vernierPitchTicks, at = x(ticks), selected = c.reveal && k === index;
@@ -417,7 +419,7 @@
     if (!['full', 'instrument', 'detail', 'game', 'free', 'focus'].includes(section)) throw new RangeError('Seção do instrumento desconhecida.');
     if(['free','focus'].includes(section)&&!technical)throw new RangeError('A vista livre usa o paquímetro universal analógico.');
     const instrument = section === 'detail' || section === 'game' ? '' : c.type === 'depth' ? wholeDepth(c, g) : c.type === 'height' ? wholeHeight(c, g) : wholeHorizontal(c, g);
-    const detail = ['instrument','free','focus'].includes(section) ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c) : vernierDetail(c);
+    const detail = ['instrument','free','focus'].includes(section) ? null : c.type === 'digital' ? digitalDetail(c, g) : c.type === 'dial' ? dialDetail(c) : section === 'game' ? gameScale(c,options.scaleHeader!==false) : vernierDetail(c);
     const instrumentHeight=technical?330:300;
     const focusWidth=Math.max(universalPlateWidth(c,g)+220,360),focusHeight=220,focusX=clean(g.sliderPx-(focusWidth-universalPlateWidth(c,g))/2);
     const height = section === 'focus' ? focusHeight : section === 'free' ? 360 : section === 'instrument' ? instrumentHeight : section === 'detail' || section === 'game' ? detail.height : instrumentHeight + detail.height;
